@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giám sát bãi xe — Smart Parking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    .slot-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 24px; }
+    @media(max-width:1100px) { .slot-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media(max-width:600px) { .slot-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .slot-card {
+      background: white;
+      border-radius: 14px;
+      border: 2px solid var(--border);
+      padding: 18px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .slot-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .slot-card.FREE     { border-color: #4ADE80; background: linear-gradient(135deg, #F0FDF4, #DCFCE7); }
+    .slot-card.OCCUPIED { border-color: #F87171; background: linear-gradient(135deg, #FEF2F2, #FEE2E2); }
+    .slot-card.RESERVED { border-color: #FB923C; background: linear-gradient(135deg, #FFF7ED, #FFEDD5); }
+    .slot-card.DISABLED { border-color: var(--border); background: var(--bg); opacity: 0.7; }
+
+    .slot-number { font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+    .slot-icon   { font-size: 32px; margin-bottom: 6px; }
+    .slot-plate  { font-size: 11px; font-weight: 600; color: var(--text-medium); background: white; border-radius: 4px; padding: 2px 6px; margin-bottom: 6px; min-height: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .slot-status-badge { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .slot-time   { font-size: 10px; color: var(--text-light); margin-top: 6px; }
+
+    .summary-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    .summary-item { background: white; border-radius: 12px; padding: 16px; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow-xs); }
+    .summary-val  { font-size: 28px; font-weight: 700; }
+    .summary-lbl  { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+    .last-update { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-light); margin-bottom: 16px; }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+    .esp-status { display: flex; gap: 12px; margin-bottom: 20px; }
+    .esp-card   { background: white; border-radius: 10px; padding: 14px 16px; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex: 1; box-shadow: var(--shadow-xs); }
+    .esp-name   { font-size: 13px; font-weight: 600; }
+    .esp-sub    { font-size: 11px; color: var(--text-light); }
+  </style>
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/admin-layout.js"></script>
+<script>
+(function init() {
+  if (!requireAdmin()) return;
+
+  const content = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div class="page-title">Giám sát & Quản lý bãi xe</div>
+        <div class="page-subtitle">Theo dõi trạng thái thời gian thực và quản lý các chỗ đỗ</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline" onclick="loadSlots()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Làm mới
+        </button>
+        <button class="btn btn-primary" onclick="openAddSlotModal()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Thêm chỗ đỗ
+        </button>
+      </div>
+    </div>
+
+    <!-- ESP32 Status -->
+    <div class="esp-status" id="esp-status">
+      <div class="esp-card"><div class="status-dot" style="width:10px;height:10px;border-radius:50%;background:#94A3B8"></div><div><div class="esp-name">ESP32 #1 (IR Slots)</div><div class="esp-sub">Đang kết nối...</div></div></div>
+      <div class="esp-card"><div class="status-dot" style="width:10px;height:10px;border-radius:50%;background:#94A3B8"></div><div><div class="esp-name">ESP32 #2 (Gate)</div><div class="esp-sub">Đang kết nối...</div></div></div>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-bar stagger-children" id="summary-bar">
+      <div class="summary-item"><div class="summary-val" style="color:var(--text-dark)" id="sum-total">—</div><div class="summary-lbl">Tổng số chỗ</div></div>
+      <div class="summary-item"><div class="summary-val" style="color:var(--success)"   id="sum-free">—</div><div class="summary-lbl">Chỗ trống</div></div>
+      <div class="summary-item"><div class="summary-val" style="color:var(--error)"     id="sum-occ">—</div><div class="summary-lbl">Đang có xe</div></div>
+      <div class="summary-item"><div class="summary-val" style="color:var(--warning)"   id="sum-res">—</div><div class="summary-lbl">Đã đặt trước</div></div>
+    </div>
+
+    <!-- Last Update -->
+    <div class="last-update">
+      <div class="live-dot"></div>
+      <span>Cập nhật lần cuối: <span id="last-update-time">—</span></span>
+      <span style="margin-left:auto;font-size:11px;color:var(--text-light);font-style:italic">💡 Nhấn vào chỗ đỗ bất kỳ để chỉnh sửa hoặc đổi trạng thái</span>
+    </div>
+
+    <!-- Slot Grid -->
+    <div class="slot-grid" id="slot-grid">
+      ${[1,2,3,4,5,6].map(() => `<div class="card card-body" style="height:170px"><div class="skeleton" style="height:100%"></div></div>`).join('')}
+    </div>
+
+    <!-- Detailed Slot Table with Filters -->
+    <div class="card">
+      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <span class="card-title">Danh sách chi tiết chỗ đỗ</span>
+        <div class="search-bar" style="display:flex;gap:8px;padding:0;align-items:center;flex-wrap:wrap">
+          <div class="search-input-wrap" style="width:200px">
+            <svg class="search-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="search" class="search-input" placeholder="Tìm mã chỗ, biển số..." id="slot-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="filterSlotsView()">
+          </div>
+          <select class="filter-select" id="slot-status-filter" onchange="filterSlotsView()" style="height:36px;font-size:12px">
+            <option value="">Tất cả trạng thái</option>
+            <option value="FREE">Chỗ trống</option>
+            <option value="OCCUPIED">Đang có xe</option>
+            <option value="RESERVED">Đã đặt trước</option>
+            <option value="DISABLED">Vô hiệu hóa</option>
+          </select>
+          <select class="filter-select" id="slot-zone-filter" onchange="filterSlotsView()" style="height:36px;font-size:12px">
+            <option value="">Tất cả khu vực</option>
+          </select>
+          <button class="btn btn-outline btn-sm" onclick="resetSlotFilters()">Xóa lọc</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead><tr>
+            <th>Chỗ đỗ</th><th>Khu vực</th><th>Trạng thái</th><th>Biển số xe</th><th>Loại xe</th>
+            <th>Thời gian vào</th><th>Thời gian dự kiến ra</th><th>Thao tác</th>
+          </tr></thead>
+          <tbody id="slot-table">${skeletonRows(6)}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Manage Slot Modal -->
+    <div id="slot-modal" class="modal-overlay">
+      <div class="modal" style="max-width:480px">
+        <div class="modal-header">
+          <span class="modal-title" id="slot-modal-title">Cập nhật chỗ đỗ</span>
+          <button class="modal-close" onclick="closeSlotModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="slot-form" onsubmit="submitSlotUpdate(event)">
+            <input type="hidden" id="edit-slot-id">
+            <div style="background:var(--bg);border-radius:10px;padding:14px;margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <span style="font-size:13px;color:var(--text-light)">Mã chỗ:</span>
+                <strong id="edit-slot-code-display" style="font-size:18px;color:var(--primary)">—</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <span style="font-size:13px;color:var(--text-light)">Xe đang đỗ:</span>
+                <code id="edit-slot-plate-display" style="font-size:13px;font-weight:600">—</code>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:13px;color:var(--text-light)">Thời gian vào:</span>
+                <span id="edit-slot-time-display" style="font-size:13px">—</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:14px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Trạng thái chỗ đỗ *</label>
+              <select class="filter-select" id="edit-slot-status" required style="width:100%;height:38px">
+                <option value="FREE">🟢 Trống (FREE)</option>
+                <option value="OCCUPIED">🔴 Đang có xe (OCCUPIED)</option>
+                <option value="RESERVED">🟠 Đã đặt trước (RESERVED)</option>
+                <option value="DISABLED">⚪ Vô hiệu hóa / Bảo trì (DISABLED)</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:20px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Khu vực (Zone) *</label>
+              <input type="text" class="input" id="edit-slot-zone" required style="width:100%" placeholder="Ví dụ: A, B, VIP...">
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;gap:8px">
+              <button type="button" class="btn btn-ghost" onclick="closeSlotModal()">Hủy</button>
+              <button type="submit" class="btn btn-primary" id="btn-save-slot">Lưu thay đổi</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Slot Modal -->
+    <div id="add-slot-modal" class="modal-overlay">
+      <div class="modal" style="max-width:480px">
+        <div class="modal-header">
+          <span class="modal-title">Thêm chỗ đỗ mới</span>
+          <button class="modal-close" onclick="closeAddSlotModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="add-slot-form" onsubmit="submitAddSlot(event)">
+            <div class="form-group" style="margin-bottom:14px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Mã chỗ đỗ *</label>
+              <input type="text" class="input" id="new-slot-code" required placeholder="Ví dụ: A07, B01" style="width:100%;font-weight:700">
+            </div>
+            <div class="form-group" style="margin-bottom:14px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Khu vực (Zone) *</label>
+              <input type="text" class="input" id="new-slot-zone" required value="A" placeholder="Ví dụ: A, B..." style="width:100%">
+            </div>
+            <div class="form-group" style="margin-bottom:20px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Cảm biến IR / Device ID</label>
+              <input type="text" class="input" id="new-slot-sensor" placeholder="Tùy chọn: IR_A07" style="width:100%">
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px">
+              <button type="button" class="btn btn-ghost" onclick="closeAddSlotModal()">Hủy</button>
+              <button type="submit" class="btn btn-primary" id="btn-submit-add-slot">Tạo chỗ đỗ</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  `;
+
+  createAdminPage('parking-monitor', content, () => {
+    loadSlots();
+    loadDevices();
+    setInterval(loadSlots, 15000);
+    if (window.io) connectSocket();
+  });
+})();
+
+let allSlotsCache = [];
+
+function resetSlotFilters() {
+  const s = document.getElementById('slot-search');
+  const st = document.getElementById('slot-status-filter');
+  const z = document.getElementById('slot-zone-filter');
+  if (s) s.value = '';
+  if (st) st.value = '';
+  if (z) z.value = '';
+  filterSlotsView();
+}
+
+async function loadSlots() {
+  try {
+    const res = await ParkingAPI.getSlots();
+    const slots = res?.data || [];
+    allSlotsCache = slots;
+
+    const summary = await ParkingAPI.getSummary();
+    const s = summary?.data || {};
+
+    document.getElementById('sum-total').textContent = slots.length;
+    document.getElementById('sum-free').textContent  = s.free  || slots.filter(x => x.status === 'FREE').length;
+    document.getElementById('sum-occ').textContent   = s.occupied || slots.filter(x => x.status === 'OCCUPIED').length;
+    document.getElementById('sum-res').textContent   = s.reserved || slots.filter(x => x.status === 'RESERVED').length;
+    document.getElementById('last-update-time').textContent = new Date().toLocaleTimeString('vi-VN');
+
+    // Populate zone filter
+    const zoneSelect = document.getElementById('slot-zone-filter');
+    if (zoneSelect && zoneSelect.options.length <= 1) {
+      const zones = [...new Set(slots.map(x => x.zone).filter(Boolean))];
+      zones.forEach(z => {
+        const opt = document.createElement('option');
+        opt.value = z;
+        opt.textContent = `Khu vực ${z}`;
+        zoneSelect.appendChild(opt);
+      });
+    }
+
+    renderSlotGrid(slots);
+    filterSlotsView();
+  } catch (err) {
+    Toast.error('Lỗi', 'Không thể tải dữ liệu bãi xe');
+  }
+}
+
+function renderSlotGrid(slots) {
+  const grid = document.getElementById('slot-grid');
+  if (!grid) return;
+
+  const iconMap = { FREE: '🅿️', OCCUPIED: '🚗', RESERVED: '📅', DISABLED: '🚫' };
+  const badgeMap = { FREE: 'badge-success', OCCUPIED: 'badge-error', RESERVED: 'badge-warning', DISABLED: 'badge-gray' };
+  const labelMap = { FREE: 'Trống', OCCUPIED: 'Có xe', RESERVED: 'Đặt trước', DISABLED: 'Vô hiệu' };
+
+  grid.innerHTML = slots.map(slot => {
+    const code = slot.slot_code || slot.slot_name || `#${slot.id}`;
+    const plate = slot.current_plate || slot.booked_plate || '';
+    const timeText = slot.entry_time ? Format.time(slot.entry_time) : (slot.start_time ? Format.time(slot.start_time) : '');
+
+    return `
+      <div class="slot-card ${slot.status} animate-fade-in" id="sc-${code}" onclick="openManageSlotModal(${slot.id})" title="Nhấn để chỉnh sửa chỗ ${code}">
+        <div class="slot-number">${code}</div>
+        <div class="slot-icon">${iconMap[slot.status] || '🏷️'}</div>
+        <div class="slot-plate">${plate || '—'}</div>
+        <span class="slot-status-badge badge ${badgeMap[slot.status] || 'badge-gray'}">${labelMap[slot.status] || slot.status}</span>
+        <div class="slot-time">${timeText ? 'Vào: ' + timeText : 'Khu: ' + (slot.zone || 'A')}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filterSlotsView() {
+  const search = document.getElementById('slot-search')?.value.trim().toLowerCase() || '';
+  const status = document.getElementById('slot-status-filter')?.value || '';
+  const zone = document.getElementById('slot-zone-filter')?.value || '';
+
+  let filtered = allSlotsCache;
+  if (status) filtered = filtered.filter(s => s.status === status);
+  if (zone) filtered = filtered.filter(s => s.zone === zone);
+  if (search) {
+    filtered = filtered.filter(s => {
+      const code = (s.slot_code || s.slot_name || '').toLowerCase();
+      const plate = (s.current_plate || s.booked_plate || '').toLowerCase();
+      return code.includes(search) || plate.includes(search);
+    });
+  }
+
+  const tbody = document.getElementById('slot-table');
+  if (!tbody) return;
+
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-state-icon">🅿️</div><div class="empty-state-title">Không tìm thấy chỗ đỗ phù hợp</div></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(slot => {
+    const code = slot.slot_code || slot.slot_name || `#${slot.id}`;
+    const plate = slot.current_plate || slot.booked_plate;
+    return `
+      <tr>
+        <td><strong>${code}</strong></td>
+        <td><span class="badge badge-gray">${slot.zone || 'A'}</span></td>
+        <td>${slotBadge(slot.status)}</td>
+        <td>${plate ? `<code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:12px;font-weight:600">${plate}</code>` : '—'}</td>
+        <td>${Format.vehicleType(slot.vehicle_type) || '—'}</td>
+        <td style="font-size:12px">${Format.datetime(slot.entry_time || slot.start_time) || '—'}</td>
+        <td style="font-size:12px">${Format.datetime(slot.expected_exit || slot.end_time) || '—'}</td>
+        <td>
+          <button class="btn btn-sm btn-ghost" onclick="openManageSlotModal(${slot.id})">Quản lý</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function openManageSlotModal(id) {
+  const slot = allSlotsCache.find(s => s.id === id);
+  if (!slot) return;
+
+  document.getElementById('edit-slot-id').value = slot.id;
+  document.getElementById('edit-slot-code-display').textContent = slot.slot_code || slot.slot_name || `#${slot.id}`;
+  document.getElementById('edit-slot-plate-display').textContent = slot.current_plate || slot.booked_plate || 'Không có xe';
+  document.getElementById('edit-slot-time-display').textContent = slot.entry_time ? Format.datetime(slot.entry_time) : (slot.start_time ? Format.datetime(slot.start_time) : '—');
+  document.getElementById('edit-slot-status').value = slot.status || 'FREE';
+  document.getElementById('edit-slot-zone').value = slot.zone || 'A';
+
+  document.getElementById('slot-modal')?.classList.add('open');
+}
+
+function closeSlotModal() {
+  document.getElementById('slot-modal')?.classList.remove('open');
+}
+
+async function submitSlotUpdate(e) {
+  e.preventDefault();
+  const id = document.getElementById('edit-slot-id')?.value;
+  const status = document.getElementById('edit-slot-status')?.value;
+  const zone = document.getElementById('edit-slot-zone')?.value.trim();
+
+  const btn = document.getElementById('btn-save-slot');
+  if (btn) { btn.disabled = true; btn.textContent = 'Đang lưu...'; }
+
+  try {
+    await ParkingAPI.updateSlot(id, { status, zone });
+    Toast.success('Thành công', 'Đã cập nhật trạng thái chỗ đỗ');
+    closeSlotModal();
+    loadSlots();
+  } catch (err) {
+    Toast.error('Lỗi', err.message || 'Không thể cập nhật chỗ đỗ');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Lưu thay đổi'; }
+  }
+}
+
+function openAddSlotModal() {
+  document.getElementById('add-slot-form')?.reset();
+  document.getElementById('add-slot-modal')?.classList.add('open');
+}
+
+function closeAddSlotModal() {
+  document.getElementById('add-slot-modal')?.classList.remove('open');
+}
+
+async function submitAddSlot(e) {
+  e.preventDefault();
+  const slot_code = document.getElementById('new-slot-code')?.value.trim().toUpperCase();
+  const zone = document.getElementById('new-slot-zone')?.value.trim().toUpperCase() || 'A';
+  const sensor_id = document.getElementById('new-slot-sensor')?.value.trim() || null;
+
+  if (!slot_code) {
+    Toast.error('Lỗi', 'Vui lòng nhập mã chỗ đỗ');
+    return;
+  }
+
+  const btn = document.getElementById('btn-submit-add-slot');
+  if (btn) { btn.disabled = true; btn.textContent = 'Đang tạo...'; }
+
+  try {
+    await ParkingAPI.createSlot({ slot_code, zone, sensor_id });
+    Toast.success('Thành công', `Đã tạo chỗ đỗ ${slot_code}`);
+    closeAddSlotModal();
+    loadSlots();
+  } catch (err) {
+    Toast.error('Lỗi', err.message || 'Không thể tạo chỗ đỗ');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Tạo chỗ đỗ'; }
+  }
+}
+
+async function loadDevices() {
+  try {
+    const res = await DeviceAPI.getAll();
+    const devices = res?.data || [];
+    const esp1 = devices.find(d => d.device_name?.includes('#1') || d.device_code === 'ESP32_1');
+    const esp2 = devices.find(d => d.device_name?.includes('#2') || d.device_code === 'ESP32_2');
+    const cards = document.getElementById('esp-status')?.children;
+    if (cards && esp1) updateEspCard(cards[0], esp1);
+    if (cards && esp2) updateEspCard(cards[1], esp2);
+  } catch {}
+}
+
+function updateEspCard(card, device) {
+  const dot = card.querySelector('.status-dot');
+  const sub = card.querySelector('.esp-sub');
+  const online = device.status === 'ONLINE';
+  if (dot) dot.style.background = online ? '#22C55E' : '#EF4444';
+  if (sub) sub.textContent = online ? `Online • ${Format.timeAgo(device.last_seen)}` : `Offline • ${Format.timeAgo(device.last_seen)}`;
+}
+
+function connectSocket() {
+  try {
+    const socket = io(window.SOCKET_URL, { auth: { token: Auth.getToken() } });
+    socket.on('slot_status_changed', (data) => {
+      loadSlots();
+      Toast.info('Cập nhật chỗ đỗ', `Chỗ ${data.slot_code || data.slot_name} → ${data.new_status || data.status}`);
+    });
+    socket.on('device_status', () => loadDevices());
+  } catch {}
+}
+</script>
+</body>
+</html>

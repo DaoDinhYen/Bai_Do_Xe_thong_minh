@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giao dịch — Smart Parking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/admin-layout.js"></script>
+<script>
+(function init() {
+  if (!requireAdmin()) return;
+  const content = `
+    <div class="page-header" style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div class="page-title">Giao dịch</div>
+        <div class="page-subtitle">Toàn bộ giao dịch ví điện tử</div>
+      </div>
+      <button class="btn btn-primary" onclick="openTopUpModal()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nạp tiền vào ví
+      </button>
+    </div>
+
+    <!-- Revenue Stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+      <div class="card card-body text-center"><div style="font-size:20px;font-weight:700;color:var(--text-dark)" id="t-total">—</div><div style="font-size:12px;color:var(--text-light)">Tổng giao dịch</div></div>
+      <div class="card card-body text-center"><div style="font-size:20px;font-weight:700;color:var(--success)" id="t-revenue">—</div><div style="font-size:12px;color:var(--text-light)">Doanh thu hôm nay</div></div>
+      <div class="card card-body text-center"><div style="font-size:20px;font-weight:700;color:var(--primary)" id="t-topup">—</div><div style="font-size:12px;color:var(--text-light)">Nạp tiền</div></div>
+      <div class="card card-body text-center"><div style="font-size:20px;font-weight:700;color:var(--warning)" id="t-refund">—</div><div style="font-size:12px;color:var(--text-light)">Hoàn tiền</div></div>
+    </div>
+
+    <div class="card">
+      <div class="search-bar">
+        <div class="search-input-wrap">
+          <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" class="search-input" placeholder="Tìm theo tên, email, nội dung..." id="tx-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchTx()">
+        </div>
+        <select class="filter-select" id="tx-type" onchange="loadTx(1)">
+          <option value="">Tất cả loại</option>
+          <option value="TOP_UP">Nạp tiền</option>
+          <option value="BOOKING_PAYMENT">Đặt chỗ</option>
+          <option value="PARKING_PAYMENT">Phí gửi xe</option>
+          <option value="REFUND">Hoàn tiền</option>
+        </select>
+        <select class="filter-select" id="tx-status" onchange="loadTx(1)">
+          <option value="">Tất cả trạng thái</option>
+          <option value="SUCCESS">Thành công</option>
+          <option value="PENDING">Đang xử lý</option>
+          <option value="FAILED">Thất bại</option>
+        </select>
+        <input type="date" class="filter-select" id="tx-date" onchange="loadTx(1)">
+        <button class="btn btn-sm btn-ghost" onclick="resetTxFilter()" title="Xóa bộ lọc" style="white-space:nowrap">
+          ✕ Xóa lọc
+        </button>
+      </div>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead><tr>
+            <th>Mã GD</th><th>Người dùng</th><th>Loại</th><th>Số tiền</th><th>Nội dung</th><th>Thời gian</th><th>Trạng thái</th>
+          </tr></thead>
+          <tbody id="tx-table">${skeletonRows(7)}</tbody>
+        </table>
+      </div>
+      <div id="tx-pager"></div>
+    </div>
+
+    <!-- Modal Nạp tiền vào ví -->
+    <div id="topup-modal" class="modal-overlay">
+      <div class="modal" style="max-width:440px">
+        <div class="modal-header">
+          <span class="modal-title">Nạp tiền vào ví người dùng</span>
+          <button class="modal-close" onclick="closeTopUpModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Chọn người dùng</label>
+            <select id="tu-user" class="form-control">
+              <option value="">-- Chọn tài khoản --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Số tiền (VNĐ)</label>
+            <input type="number" id="tu-amount" class="form-control" placeholder="Ví dụ: 100000" min="10000" step="10000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nội dung / Ghi chú</label>
+            <input type="text" id="tu-desc" class="form-control" placeholder="Admin nạp tiền ví...">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" onclick="closeTopUpModal()">Hủy</button>
+          <button class="btn btn-primary" onclick="submitTopUp()">Xác nhận nạp</button>
+        </div>
+      </div>
+    </div>
+  `;
+  createAdminPage('transactions', content, () => {
+    loadTx(1);
+    loadUsersForTopUp();
+    window.debouncedSearchTx = debounce(() => loadTx(1), 400);
+  });
+})();
+
+function resetTxFilter() {
+  document.getElementById('tx-search').value = '';
+  document.getElementById('tx-type').value = '';
+  document.getElementById('tx-status').value = '';
+  document.getElementById('tx-date').value = '';
+  loadTx(1);
+}
+
+async function loadUsersForTopUp() {
+  try {
+    const res = await UserAPI.getAll({ limit: 100 });
+    const users = Array.isArray(res?.data) ? res.data : [];
+    const sel = document.getElementById('tu-user');
+    if (sel) {
+      sel.innerHTML = '<option value="">-- Chọn tài khoản --</option>' +
+        users.map(u => `<option value="${u.id}">${u.name} (${u.email}) — Số dư: ${Format.money(u.wallet_balance)}</option>`).join('');
+    }
+  } catch {}
+}
+
+function openTopUpModal() {
+  document.getElementById('topup-modal')?.classList.add('open');
+}
+function closeTopUpModal() {
+  document.getElementById('topup-modal')?.classList.remove('open');
+}
+
+async function submitTopUp() {
+  const userId = document.getElementById('tu-user')?.value;
+  const amount = document.getElementById('tu-amount')?.value;
+  const desc = document.getElementById('tu-desc')?.value || 'Admin nạp tiền vào ví';
+  if (!userId || !amount || Number(amount) <= 0) return Toast.error('Lỗi', 'Vui lòng chọn người dùng và nhập số tiền hợp lệ');
+
+  try {
+    await PaymentAPI.adjustWallet({ user_id: +userId, amount: +amount, description: desc });
+    Toast.success('Thành công', `Đã nạp ${Format.money(amount)} vào ví`);
+    closeTopUpModal();
+    loadTx(1);
+    loadUsersForTopUp();
+  } catch (e) {
+    Toast.error('Lỗi nạp tiền', e.message);
+  }
+}
+
+async function loadTx(page = 1) {
+  const search = document.getElementById('tx-search')?.value || '';
+  const type   = document.getElementById('tx-type')?.value || '';
+  const status = document.getElementById('tx-status')?.value || '';
+  const date   = document.getElementById('tx-date')?.value || '';
+
+  const tbody = document.getElementById('tx-table');
+  if (tbody) tbody.innerHTML = skeletonRows(7);
+
+  try {
+    const params = { page, limit: 15, search, type, status };
+    if (date) params.date = date;
+
+    const res = await PaymentAPI.getAllTransactions(params);
+    let data = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
+
+    // Strict client-side check to guarantee exact match
+    if (date) {
+      data = data.filter(t => {
+        if (!t.created_at) return false;
+        const d = new Date(t.created_at);
+        const ymd = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        return ymd === date;
+      });
+    }
+    if (type) {
+      data = data.filter(t => t.type === type);
+    }
+    if (status) {
+      data = data.filter(t => t.status === status);
+    }
+
+    const total = res?.pagination?.total ?? data.length;
+
+    const totalTopup = data.filter(t => t.type === 'TOP_UP').reduce((s, t) => s + Math.abs(parseFloat(t.amount || 0)), 0);
+    const totalSpend = data.filter(t => t.type !== 'TOP_UP' && t.type !== 'REFUND').reduce((s, t) => s + Math.abs(parseFloat(t.amount || 0)), 0);
+    const totalRefund = data.filter(t => t.type === 'REFUND').reduce((s, t) => s + Math.abs(parseFloat(t.amount || 0)), 0);
+
+    document.getElementById('t-total').textContent = total;
+    document.getElementById('t-revenue').textContent = Format.money(res?.summary?.today_revenue ?? totalSpend);
+    document.getElementById('t-topup').textContent   = Format.money(res?.summary?.total_topup ?? totalTopup);
+    document.getElementById('t-refund').textContent  = Format.money(res?.summary?.total_refund ?? totalRefund);
+
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">💳</div><div class="empty-state-title">Không có giao dịch nào</div></div></td></tr>`;
+      return;
+    }
+
+    const txColors = { TOP_UP: '#22C55E', BOOKING_PAYMENT: '#2563EB', PARKING_PAYMENT: '#F97316', REFUND: '#8B5CF6' };
+
+    tbody.innerHTML = data.map(t => `
+      <tr>
+        <td><code style="font-size:11px;color:var(--primary)">#${t.id}</code></td>
+        <td>
+          <div style="font-weight:500">${t.user_name || '—'}</div>
+          <div style="font-size:11px;color:var(--text-light)">${t.email || ''}</div>
+        </td>
+        <td>
+          <span class="badge" style="background:${txColors[t.type]}22;color:${txColors[t.type]}">
+            ${Format.txType(t.type)}
+          </span>
+        </td>
+        <td style="font-weight:700;color:${t.type === 'TOP_UP' ? 'var(--success)' : t.type === 'REFUND' ? 'var(--primary)' : 'var(--error)'}">
+          ${t.type === 'TOP_UP' || t.type === 'REFUND' ? '+' : '-'}${Format.money(Math.abs(t.amount))}
+        </td>
+        <td style="font-size:12px;color:var(--text-medium);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.description || ''}">${t.description || '—'}</td>
+        <td style="font-size:12px">${Format.datetime(t.created_at)}</td>
+        <td>${txBadge(t.status)}</td>
+      </tr>
+    `).join('');
+
+    new Pagination({ container: 'tx-pager', total, page, limit: 15, onChange: loadTx }).render();
+  } catch (err) {
+    if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--error);padding:24px">Lỗi: ${err.message}</td></tr>`;
+  }
+}
+</script>
+</body>
+</html>

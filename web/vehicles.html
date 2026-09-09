@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phương tiện — Smart Parking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/admin-layout.js"></script>
+<script>
+(function init() {
+  if (!requireAdmin()) return;
+  const content = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div class="page-title">Phương tiện</div>
+        <div class="page-subtitle">Quản lý phương tiện đăng ký và liên kết thẻ RFID</div>
+      </div>
+      <button class="btn btn-primary" onclick="openAddVehicleModal()">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Thêm phương tiện
+      </button>
+    </div>
+
+    <!-- Vehicles List Card -->
+    <div class="card">
+      <div class="search-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div class="search-input-wrap" style="flex:1;min-width:220px">
+          <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" class="search-input" placeholder="Tìm biển số, chủ xe, RFID UID..." id="v-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchV()">
+        </div>
+        <select class="filter-select" id="v-type" onchange="loadVehicles(1)">
+          <option value="">Tất cả loại xe</option>
+          <option value="CAR">Ô tô</option>
+          <option value="MOTORBIKE">Xe máy</option>
+          <option value="TRUCK">Xe tải</option>
+        </select>
+        <select class="filter-select" id="v-rfid" onchange="loadVehicles(1)">
+          <option value="">Tất cả RFID</option>
+          <option value="yes">Đã gắn RFID</option>
+          <option value="no">Chưa gắn RFID</option>
+        </select>
+        <select class="filter-select" id="v-sort" onchange="loadVehicles(1)">
+          <option value="created_at:desc">Mới nhất</option>
+          <option value="created_at:asc">Cũ nhất</option>
+          <option value="plate_number:asc">Biển số (A-Z)</option>
+          <option value="plate_number:desc">Biển số (Z-A)</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="resetVehicleFilters()" title="Xóa toàn bộ bộ lọc">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          Xóa lọc
+        </button>
+      </div>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead><tr>
+            <th>Biển số</th><th>Chủ xe</th><th>Loại xe</th><th>Tên xe / Màu sắc</th><th>RFID UID</th>
+            <th>Mặc định</th><th>Ngày đăng ký</th><th>Thao tác</th>
+          </tr></thead>
+          <tbody id="vehicle-table">${skeletonRows(7)}</tbody>
+        </table>
+      </div>
+      <div id="vehicle-pager"></div>
+    </div>
+
+    <!-- RFID Cards Panel -->
+    <div class="card" style="margin-top:24px">
+      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center">
+        <span class="card-title">Thẻ RFID đã đăng ký trong hệ thống</span>
+        <button class="btn btn-sm btn-outline" onclick="loadRfid()">Làm mới</button>
+      </div>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead><tr><th>UID Thẻ</th><th>Chủ thẻ</th><th>Biển số liên kết</th><th>Trạng thái</th><th>Đăng ký lúc</th><th>Thao tác</th></tr></thead>
+          <tbody id="rfid-table">${skeletonRows(4)}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Vehicle Detail Modal -->
+    <div id="vehicle-modal" class="modal-overlay">
+      <div class="modal" style="max-width:540px">
+        <div class="modal-header">
+          <span class="modal-title">Chi tiết phương tiện</span>
+          <button class="modal-close" onclick="closeVehicleModal()">✕</button>
+        </div>
+        <div class="modal-body" id="vehicle-modal-body"></div>
+        <div class="modal-footer" style="display:flex;justify-content:space-between;align-items:center">
+          <div id="vehicle-modal-actions"></div>
+          <button class="btn btn-ghost" onclick="closeVehicleModal()">Đóng</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Vehicle Modal -->
+    <div id="add-vehicle-modal" class="modal-overlay">
+      <div class="modal" style="max-width:520px">
+        <div class="modal-header">
+          <span class="modal-title">Thêm phương tiện mới</span>
+          <button class="modal-close" onclick="closeAddVehicleModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="add-vehicle-form" onsubmit="submitAddVehicle(event)">
+            <div class="form-group" style="margin-bottom:14px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Biển số xe *</label>
+              <input type="text" class="input" id="new-v-plate" required placeholder="Ví dụ: 30A-999.88" style="width:100%;font-weight:700;letter-spacing:1px">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+              <div>
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Loại xe *</label>
+                <select class="filter-select" id="new-v-type" style="width:100%;height:38px">
+                  <option value="CAR">Ô tô (CAR)</option>
+                  <option value="MOTORBIKE">Xe máy (MOTORBIKE)</option>
+                  <option value="TRUCK">Xe tải (TRUCK)</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Chủ phương tiện *</label>
+                <select class="filter-select" id="new-v-owner" required style="width:100%;height:38px">
+                  <option value="">Đang tải danh sách...</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+              <div>
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Tên/Hãng xe</label>
+                <input type="text" class="input" id="new-v-name" placeholder="Ví dụ: Honda Civic" style="width:100%">
+              </div>
+              <div>
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Màu sắc</label>
+                <input type="text" class="input" id="new-v-color" placeholder="Ví dụ: Trắng, Đen..." style="width:100%">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:14px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Mã thẻ RFID (nếu có)</label>
+              <input type="text" class="input" id="new-v-rfid" placeholder="Ví dụ: A1B2C3D4" style="width:100%">
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px">
+              <button type="button" class="btn btn-ghost" onclick="closeAddVehicleModal()">Hủy</button>
+              <button type="submit" class="btn btn-primary" id="btn-submit-add-vehicle">Lưu phương tiện</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  `;
+  createAdminPage('vehicles', content, () => {
+    loadVehicles(1);
+    loadRfid();
+    loadUsersDropdown();
+    window.debouncedSearchV = debounce(() => loadVehicles(1), 400);
+  });
+})();
+
+let currentVehicleId = null;
+
+function resetVehicleFilters() {
+  const s = document.getElementById('v-search');
+  const t = document.getElementById('v-type');
+  const r = document.getElementById('v-rfid');
+  const sort = document.getElementById('v-sort');
+  if (s) s.value = '';
+  if (t) t.value = '';
+  if (r) r.value = '';
+  if (sort) sort.value = 'created_at:desc';
+  loadVehicles(1);
+}
+
+async function loadUsersDropdown() {
+  try {
+    const res = await UserAPI.getAll({ limit: 100 });
+    const users = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
+    const select = document.getElementById('new-v-owner');
+    if (!select) return;
+    if (!users.length) {
+      select.innerHTML = '<option value="">Chưa có người dùng</option>';
+      return;
+    }
+    select.innerHTML = users.map(u => `<option value="${u.id}">${u.name} (${u.email || u.phone || '#' + u.id})</option>`).join('');
+  } catch {}
+}
+
+async function loadVehicles(page = 1) {
+  const search = document.getElementById('v-search')?.value || '';
+  const vehicle_type = document.getElementById('v-type')?.value || '';
+  const has_rfid = document.getElementById('v-rfid')?.value || '';
+  const sortVal = document.getElementById('v-sort')?.value || 'created_at:desc';
+  const [sort_by, sort_order] = sortVal.split(':');
+
+  const tbody  = document.getElementById('vehicle-table');
+  if (tbody) tbody.innerHTML = skeletonRows(7);
+
+  try {
+    const params = { page, limit: 15, search, sort_by, sort_order };
+    if (vehicle_type) params.vehicle_type = vehicle_type;
+    if (has_rfid) params.has_rfid = has_rfid;
+
+    const res = await VehicleAPI.getAll(params);
+    const data = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
+    const total = res?.pagination?.total ?? res?.total ?? data.length;
+
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-state-icon">🚗</div><div class="empty-state-title">Không tìm thấy phương tiện nào</div></div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(v => `
+      <tr>
+        <td>
+          <code style="background:var(--bg);padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:1px">${v.plate_number || '—'}</code>
+        </td>
+        <td>
+          <div style="font-weight:500">${v.owner_name || v.user_name || '—'}</div>
+          <div style="font-size:11px;color:var(--text-light)">${v.owner_email || v.email || ''}</div>
+        </td>
+        <td>
+          <span class="badge ${v.vehicle_type === 'CAR' ? 'badge-primary' : v.vehicle_type === 'MOTORBIKE' ? 'badge-success' : 'badge-warning'}">
+            ${Format.vehicleType(v.vehicle_type)}
+          </span>
+        </td>
+        <td style="font-size:12px">
+          ${v.vehicle_name || '—'}${v.color ? ` <span style="color:var(--text-light)">(${v.color})</span>` : ''}
+        </td>
+        <td>
+          ${v.rfid_uid ? `<code style="font-size:11px;background:var(--teal-light);color:var(--teal);padding:2px 8px;border-radius:4px">${v.rfid_uid}</code>` : '<span style="color:var(--text-light);font-size:12px">Chưa gắn</span>'}
+        </td>
+        <td>${v.is_default ? '<span class="badge badge-success">✓ Mặc định</span>' : '—'}</td>
+        <td style="font-size:12px">${Format.date(v.created_at)}</td>
+        <td>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-sm btn-ghost" onclick="viewVehicle(${v.id})">Chi tiết</button>
+            <button class="btn btn-sm btn-error" onclick="deleteVehicleAction(${v.id}, '${v.plate_number}')">Xóa</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+
+    new Pagination({ container: 'vehicle-pager', total, page, limit: 15, onChange: loadVehicles }).render();
+  } catch (err) {
+    if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--error);padding:24px">Lỗi: ${err.message}</td></tr>`;
+  }
+}
+
+async function loadRfid() {
+  const tbody = document.getElementById('rfid-table');
+  if (tbody) tbody.innerHTML = skeletonRows(4);
+  try {
+    const res = await RfidAPI.getAll({ page: 1, limit: 20 });
+    const data = res?.data?.data || res?.data || [];
+
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-light);padding:20px">Chưa có thẻ RFID nào</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(r => `
+      <tr>
+        <td><code style="font-size:12px;background:var(--bg);padding:3px 8px;border-radius:4px;font-weight:600">${r.rfid_uid || '—'}</code></td>
+        <td>${r.user_name || r.owner_name || '—'}</td>
+        <td><code style="font-size:12px;font-weight:600">${r.plate_number || 'Chưa gắn'}</code></td>
+        <td>${r.status === 'ACTIVE' ? '<span class="badge badge-success">Hoạt động</span>' : '<span class="badge badge-error">Vô hiệu</span>'}</td>
+        <td style="font-size:12px">${Format.datetime(r.registered_at || r.created_at)}</td>
+        <td>
+          ${r.status === 'ACTIVE'
+            ? `<button class="btn btn-sm btn-error" onclick="setRfidStatus(${r.id},'DISABLED')">Vô hiệu hóa</button>`
+            : `<button class="btn btn-sm btn-success" onclick="setRfidStatus(${r.id},'ACTIVE')">Kích hoạt</button>`
+          }
+        </td>
+      </tr>
+    `).join('');
+  } catch {}
+}
+
+async function setRfidStatus(id, status) {
+  const ok = await showConfirm({ title: `${status === 'ACTIVE' ? 'Kích hoạt' : 'Vô hiệu hóa'} thẻ RFID`, message: `Xác nhận thay đổi trạng thái thẻ RFID?`, confirmText: 'Xác nhận' });
+  if (!ok) return;
+  try {
+    await RfidAPI.setStatus(id, status);
+    Toast.success('Thành công', `Đã cập nhật trạng thái thẻ RFID`);
+    loadRfid();
+  } catch (e) { Toast.error('Lỗi', e.message); }
+}
+
+async function viewVehicle(id) {
+  currentVehicleId = id;
+  const modal = document.getElementById('vehicle-modal');
+  const body = document.getElementById('vehicle-modal-body');
+  const actions = document.getElementById('vehicle-modal-actions');
+  if (!modal || !body) return;
+  body.innerHTML = `<div class="text-center p-4"><div class="spinner spinner-primary spinner-lg" style="margin:0 auto"></div></div>`;
+  if (actions) actions.innerHTML = '';
+  modal.classList.add('open');
+
+  try {
+    const res = await VehicleAPI.getById(id);
+    const v = res?.data || {};
+
+    body.innerHTML = `
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-light)">
+        <div style="font-size:36px">🚗</div>
+        <div>
+          <div style="font-size:20px;font-weight:700;letter-spacing:1px;font-family:monospace">${v.plate_number || '—'}</div>
+          <div style="font-size:13px;color:var(--text-light);margin-top:2px">${v.vehicle_name || 'Phương tiện'} ${v.color ? `(${v.color})` : ''}</div>
+          <div style="margin-top:6px">
+            <span class="badge ${v.vehicle_type === 'CAR' ? 'badge-primary' : 'badge-success'}">${Format.vehicleType(v.vehicle_type)}</span>
+            ${v.is_default ? '<span class="badge badge-teal" style="margin-left:4px">Mặc định</span>' : ''}
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        ${[
+          ['Chủ sở hữu', v.owner_name || v.user_name || '—'],
+          ['Email chủ xe', v.owner_email || v.email || '—'],
+          ['Điện thoại', v.owner_phone || v.phone || '—'],
+          ['Mã thẻ RFID', v.rfid_uid ? `<code style="background:var(--bg);padding:2px 6px;border-radius:4px">${v.rfid_uid}</code>` : 'Chưa liên kết'],
+          ['Ngày đăng ký', Format.datetime(v.created_at)],
+          ['Trạng thái', v.status === 'ACTIVE' ? '<span class="badge badge-success">Hoạt động</span>' : '<span class="badge badge-gray">Khóa</span>']
+        ].map(([k,val]) => `
+          <div><div style="font-size:11px;color:var(--text-light);margin-bottom:4px">${k}</div><div style="font-size:13px;font-weight:500">${val}</div></div>
+        `).join('')}
+      </div>
+    `;
+
+    if (actions) {
+      actions.innerHTML = `
+        <button class="btn btn-sm btn-error" onclick="deleteVehicleAction(${v.id}, '${v.plate_number}')">
+          Xóa phương tiện
+        </button>
+      `;
+    }
+  } catch (err) {
+    body.innerHTML = `<div style="text-align:center;color:var(--error);padding:20px">Không thể tải thông tin phương tiện: ${err.message}</div>`;
+  }
+}
+
+function closeVehicleModal() {
+  document.getElementById('vehicle-modal')?.classList.remove('open');
+}
+
+function openAddVehicleModal() {
+  document.getElementById('add-vehicle-form')?.reset();
+  loadUsersDropdown();
+  document.getElementById('add-vehicle-modal')?.classList.add('open');
+}
+
+function closeAddVehicleModal() {
+  document.getElementById('add-vehicle-modal')?.classList.remove('open');
+}
+
+async function submitAddVehicle(e) {
+  e.preventDefault();
+  const plate_number = document.getElementById('new-v-plate')?.value.trim();
+  const vehicle_type = document.getElementById('new-v-type')?.value;
+  const user_id = document.getElementById('new-v-owner')?.value;
+  const vehicle_name = document.getElementById('new-v-name')?.value.trim();
+  const color = document.getElementById('new-v-color')?.value.trim();
+  const rfid_uid = document.getElementById('new-v-rfid')?.value.trim() || null;
+
+  if (!plate_number || !user_id) {
+    Toast.error('Lỗi', 'Vui lòng nhập biển số xe và chọn chủ sở hữu');
+    return;
+  }
+
+  const btn = document.getElementById('btn-submit-add-vehicle');
+  if (btn) { btn.disabled = true; btn.textContent = 'Đang lưu...'; }
+
+  try {
+    await VehicleAPI.create({ plate_number, vehicle_type, user_id, vehicle_name, color, rfid_uid });
+    Toast.success('Thành công', `Đã thêm phương tiện ${plate_number}`);
+    closeAddVehicleModal();
+    loadVehicles(1);
+    loadRfid();
+  } catch (err) {
+    Toast.error('Lỗi', err.message || 'Không thể thêm phương tiện');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Lưu phương tiện'; }
+  }
+}
+
+async function deleteVehicleAction(id, plate) {
+  const ok = await showConfirm({
+    title: 'Xóa phương tiện',
+    message: `Xác nhận xóa phương tiện biển số ${plate}? Hành động này không thể hoàn tác.`,
+    confirmText: 'Xóa xe',
+    danger: true
+  });
+  if (!ok) return;
+
+  try {
+    await VehicleAPI.delete(id);
+    Toast.success('Thành công', `Đã xóa phương tiện ${plate}`);
+    closeVehicleModal();
+    loadVehicles(1);
+  } catch (err) {
+    Toast.error('Lỗi', err.message || 'Không thể xóa phương tiện');
+  }
+}
+</script>
+</body>
+</html>

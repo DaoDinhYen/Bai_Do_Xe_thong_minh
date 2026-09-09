@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhật ký hệ thống — Smart Parking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/admin-layout.js"></script>
+<script>
+(function init() {
+  if (!requireAdmin()) return;
+  const content = `
+    <div class="page-header flex justify-between items-center">
+      <div>
+        <div class="page-title">Nhật ký hệ thống</div>
+        <div class="page-subtitle">Theo dõi toàn bộ hoạt động, sự kiện bảo mật và điều khiển thiết bị</div>
+      </div>
+      <button class="btn btn-outline" onclick="loadLogs(1)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Làm mới
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="search-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div class="search-input-wrap" style="flex:1;min-width:220px">
+          <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" class="search-input" placeholder="Tìm mô tả, người dùng, IP, hành động..." id="log-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchL()">
+        </div>
+        <select class="filter-select" id="log-action" onchange="loadLogs(1)">
+          <option value="">Tất cả hành động</option>
+          <optgroup label="Tài khoản & Xác thực">
+            <option value="LOGIN">Đăng nhập (LOGIN)</option>
+            <option value="LOGOUT">Đăng xuất (LOGOUT)</option>
+            <option value="REGISTER">Đăng ký mới (REGISTER)</option>
+          </optgroup>
+          <optgroup label="Bãi xe & Cổng">
+            <option value="VEHICLE_ENTRY">Xe vào bãi (ENTRY)</option>
+            <option value="VEHICLE_EXIT">Xe ra bãi (EXIT)</option>
+            <option value="BARRIER_OPEN">Mở barrier</option>
+            <option value="BARRIER_CLOSE">Đóng barrier</option>
+            <option value="LIGHT_ON">Bật đèn</option>
+            <option value="LIGHT_OFF">Tắt đèn</option>
+          </optgroup>
+          <optgroup label="Thanh toán & Booking">
+            <option value="BOOKING_CREATED">Đặt chỗ mới</option>
+            <option value="BOOKING_CANCELLED">Hủy đặt chỗ</option>
+            <option value="PAYMENT">Thanh toán phí gửi</option>
+            <option value="WALLET_TOPUP">Nạp tiền vào ví</option>
+          </optgroup>
+          <optgroup label="RFID & Thiết bị">
+            <option value="RFID_SCAN">Quẹt thẻ RFID hợp lệ</option>
+            <option value="RFID_INVALID">Thẻ RFID không hợp lệ</option>
+            <option value="DEVICE_ONLINE">Thiết bị Online</option>
+            <option value="DEVICE_OFFLINE">Thiết bị Mất kết nối</option>
+          </optgroup>
+        </select>
+        <input type="date" class="filter-select" id="log-date" onchange="loadLogs(1)" title="Lọc theo ngày">
+        <button class="btn btn-outline btn-sm" onclick="resetLogFilters()" title="Xóa toàn bộ bộ lọc">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          Xóa lọc
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead><tr>
+            <th>Thời gian</th><th>Hành động</th><th>Mô tả sự kiện</th><th>Người thực hiện</th><th>Địa chỉ IP</th><th>Thiết bị ID</th><th>Thao tác</th>
+          </tr></thead>
+          <tbody id="log-table">${skeletonRows(10)}</tbody>
+        </table>
+      </div>
+      <div id="log-pager"></div>
+    </div>
+
+    <!-- Log Detail Modal -->
+    <div id="log-modal" class="modal-overlay">
+      <div class="modal" style="max-width:540px">
+        <div class="modal-header">
+          <span class="modal-title">Chi tiết bản ghi sự kiện</span>
+          <button class="modal-close" onclick="closeLogModal()">✕</button>
+        </div>
+        <div class="modal-body" id="log-modal-body"></div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" onclick="closeLogModal()">Đóng</button>
+        </div>
+      </div>
+    </div>
+  `;
+  createAdminPage('logs', content, () => {
+    loadLogs(1);
+    window.debouncedSearchL = debounce(() => loadLogs(1), 400);
+  });
+})();
+
+let currentLogsCache = [];
+
+function resetLogFilters() {
+  const s = document.getElementById('log-search');
+  const a = document.getElementById('log-action');
+  const d = document.getElementById('log-date');
+  if (s) s.value = '';
+  if (a) a.value = '';
+  if (d) d.value = '';
+  loadLogs(1);
+}
+
+const actionBadge = (action) => {
+  const map = {
+    LOGIN: '#2563EB', LOGOUT: '#64748B', REGISTER: '#8B5CF6',
+    VEHICLE_ENTRY: '#22C55E', VEHICLE_EXIT: '#3B82F6',
+    BARRIER_OPEN: '#10B981', BARRIER_CLOSE: '#EF4444',
+    LIGHT_ON: '#F59E0B', LIGHT_OFF: '#64748B',
+    BOOKING_CREATED: '#F97316', BOOKING_CANCELLED: '#DC2626',
+    PAYMENT: '#059669', WALLET_TOPUP: '#16A34A',
+    RFID_SCAN: '#06B6D4', RFID_INVALID: '#E11D48',
+    DEVICE_ONLINE: '#22C55E', DEVICE_OFFLINE: '#EF4444'
+  };
+  const bg = map[action] || '#475569';
+  return `<span class="badge" style="background:${bg}1A;color:${bg};border:1px solid ${bg}33;font-weight:600">${action || 'SYSTEM'}</span>`;
+};
+
+async function loadLogs(page = 1) {
+  const search = document.getElementById('log-search')?.value || '';
+  const action = document.getElementById('log-action')?.value || '';
+  const date   = document.getElementById('log-date')?.value || '';
+  const tbody  = document.getElementById('log-table');
+  if (tbody) tbody.innerHTML = skeletonRows(10);
+
+  try {
+    const params = { page, limit: 20, search, action };
+    if (date) params.date = date;
+    const res = await LogAPI.getAll(params);
+    let data = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
+
+    if (date) {
+      data = data.filter(l => {
+        if (!l.created_at) return false;
+        const d = new Date(l.created_at);
+        const ymd = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        return ymd === date;
+      });
+    }
+    if (action) {
+      data = data.filter(l => l.action === action);
+    }
+
+    const total = res?.pagination?.total ?? data.length;
+    currentLogsCache = data;
+
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-title">Không tìm thấy nhật ký sự kiện nào</div></div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(log => `
+      <tr>
+        <td style="font-size:12px;color:var(--text-light);white-space:nowrap">${Format.datetime(log.created_at)}</td>
+        <td>${actionBadge(log.action)}</td>
+        <td style="font-size:13px;max-width:280px;font-weight:500" title="${log.description || ''}">
+          ${log.description || '—'}
+        </td>
+        <td style="font-size:12px">
+          ${log.user_name ? `<strong>${log.user_name}</strong>` : (log.user_id ? `User #${log.user_id}` : '<span style="color:var(--text-light)">Hệ thống</span>')}
+        </td>
+        <td style="font-size:11px;font-family:monospace;color:var(--text-light)">${log.ip_address || '—'}</td>
+        <td style="font-size:12px">${log.device_id ? `<code style="font-size:11px">${log.device_id}</code>` : '—'}</td>
+        <td>
+          <button class="btn btn-sm btn-ghost" onclick="viewLogDetail(${log.id})">Chi tiết</button>
+        </td>
+      </tr>
+    `).join('');
+
+    new Pagination({ container: 'log-pager', total, page, limit: 20, onChange: loadLogs }).render();
+  } catch (err) {
+    if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--error);padding:24px">Lỗi: ${err.message}</td></tr>`;
+  }
+}
+
+function viewLogDetail(id) {
+  const log = currentLogsCache.find(x => x.id === id);
+  if (!log) return;
+
+  const modal = document.getElementById('log-modal');
+  const body = document.getElementById('log-modal-body');
+  if (!modal || !body) return;
+
+  body.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border-light)">
+      <div style="font-size:28px">📋</div>
+      <div>
+        <div style="font-size:16px;font-weight:700">${log.action || 'SỰ KIỆN HỆ THỐNG'}</div>
+        <div style="font-size:12px;color:var(--text-light)">Thời gian ghi nhận: ${Format.datetime(log.created_at)}</div>
+      </div>
+      <div style="margin-left:auto">${actionBadge(log.action)}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+      ${[
+        ['Người thực hiện', log.user_name || (log.user_id ? `User ID #${log.user_id}` : 'Hệ thống tự động')],
+        ['Địa chỉ IP', log.ip_address || '—'],
+        ['Thiết bị liên quan', log.device_id ? `<code>${log.device_id}</code>` : 'Không có']
+      ].map(([k,v]) => `
+        <div><div style="font-size:11px;color:var(--text-light);margin-bottom:4px">${k}</div><div style="font-size:13px;font-weight:500">${v}</div></div>
+      `).join('')}
+    </div>
+    <div style="background:var(--bg);border-radius:8px;padding:14px">
+      <div style="font-size:12px;color:var(--text-light);margin-bottom:6px">Nội dung / Mô tả chi tiết:</div>
+      <div style="font-size:13px;line-height:1.5;color:var(--text-dark);white-space:pre-wrap">${log.description || 'Không có mô tả chi tiết'}</div>
+    </div>
+  `;
+  modal.classList.add('open');
+}
+
+function closeLogModal() {
+  document.getElementById('log-modal')?.classList.remove('open');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking — Smart Parking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/admin-layout.js"></script>
+<script>
+(function init() {
+  if (!requireAdmin()) return;
+  const content = `
+    <div class="page-header flex justify-between items-center">
+      <div>
+        <div class="page-title">Quản lý Booking</div>
+        <div class="page-subtitle">Danh sách đặt chỗ trước và trạng thái sử dụng</div>
+      </div>
+      <button class="btn btn-outline" onclick="loadBookings(1)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Làm mới
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px" id="booking-stats">
+      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--text-dark)" id="bs-total">—</div><div style="font-size:12px;color:var(--text-light)">Tổng booking</div></div>
+      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--primary)" id="bs-confirmed">—</div><div style="font-size:12px;color:var(--text-light)">Đã xác nhận</div></div>
+      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--success)" id="bs-active">—</div><div style="font-size:12px;color:var(--text-light)">Đang sử dụng</div></div>
+      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--error)" id="bs-cancelled">—</div><div style="font-size:12px;color:var(--text-light)">Đã hủy / Hết hạn</div></div>
+    </div>
+
+    <div class="card">
+      <div class="search-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div class="search-input-wrap" style="flex:1;min-width:220px">
+          <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" class="search-input" placeholder="Tìm theo mã booking, biển số, tên khách, chỗ..." id="b-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearch()">
+        </div>
+        <select class="filter-select" id="b-status" onchange="loadBookings(1)">
+          <option value="">Tất cả trạng thái</option>
+          <option value="CONFIRMED">Đã xác nhận (CONFIRMED)</option>
+          <option value="ACTIVE">Đang sử dụng (ACTIVE)</option>
+          <option value="COMPLETED">Hoàn thành (COMPLETED)</option>
+          <option value="CANCELLED">Đã hủy (CANCELLED)</option>
+          <option value="EXPIRED">Hết hạn (EXPIRED)</option>
+        </select>
+        <select class="filter-select" id="b-sort" onchange="loadBookings(1)">
+          <option value="created_at:desc">Mới tạo nhất</option>
+          <option value="created_at:asc">Cũ nhất</option>
+          <option value="start_time:asc">Giờ vào sớm nhất</option>
+          <option value="total_price:desc">Phí cao nhất</option>
+        </select>
+        <input type="date" class="filter-select" id="b-date" onchange="loadBookings(1)" title="Lọc theo ngày">
+        <button class="btn btn-outline btn-sm" onclick="resetBookingFilters()" title="Xóa toàn bộ bộ lọc">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          Xóa lọc
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead><tr>
+            <th>Mã</th><th>Người dùng</th><th>Biển số</th><th>Chỗ đỗ</th>
+            <th>Thời gian dự kiến</th><th>Thời lượng</th><th>Tổng phí</th><th>Trạng thái</th><th>Thanh toán</th><th>Thao tác</th>
+          </tr></thead>
+          <tbody id="booking-table">${skeletonRows(5)}</tbody>
+        </table>
+      </div>
+      <div id="booking-pager"></div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="booking-modal" class="modal-overlay">
+      <div class="modal" style="max-width:540px">
+        <div class="modal-header">
+          <span class="modal-title">Chi tiết Booking</span>
+          <button class="modal-close" onclick="closeModal('booking-modal')">✕</button>
+        </div>
+        <div class="modal-body" id="booking-modal-body"></div>
+        <div class="modal-footer" style="display:flex;justify-content:space-between;align-items:center">
+          <div id="booking-modal-actions">
+            <button class="btn btn-error" id="cancel-booking-btn" style="display:none" onclick="cancelBooking()">Hủy booking</button>
+          </div>
+          <button class="btn btn-ghost" onclick="closeModal('booking-modal')">Đóng</button>
+        </div>
+      </div>
+    </div>
+  `;
+  createAdminPage('bookings', content, () => {
+    loadBookings(1);
+    window.debouncedSearch = debounce(() => loadBookings(1), 400);
+  });
+})();
+
+let currentPage = 1, currentBookingId = null;
+
+function resetBookingFilters() {
+  const s = document.getElementById('b-search');
+  const st = document.getElementById('b-status');
+  const sort = document.getElementById('b-sort');
+  const d = document.getElementById('b-date');
+  if (s) s.value = '';
+  if (st) st.value = '';
+  if (sort) sort.value = 'created_at:desc';
+  if (d) d.value = '';
+  loadBookings(1);
+}
+
+async function loadBookings(page = 1) {
+  currentPage = page;
+  const search = document.getElementById('b-search')?.value.trim() || '';
+  const status = document.getElementById('b-status')?.value || '';
+  const date   = document.getElementById('b-date')?.value || '';
+  const [sort_by, sort_order] = (document.getElementById('b-sort')?.value || 'created_at:desc').split(':');
+
+  const tbody = document.getElementById('booking-table');
+  if (tbody) tbody.innerHTML = skeletonRows(5);
+
+  try {
+    const params = { page, limit: 15, search, status, sort_by, sort_order };
+    if (date) params.date = date;
+
+    const res = await BookingAPI.getAll(params);
+    let data = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
+
+    // Strict client-side check
+    if (status) {
+      data = data.filter(b => b.status === status);
+    }
+    if (date) {
+      const toYMD = (ts) => {
+        if (!ts) return '';
+        const d = new Date(ts);
+        if (isNaN(d.getTime())) return '';
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      };
+      data = data.filter(b => toYMD(b.start_time) === date || toYMD(b.end_time) === date || toYMD(b.created_at) === date);
+    }
+
+    const total = res?.pagination?.total ?? data.length;
+
+    // Stats
+    const confirmedCount = data.filter(b => b.status === 'CONFIRMED').length;
+    const activeCount    = data.filter(b => b.status === 'ACTIVE').length;
+    const cancelledCount = data.filter(b => b.status === 'CANCELLED' || b.status === 'EXPIRED').length;
+
+    if (document.getElementById('bs-total')) document.getElementById('bs-total').textContent = total;
+    if (document.getElementById('bs-confirmed')) document.getElementById('bs-confirmed').textContent = confirmedCount;
+    if (document.getElementById('bs-active')) document.getElementById('bs-active').textContent = activeCount;
+    if (document.getElementById('bs-cancelled')) document.getElementById('bs-cancelled').textContent = cancelledCount;
+
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><div class="empty-state-icon">📅</div><div class="empty-state-title">Không tìm thấy booking nào</div></div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(b => `
+      <tr>
+        <td><code style="font-size:11px;color:var(--primary);font-weight:700">${b.booking_code || '#' + b.id}</code></td>
+        <td>
+          <div style="font-weight:500">${b.user_name || '—'}</div>
+          <div style="font-size:11px;color:var(--text-light)">${b.user_email || b.email || ''}</div>
+        </td>
+        <td><code style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:12px;font-weight:600">${b.plate_number || '—'}</code></td>
+        <td><span class="badge badge-primary">${b.slot_code || b.slot_name || '—'}</span></td>
+        <td>
+          <div style="font-size:12px;font-weight:500">${Format.datetime(b.start_time)}</div>
+          <div style="font-size:11px;color:var(--text-light)">đến ${Format.datetime(b.end_time)}</div>
+        </td>
+        <td style="font-size:12px">${b.duration ? `${b.duration} giờ` : '—'}</td>
+        <td style="font-weight:600;color:var(--success)">${Format.money(b.total_price)}</td>
+        <td>${bookingBadge(b.status)}</td>
+        <td><span class="badge badge-success">✓ Đã thanh toán</span></td>
+        <td>
+          <button class="btn btn-sm btn-ghost" onclick="viewBooking(${b.id})">Chi tiết</button>
+        </td>
+      </tr>
+    `).join('');
+
+    new Pagination({ container: 'booking-pager', total, page, limit: 10, onChange: loadBookings }).render();
+  } catch (err) {
+    if (tbody) tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--error);padding:24px">Lỗi: ${err.message}</td></tr>`;
+  }
+}
+
+async function viewBooking(id) {
+  currentBookingId = id;
+  const modal = document.getElementById('booking-modal');
+  const body = document.getElementById('booking-modal-body');
+  if (!modal || !body) return;
+  body.innerHTML = `<div class="text-center p-4"><div class="spinner spinner-primary spinner-lg" style="margin:auto"></div></div>`;
+  modal.classList.add('open');
+
+  try {
+    const res = await BookingAPI.getById(id);
+    const b = res?.data || {};
+    const cancelBtn = document.getElementById('cancel-booking-btn');
+    if (cancelBtn) {
+      cancelBtn.style.display = ['CONFIRMED', 'PENDING'].includes(b.status) ? 'inline-flex' : 'none';
+    }
+
+    body.innerHTML = `
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border-light)">
+        <div>
+          <div style="font-size:18px;font-weight:700;color:var(--primary)">${b.booking_code || '#' + b.id}</div>
+          <div style="font-size:12px;color:var(--text-light)">Tạo lúc: ${Format.datetime(b.created_at)}</div>
+        </div>
+        <div style="margin-left:auto">
+          ${bookingBadge(b.status)}
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        ${[
+          ['Người dùng', b.user_name || '—'],
+          ['Email', b.user_email || b.email || '—'],
+          ['Biển số xe', b.plate_number ? `<code>${b.plate_number}</code>` : '—'],
+          ['Loại xe', Format.vehicleType(b.vehicle_type)],
+          ['Chỗ đỗ', `<strong>${b.slot_code || b.slot_name || '—'}</strong> (${b.zone ? 'Khu ' + b.zone : 'Khu A'})`],
+          ['Thời lượng', b.duration ? `${b.duration} giờ` : '—'],
+          ['Thời gian vào', Format.datetime(b.start_time)],
+          ['Thời gian ra (dự kiến)', Format.datetime(b.end_time)],
+          ['Đơn giá / giờ', Format.money(b.unit_price)],
+          ['Tổng chi phí', `<span style="font-size:15px;font-weight:700;color:var(--success)">${Format.money(b.total_price)}</span>`],
+          ['Thanh toán', '<span class="badge badge-success">✓ Đã trừ ví</span>']
+        ].map(([k, v]) => `
+          <div>
+            <div style="font-size:11px;color:var(--text-light);margin-bottom:4px">${k}</div>
+            <div style="font-size:13px">${v}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch {
+    body.innerHTML = `<div class="text-center" style="color:var(--error);padding:20px">Không thể tải chi tiết booking</div>`;
+  }
+}
+
+async function cancelBooking() {
+  if (!currentBookingId) return;
+  const ok = await showConfirm({
+    title: 'Hủy booking',
+    message: 'Xác nhận hủy booking này? Số tiền đã thanh toán sẽ được hoàn trả đầy đủ vào ví người dùng.',
+    confirmText: 'Hủy booking',
+    danger: true
+  });
+  if (!ok) return;
+
+  try {
+    await BookingAPI.cancel(currentBookingId);
+    closeModal('booking-modal');
+    Toast.success('Thành công', 'Đã hủy booking và hoàn tiền vào ví người dùng');
+    loadBookings(currentPage);
+  } catch (e) {
+    Toast.error('Lỗi', e.message || 'Không thể hủy booking');
+  }
+}
+
+function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
+</script>
+</body>
+</html>

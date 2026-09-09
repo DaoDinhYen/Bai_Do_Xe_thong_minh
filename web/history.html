@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch sử gửi xe — Smart Parking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/admin-layout.js"></script>
+<script>
+(function init() {
+  if (!requireAdmin()) return;
+  const content = `
+    <div class="page-header flex justify-between items-center">
+      <div>
+        <div class="page-title">Lịch sử gửi xe</div>
+        <div class="page-subtitle">Nhật ký chi tiết các lượt phương tiện ra vào bãi xe</div>
+      </div>
+      <button class="btn btn-outline" onclick="loadHistory(1)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Làm mới
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="search-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div class="search-input-wrap" style="flex:1;min-width:220px">
+          <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" class="search-input" placeholder="Tìm biển số xe, tên khách..." id="h-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchH()">
+        </div>
+        <select class="filter-select" id="h-type" onchange="loadHistory(1)">
+          <option value="">Tất cả loại khách</option>
+          <option value="registered">Thành viên có tài khoản</option>
+          <option value="guest">Khách vãng lai (Guest)</option>
+        </select>
+        <select class="filter-select" id="h-status" onchange="loadHistory(1)">
+          <option value="">Tất cả trạng thái</option>
+          <option value="ACTIVE">Đang đỗ trong bãi</option>
+          <option value="COMPLETED">Đã hoàn thành lượt gửi</option>
+        </select>
+        <input type="date" class="filter-select" id="h-date" onchange="loadHistory(1)" title="Lọc theo ngày">
+        <button class="btn btn-outline btn-sm" onclick="resetHistoryFilters()" title="Xóa bộ lọc">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          Xóa lọc
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead><tr>
+            <th>Biển số xe</th><th>Khách hàng</th><th>Chỗ đỗ</th><th>Thời gian vào</th><th>Thời gian ra</th>
+            <th>Thời lượng</th><th>Phí gửi</th><th>Xác thực</th><th>Trạng thái</th><th>Thao tác</th>
+          </tr></thead>
+          <tbody id="history-table">${skeletonRows(7)}</tbody>
+        </table>
+      </div>
+      <div id="history-pager"></div>
+    </div>
+
+    <!-- History Detail Modal -->
+    <div id="history-modal" class="modal-overlay">
+      <div class="modal" style="max-width:520px">
+        <div class="modal-header">
+          <span class="modal-title">Chi tiết phiên gửi xe</span>
+          <button class="modal-close" onclick="closeHistoryModal()">✕</button>
+        </div>
+        <div class="modal-body" id="history-modal-body"></div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" onclick="closeHistoryModal()">Đóng</button>
+        </div>
+      </div>
+    </div>
+  `;
+  createAdminPage('history', content, () => {
+    loadHistory(1);
+    window.debouncedSearchH = debounce(() => loadHistory(1), 400);
+  });
+})();
+
+let currentHistoryCache = [];
+
+function resetHistoryFilters() {
+  const s = document.getElementById('h-search');
+  const t = document.getElementById('h-type');
+  const st = document.getElementById('h-status');
+  const d = document.getElementById('h-date');
+  if (s) s.value = '';
+  if (t) t.value = '';
+  if (st) st.value = '';
+  if (d) d.value = '';
+  loadHistory(1);
+}
+
+async function loadHistory(page = 1) {
+  const search = document.getElementById('h-search')?.value.trim() || '';
+  const type   = document.getElementById('h-type')?.value || '';
+  const status = document.getElementById('h-status')?.value || '';
+  const date   = document.getElementById('h-date')?.value || '';
+
+  const tbody = document.getElementById('history-table');
+  if (tbody) tbody.innerHTML = skeletonRows(7);
+
+  try {
+    const params = { page: 1, limit: 100 };
+    if (search) params.search = search;
+    if (status) params.status = status;
+    if (date) params.date = date;
+
+    let registeredData = [];
+    let guestData = [];
+
+    const fetches = [];
+    if (!type || type === 'registered') {
+      fetches.push(
+        HistoryAPI.getAll(params).then(res => {
+          registeredData = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
+        }).catch(() => {})
+      );
+    }
+    if (!type || type === 'guest') {
+      fetches.push(
+        HistoryAPI.getGuestSessions(params).then(res => {
+          guestData = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
+        }).catch(() => {})
+      );
+    }
+    await Promise.allSettled(fetches);
+
+    let combined = [];
+    if (!type || type === 'registered') {
+      combined.push(...registeredData.map(h => ({
+        ...h,
+        _type: 'registered',
+        plate_number: h.plate_number,
+        slot_code: h.slot_code || h.slot_name,
+        entry_time: h.entry_time || h.start_time,
+        exit_time: h.exit_time || h.end_time
+      })));
+    }
+    if (!type || type === 'guest') {
+      combined.push(...guestData.map(g => ({
+        ...g,
+        _type: 'guest',
+        plate_number: g.license_plate || g.plate_number,
+        slot_code: g.parking_slot || g.slot_code,
+        slot_name: g.parking_slot || g.slot_code,
+        entry_time: g.entry_time,
+        exit_time: g.exit_time
+      })));
+    }
+
+    const toYMD = (val) => {
+      if (!val) return '';
+      const d = new Date(val);
+      if (isNaN(d.getTime())) return '';
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    };
+
+    // Strict Client-Side Filter Layer for 100% accuracy
+    let filtered = combined.filter(h => {
+      // 1. Status filter
+      const isParking = h.status === 'ACTIVE' || (!h.exit_time && !h.end_time);
+      if (status === 'ACTIVE' && !isParking) return false;
+      if (status === 'COMPLETED' && isParking) return false;
+
+      // 2. Date filter (exact match on entry date or exit date)
+      if (date) {
+        const inYMD = toYMD(h.entry_time);
+        const outYMD = toYMD(h.exit_time);
+        if (inYMD !== date && outYMD !== date) return false;
+      }
+
+      // 3. Search filter
+      if (search) {
+        const s = search.toLowerCase();
+        const pMatch = (h.plate_number || '').toLowerCase().includes(s);
+        const uMatch = (h.user_name || '').toLowerCase().includes(s);
+        const sMatch = (h.slot_code || '').toLowerCase().includes(s);
+        const rMatch = (h.rfid_uid || '').toLowerCase().includes(s);
+        if (!pMatch && !uMatch && !sMatch && !rMatch) return false;
+      }
+
+      return true;
+    });
+
+    // Sort by entry_time descending
+    filtered.sort((a, b) => new Date(b.entry_time || 0) - new Date(a.entry_time || 0));
+
+    currentHistoryCache = filtered;
+
+    if (!tbody) return;
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><div class="empty-state-icon">🚗</div><div class="empty-state-title">Không tìm thấy lượt gửi xe nào phù hợp</div></div></td></tr>`;
+      const pagerEl = document.getElementById('history-pager');
+      if (pagerEl) pagerEl.innerHTML = '';
+      return;
+    }
+
+    // Pagination
+    const limit = 15;
+    const total = filtered.length;
+    const totalPages = Math.ceil(total / limit);
+    const currPage = Math.min(page, totalPages) || 1;
+    const paged = filtered.slice((currPage - 1) * limit, currPage * limit);
+
+    tbody.innerHTML = paged.map((h, idx) => {
+      const globalIdx = (currPage - 1) * limit + idx;
+      const isGuest = h._type === 'guest';
+      const entryTime  = h.entry_time;
+      const exitTime   = h.exit_time;
+      const duration   = h.duration ?? h.actual_minutes ?? h.duration_minutes;
+      const slotText   = h.slot_code || h.parking_slot || '—';
+      const feeVal     = h.fee ?? h.amount ?? h.actual_fee ?? h.total_fee ?? 0;
+      const isParking  = h.status === 'ACTIVE' || !exitTime;
+
+      return `
+        <tr>
+          <td><code style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:12px;font-weight:700;letter-spacing:1px">${h.plate_number || '—'}</code></td>
+          <td>${isGuest ? '<span class="badge badge-purple">Khách vãng lai</span>' : `<span class="badge badge-primary">${h.user_name || 'Thành viên'}</span>`}</td>
+          <td><strong style="color:var(--primary)">${slotText}</strong></td>
+          <td style="font-size:12px">${Format.datetime(entryTime)}</td>
+          <td style="font-size:12px">${exitTime ? Format.datetime(exitTime) : '<span class="badge badge-success">Đang trong bãi</span>'}</td>
+          <td>${duration ? Format.duration(duration) : '—'}</td>
+          <td style="font-weight:600;color:var(--success)">${Format.money(feeVal)}</td>
+          <td>
+            <div style="display:flex;gap:4px">
+              ${h.rfid_uid ? `<span class="badge badge-teal">RFID</span>` : ''}
+              ${h.plate_number ? `<span class="badge badge-primary">ANPR</span>` : ''}
+            </div>
+          </td>
+          <td>${isParking ? '<span class="badge badge-success">Đang gửi</span>' : '<span class="badge badge-gray">Hoàn thành</span>'}</td>
+          <td>
+            <button class="btn btn-sm btn-ghost" onclick="viewHistoryDetail(${globalIdx})">Chi tiết</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    new Pagination({ container: 'history-pager', total, page: currPage, limit, onChange: loadHistory }).render();
+  } catch (err) {
+    if (tbody) tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--error);padding:24px">Lỗi tải dữ liệu: ${err.message}</td></tr>`;
+  }
+}
+
+function viewHistoryDetail(idx) {
+  const h = currentHistoryCache[idx];
+  if (!h) return;
+
+  const modal = document.getElementById('history-modal');
+  const body = document.getElementById('history-modal-body');
+  if (!modal || !body) return;
+
+  const isGuest = h._type === 'guest';
+  const entryTime  = h.entry_time;
+  const exitTime   = h.exit_time;
+  const duration   = h.duration ?? h.actual_minutes ?? h.duration_minutes;
+  const slotText   = h.slot_code || h.parking_slot || '—';
+  const feeVal     = h.fee ?? h.amount ?? h.actual_fee ?? h.total_fee ?? 0;
+  const isParking  = h.status === 'ACTIVE' || !exitTime;
+
+  body.innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border-light)">
+      <div style="font-size:32px">🚗</div>
+      <div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:1px;font-family:monospace">${h.plate_number || '—'}</div>
+        <div style="font-size:12px;color:var(--text-light);margin-top:2px">Chỗ đỗ: <strong>${slotText}</strong></div>
+      </div>
+      <div style="margin-left:auto">
+        ${isParking ? '<span class="badge badge-success">Đang trong bãi</span>' : '<span class="badge badge-gray">Đã rời bãi</span>'}
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      ${[
+        ['Khách hàng', isGuest ? 'Khách vãng lai' : (h.user_name || 'Thành viên')],
+        ['Loại xe', Format.vehicleType(h.vehicle_type)],
+        ['Giờ vào bãi', Format.datetime(entryTime)],
+        ['Giờ ra bãi', exitTime ? Format.datetime(exitTime) : 'Chưa lấy xe'],
+        ['Thời lượng đỗ', duration ? Format.duration(duration) : 'Đang tính...'],
+        ['Phương thức xác thực', h.rfid_uid ? `Thẻ RFID (${h.rfid_uid})` : 'Nhận diện biển số (ANPR)'],
+        ['Tổng phí gửi', `<strong style="font-size:15px;color:var(--success)">${Format.money(feeVal)}</strong>`],
+        ['Trạng thái thanh toán', exitTime ? '<span class="badge badge-success">✓ Đã thanh toán</span>' : '<span class="badge badge-warning">Chưa thanh toán</span>']
+      ].map(([k, v]) => `
+        <div><div style="font-size:11px;color:var(--text-light);margin-bottom:4px">${k}</div><div style="font-size:13px;font-weight:500">${v}</div></div>
+      `).join('')}
+    </div>
+  `;
+  modal.classList.add('open');
+}
+
+function closeHistoryModal() {
+  document.getElementById('history-modal')?.classList.remove('open');
+}
+</script>
+</body>
+</html>

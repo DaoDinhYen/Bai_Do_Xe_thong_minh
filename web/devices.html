@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiết bị IoT — Smart Parking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    .device-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .device-card {
+      background: white; border-radius: 14px; border: 1px solid var(--border);
+      padding: 20px; box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+    .device-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .device-card.offline { opacity: 0.85; }
+    .device-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .device-icon { font-size: 28px; }
+    .device-name { font-size: 15px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px; }
+    .device-id   { font-size: 11px; color: var(--text-light); font-family: monospace; }
+    .device-info { display: flex; flex-direction: column; gap: 6px; }
+    .device-row  { display: flex; justify-content: space-between; font-size: 12px; }
+    .device-row-label { color: var(--text-light); }
+    .device-row-val   { color: var(--text-dark); font-weight: 500; }
+  </style>
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/admin-layout.js"></script>
+<script>
+(function init() {
+  if (!requireAdmin()) return;
+  const content = `
+    <div class="page-header flex justify-between items-center">
+      <div><div class="page-title">Thiết bị IoT</div><div class="page-subtitle">Giám sát trạng thái vi điều khiển ESP32, cảm biến và cơ cấu chấp hành</div></div>
+      <div style="display:flex;gap:8px">
+        <a href="control.html" class="btn btn-primary">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
+          Điều khiển thiết bị
+        </a>
+        <button class="btn btn-outline" onclick="loadDevices()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Làm mới
+        </button>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
+      <div class="card card-body text-center">
+        <div style="font-size:26px;font-weight:700;color:var(--text-dark)" id="dev-total">—</div>
+        <div style="font-size:12px;color:var(--text-light)">Tổng thiết bị</div>
+      </div>
+      <div class="card card-body text-center">
+        <div style="font-size:26px;font-weight:700;color:var(--success)" id="dev-online">—</div>
+        <div style="font-size:12px;color:var(--text-light)">Đang kết nối (Online)</div>
+      </div>
+      <div class="card card-body text-center">
+        <div style="font-size:26px;font-weight:700;color:var(--error)" id="dev-offline">—</div>
+        <div style="font-size:12px;color:var(--text-light)">Mất kết nối (Offline)</div>
+      </div>
+      <div class="card card-body text-center">
+        <div style="font-size:26px;font-weight:700;color:var(--primary)" id="dev-sensors">—</div>
+        <div style="font-size:12px;color:var(--text-light)">Cảm biến hồng ngoại & RFID</div>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card" style="padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div class="search-input-wrap" style="flex:1;min-width:200px">
+        <svg class="search-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" class="search-input" placeholder="Tìm tên thiết bị, mã thiết bị..." id="dev-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="renderDeviceGrid()">
+      </div>
+      <select class="filter-select" id="dev-status-filter" onchange="renderDeviceGrid()" style="height:36px">
+        <option value="">Tất cả trạng thái</option>
+        <option value="ONLINE">Đang Online</option>
+        <option value="OFFLINE">Đang Offline</option>
+      </select>
+      <button class="btn btn-outline btn-sm" onclick="resetDeviceFilters()">Xóa lọc</button>
+    </div>
+
+    <!-- Device Cards -->
+    <div class="device-grid stagger-children" id="device-grid">
+      ${[1,2,3,4].map(() => `<div class="device-card"><div class="skeleton" style="height:120px"></div></div>`).join('')}
+    </div>
+
+    <!-- Device Logs -->
+    <div class="card mt-4" style="margin-top:24px">
+      <div class="card-header"><span class="card-title">Nhật ký hoạt động thiết bị</span></div>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead><tr><th>Thời gian</th><th>Thiết bị</th><th>Sự kiện</th><th>Dữ liệu</th><th>Trạng thái</th></tr></thead>
+          <tbody id="dev-logs">${skeletonRows(5)}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  createAdminPage('parking-devices', content, () => {
+    loadDevices();
+    setInterval(loadDevices, 15000);
+  });
+})();
+
+const DEVICE_DEFS = [
+  { key: 'ESP32_1',      name: 'ESP32 #1',    icon: '🖥️', role: 'IR Slot Sensors (A01–A06)' },
+  { key: 'ESP32_2',      name: 'ESP32 #2',    icon: '🖥️', role: 'Gate Control (RFID + Barrier)' },
+  { key: 'CAM_IN',       name: 'Camera IN',   icon: '📷', role: 'ANPR Camera — Lối vào' },
+  { key: 'CAM_OUT',      name: 'Camera OUT',  icon: '📷', role: 'ANPR Camera — Lối ra' },
+  { key: 'RFID_IN',      name: 'RFID Reader IN',  icon: '📡', role: 'RC522 RFID tại cổng vào' },
+  { key: 'RFID_OUT',     name: 'RFID Reader OUT', icon: '📡', role: 'RC522 RFID tại cổng ra' },
+  { key: 'IR_IN',        name: 'IR Sensor IN',    icon: '🔦', role: 'Cảm biến hồng ngoại cổng vào' },
+  { key: 'IR_OUT',       name: 'IR Sensor OUT',   icon: '🔦', role: 'Cảm biến hồng ngoại cổng ra' },
+  { key: 'SERVO_IN',     name: 'Servo Barrier IN',  icon: '⚙️', role: 'Motor barrier cổng vào' },
+  { key: 'SERVO_OUT',    name: 'Servo Barrier OUT', icon: '⚙️', role: 'Motor barrier cổng ra' },
+  { key: 'RELAY_LIGHT',  name: 'Relay Đèn',         icon: '💡', role: 'Relay điều khiển đèn bãi xe' },
+];
+
+let rawDevicesList = [];
+
+function resetDeviceFilters() {
+  const s = document.getElementById('dev-search');
+  const st = document.getElementById('dev-status-filter');
+  if (s) s.value = '';
+  if (st) st.value = '';
+  renderDeviceGrid();
+}
+
+async function loadDevices() {
+  try {
+    const res = await DeviceAPI.getAll();
+    rawDevicesList = res?.data || [];
+
+    const online = rawDevicesList.filter(d => d.status === 'ONLINE').length;
+    document.getElementById('dev-total').textContent = DEVICE_DEFS.length;
+    document.getElementById('dev-online').textContent = online;
+    document.getElementById('dev-offline').textContent = Math.max(0, DEVICE_DEFS.length - online);
+    document.getElementById('dev-sensors').textContent = DEVICE_DEFS.filter(d => d.key.startsWith('IR') || d.key.startsWith('RFID')).length;
+
+    renderDeviceGrid();
+
+    // Load device logs
+    const logsRes = await DeviceAPI.getAllLogs();
+    const logs = logsRes?.data?.slice(0, 15) || [];
+    const tbody = document.getElementById('dev-logs');
+    if (tbody) {
+      tbody.innerHTML = logs.length ? logs.map(l => `
+        <tr>
+          <td style="font-size:12px">${Format.datetime(l.created_at)}</td>
+          <td><strong>${l.device_name || l.device_code || '—'}</strong></td>
+          <td><span class="badge badge-primary">${l.event_type || l.action || '—'}</span></td>
+          <td style="max-width:220px"><code style="font-size:11px;color:var(--text-medium)">${JSON.stringify(l.data || {}).slice(0, 70)}</code></td>
+          <td>${l.status === 'SUCCESS' ? '<span class="badge badge-success">Thành công</span>' : '<span class="badge badge-error">Lỗi</span>'}</td>
+        </tr>
+      `).join('') : `<tr><td colspan="5" class="empty-state">Chưa có nhật ký thiết bị</td></tr>`;
+    }
+  } catch (err) {
+    Toast.error('Lỗi', 'Không thể tải dữ liệu thiết bị: ' + err.message);
+  }
+}
+
+function renderDeviceGrid() {
+  const search = document.getElementById('dev-search')?.value.trim().toLowerCase() || '';
+  const statusFilter = document.getElementById('dev-status-filter')?.value || '';
+
+  const grid = document.getElementById('device-grid');
+  if (!grid) return;
+
+  let defs = DEVICE_DEFS;
+  if (search) {
+    defs = defs.filter(d => d.name.toLowerCase().includes(search) || d.key.toLowerCase().includes(search) || d.role.toLowerCase().includes(search));
+  }
+
+  const renderedItems = defs.map(def => {
+    const dev = rawDevicesList.find(d => d.device_code === def.key || d.device_name?.includes(def.name.replace(' #', ' ').split(' ')[1] || ''));
+    const online = dev?.status === 'ONLINE';
+    return { def, dev, online };
+  }).filter(item => {
+    if (!statusFilter) return true;
+    if (statusFilter === 'ONLINE') return item.online;
+    if (statusFilter === 'OFFLINE') return !item.online;
+    return true;
+  });
+
+  if (!renderedItems.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;padding:30px;text-align:center;color:var(--text-light)">Không tìm thấy thiết bị phù hợp</div>`;
+    return;
+  }
+
+  grid.innerHTML = renderedItems.map(({ def, dev, online }) => `
+    <div class="device-card ${online ? '' : 'offline'} animate-fade-in">
+      <div class="device-header">
+        <div class="device-icon">${def.icon}</div>
+        <span class="badge ${online ? 'badge-success' : 'badge-error'}">
+          ${online ? '● Online' : '○ Offline'}
+        </span>
+      </div>
+      <div class="device-name">${def.name}</div>
+      <div class="device-id">${dev?.device_code || def.key}</div>
+      <div style="height:1px;background:var(--border-light);margin:14px 0"></div>
+      <div class="device-info">
+        <div class="device-row"><span class="device-row-label">Chức năng</span><span class="device-row-val" style="text-align:right;max-width:140px;font-size:11px">${def.role}</span></div>
+        <div class="device-row"><span class="device-row-label">Trạng thái</span><span class="device-row-val">${dev?.current_state || (online ? 'Đang hoạt động' : 'Chờ kết nối')}</span></div>
+        <div class="device-row"><span class="device-row-label">Cập nhật</span><span class="device-row-val">${dev?.last_seen ? Format.timeAgo(dev.last_seen) : '—'}</span></div>
+      </div>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>
