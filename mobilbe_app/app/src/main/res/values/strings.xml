@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Smart Parking</string>
+    <string name="app_slogan">Đỗ xe thông minh - Cuộc sống tiện lợi</string>
+    <string name="back">Quay lại</string>
+
+    <!-- Bottom Navigation 5 Tabs -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_booking">Đặt chỗ</string>
+    <string name="nav_history">Lịch sử</string>
+    <string name="nav_wallet">Ví</string>
+    <string name="nav_profile">Tài khoản</string>
+
+    <!-- Auth -->
+    <string name="login_title">Đăng nhập</string>
+    <string name="login_subtitle">Chào mừng bạn trở lại hệ thống!</string>
+    <string name="email_hint">Email / Tên đăng nhập</string>
+    <string name="password_hint">Mật khẩu</string>
+    <string name="confirm_password_hint">Xác nhận mật khẩu</string>
+    <string name="full_name_hint">Họ và tên</string>
+    <string name="phone_hint">Số điện thoại</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="btn_login">Đăng nhập</string>
+    <string name="btn_register">Đăng ký</string>
+    <string name="have_account">Đã có tài khoản? Đăng nhập ngay</string>
+    <string name="no_account">Chưa có tài khoản? Đăng ký</string>
+    <string name="server_config">Cài đặt kết nối máy chủ</string>
+    <string name="server_ip_hint">Địa chỉ máy chủ (vd: 192.168.1.100)</string>
+    <string name="server_port_hint">Cổng (mặc định: 3000)</string>
+    <string name="btn_save">Lưu cấu hình</string>
+
+    <!-- Home Screen -->
+    <string name="greeting_prefix">Xin chào,</string>
+    <string name="default_user_name">Người dùng</string>
+    <string name="wallet_balance_title">Số dư ví</string>
+    <string name="btn_top_up">Nạp tiền</string>
+    <string name="stat_total">Tổng chỗ</string>
+    <string name="stat_free">Trống</string>
+    <string name="stat_occupied">Đang có xe</string>
+    <string name="stat_reserved">Đang đặt</string>
+    <string name="system_status">Trạng thái hệ thống</string>
+    <string name="status_normal">Hoạt động bình thường</string>
+    <string name="parking_map_title">Sơ đồ bãi đỗ xe</string>
+    <string name="legend_free">Trống</string>
+    <string name="legend_occupied">Có xe</string>
+    <string name="legend_reserved">Đã đặt</string>
+    <string name="legend_disabled">Không hoạt động</string>
+
+    <!-- Booking -->
+    <string name="booking_step1">Chọn khu vực</string>
+    <string name="booking_step2">Chọn chỗ</string>
+    <string name="booking_step3">Thời gian</string>
+    <string name="booking_step4">Xác nhận</string>
+    <string name="filter_all">Tất cả</string>
+    <string name="filter_zone_a">Khu A</string>
+    <string name="filter_zone_b">Khu B</string>
+    <string name="filter_zone_c">Khu C</string>
+    <string name="booking_info_title">Thông tin đặt chỗ</string>
+    <string name="label_slot">Chỗ đỗ</string>
+    <string name="label_zone">Khu vực</string>
+    <string name="label_date">Ngày đến</string>
+    <string name="label_time">Giờ đến</string>
+    <string name="label_duration">Số giờ gửi</string>
+    <string name="price_detail_title">Chi tiết giá</string>
+    <string name="label_unit_price">Đơn giá</string>
+    <string name="label_total_price">Tổng tiền</string>
+    <string name="payment_method_title">Phương thức thanh toán</string>
+    <string name="payment_wallet">Ví điện tử</string>
+    <string name="btn_confirm_booking">Xác nhận đặt chỗ</string>
+    <string name="btn_continue">Tiếp tục</string>
+    <string name="booking_success_title">Đặt chỗ thành công!</string>
+    <string name="booking_code_label">Mã đặt chỗ của bạn là</string>
+    <string name="booking_notice">Vui lòng có mặt đúng giờ để được ưu tiên giữ chỗ.</string>
+    <string name="btn_view_detail">Xem chi tiết</string>
+    <string name="btn_back_home">Quay về trang chủ</string>
+    <string name="btn_cancel_booking">Hủy đặt chỗ</string>
+
+    <!-- Wallet -->
+    <string name="my_wallet_title">Ví của tôi</string>
+    <string name="current_balance_title">Số dư hiện tại</string>
+    <string name="btn_transaction_history">Lịch sử giao dịch</string>
+    <string name="btn_wallet_history_short">Lịch sử ví</string>
+    <string name="recent_transactions_title">Giao dịch gần đây</string>
+    <string name="custom_amount">Số tiền khác</string>
+    <string name="btn_confirm_topup">Xác nhận nạp tiền</string>
+
+    <!-- History -->
+    <string name="history_title">Lịch sử</string>
+    <string name="tab_booking">Đặt chỗ</string>
+    <string name="tab_parking">Gửi xe</string>
+    <string name="tab_transaction">Giao dịch</string>
+
+    <!-- Vehicle Management -->
+    <string name="vehicle_title">Phương tiện</string>
+    <string name="tab_my_vehicles">Xe của tôi</string>
+    <string name="tab_rfid">Thẻ RFID</string>
+    <string name="btn_add_vehicle">+ Thêm phương tiện</string>
+    <string name="vehicle_plate_label">Biển số</string>
+    <string name="vehicle_type_label">Loại xe</string>
+    <string name="vehicle_name_label">Tên xe / Hãng xe</string>
+    <string name="vehicle_color_label">Màu sắc</string>
+    <string name="vehicle_rfid_label">Mã thẻ RFID (nếu có)</string>
+    <string name="btn_set_default">Đặt làm mặc định</string>
+    <string name="badge_default">Mặc định</string>
+    <string name="status_active">Đang hoạt động</string>
+
+    <!-- Notifications -->
+    <string name="notification_title">Thông báo</string>
+    <string name="btn_mark_all_read">Đã đọc tất cả</string>
+    <string name="empty_notifications">Chưa có thông báo nào</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Tài khoản</string>
+    <string name="btn_edit_profile">Chỉnh sửa</string>
+    <string name="menu_personal_info">Thông tin cá nhân</string>
+    <string name="menu_vehicle_management">Quản lý phương tiện</string>
+    <string name="menu_my_wallet">Ví của tôi</string>
+    <string name="menu_notifications">Thông báo</string>
+    <string name="menu_activity_history">Lịch sử hoạt động</string>
+    <string name="menu_settings">Cài đặt</string>
+    <string name="btn_logout">Đăng xuất</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Cài đặt</string>
+    <string name="section_connection">Kết nối mạng &amp; Máy chủ</string>
+    <string name="section_account">Tài khoản &amp; Bảo mật</string>
+    <string name="menu_change_password">Đổi mật khẩu</string>
+    <string name="section_app_info">Thông tin ứng dụng</string>
+    <string name="app_version">Phiên bản 1.0.0 (Build 2026.09)</string>
+    <string name="terms_of_service">Điều khoản dịch vụ</string>
+    <string name="privacy_policy">Chính sách bảo mật</string>
+
+    <!-- General / Errors -->
+    <string name="loading">Đang tải...</string>
+    <string name="error_network">Không thể kết nối máy chủ</string>
+    <string name="error_timeout">Yêu cầu quá thời gian. Vui lòng thử lại.</string>
+    <string name="error_auth">Email hoặc mật khẩu không chính xác</string>
+    <string name="empty_data">Không có dữ liệu</string>
+</resources>

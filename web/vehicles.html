@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Phương tiện — Smart Parking</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/animations.css">
 </head>
 <body>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script src="js/api.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/admin-layout.js"></script>
@@ -15,67 +18,104 @@
 (function init() {
   if (!requireAdmin()) return;
   const content = `
-    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+    <!-- Page Header -->
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:24px">
       <div>
-        <div class="page-title">Phương tiện</div>
-        <div class="page-subtitle">Quản lý phương tiện đăng ký và liên kết thẻ RFID</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <h1 class="page-title" style="margin:0">Phương tiện</h1>
+          <span style="font-size:12px;font-weight:600;background:rgba(37,99,235,0.08);color:#2563EB;padding:3px 10px;border-radius:20px;border:1px solid rgba(37,99,235,0.15)">Danh mục xe</span>
+        </div>
+        <div class="page-subtitle" style="margin-top:4px">Quản lý các phương tiện đăng ký gửi xe và liên kết thẻ RFID nhận diện tự động</div>
       </div>
-      <button class="btn btn-primary" onclick="openAddVehicleModal()">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Thêm phương tiện
+      <button class="btn btn-primary" onclick="openAddVehicleModal()" style="display:flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(37,99,235,0.25)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Thêm phương tiện</span>
       </button>
     </div>
 
     <!-- Vehicles List Card -->
-    <div class="card">
-      <div class="search-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <div class="search-input-wrap" style="flex:1;min-width:220px">
-          <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="search" class="search-input" placeholder="Tìm biển số, chủ xe, RFID UID..." id="v-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchV()">
+    <div class="card" style="margin-bottom:24px;border:1px solid rgba(226,232,240,0.8);border-radius:16px;box-shadow:var(--shadow-card)">
+      <!-- Filter Bar -->
+      <div style="padding:16px 20px;border-bottom:1px solid rgba(226,232,240,0.7);background:#FAFAFA;border-radius:16px 16px 0 0">
+        <div class="search-bar" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:0">
+          <div class="search-input-wrap" style="flex:1;min-width:260px;position:relative">
+            <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94A3B8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="search" class="search-input" placeholder="Tìm biển số xe, tên chủ xe, RFID..." id="v-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchV()" style="padding-left:40px;border-radius:10px;background:#FFF;border:1px solid #E2E8F0">
+          </div>
+          <select class="filter-select" id="v-type" onchange="loadVehicles(1)" style="border-radius:10px;background:#FFF;border:1px solid #E2E8F0;font-weight:500">
+            <option value="">Tất cả loại xe</option>
+            <option value="CAR">Ô tô</option>
+            <option value="MOTORBIKE">Xe máy</option>
+            <option value="TRUCK">Xe tải</option>
+          </select>
+          <select class="filter-select" id="v-rfid" onchange="loadVehicles(1)" style="border-radius:10px;background:#FFF;border:1px solid #E2E8F0;font-weight:500">
+            <option value="">Tất cả RFID</option>
+            <option value="yes">Đã gắn RFID</option>
+            <option value="no">Chưa gắn RFID</option>
+          </select>
+          <select class="filter-select" id="v-sort" onchange="loadVehicles(1)" style="border-radius:10px;background:#FFF;border:1px solid #E2E8F0;font-weight:500">
+            <option value="created_at:desc">Mới nhất</option>
+            <option value="created_at:asc">Cũ nhất</option>
+            <option value="plate_number:asc">Biển số (A-Z)</option>
+            <option value="plate_number:desc">Biển số (Z-A)</option>
+          </select>
+          <button class="btn btn-outline btn-sm" onclick="resetVehicleFilters()" title="Xóa toàn bộ bộ lọc" style="border-radius:10px;display:flex;align-items:center;gap:6px;font-weight:600">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            <span>Xóa lọc</span>
+          </button>
         </div>
-        <select class="filter-select" id="v-type" onchange="loadVehicles(1)">
-          <option value="">Tất cả loại xe</option>
-          <option value="CAR">Ô tô</option>
-          <option value="MOTORBIKE">Xe máy</option>
-          <option value="TRUCK">Xe tải</option>
-        </select>
-        <select class="filter-select" id="v-rfid" onchange="loadVehicles(1)">
-          <option value="">Tất cả RFID</option>
-          <option value="yes">Đã gắn RFID</option>
-          <option value="no">Chưa gắn RFID</option>
-        </select>
-        <select class="filter-select" id="v-sort" onchange="loadVehicles(1)">
-          <option value="created_at:desc">Mới nhất</option>
-          <option value="created_at:asc">Cũ nhất</option>
-          <option value="plate_number:asc">Biển số (A-Z)</option>
-          <option value="plate_number:desc">Biển số (Z-A)</option>
-        </select>
-        <button class="btn btn-outline btn-sm" onclick="resetVehicleFilters()" title="Xóa toàn bộ bộ lọc">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-          Xóa lọc
-        </button>
       </div>
-      <div class="table-wrapper">
-        <table class="table">
-          <thead><tr>
-            <th>Biển số</th><th>Chủ xe</th><th>Loại xe</th><th>Tên xe / Màu sắc</th><th>RFID UID</th>
-            <th>Mặc định</th><th>Ngày đăng ký</th><th>Thao tác</th>
-          </tr></thead>
+
+      <!-- Table Wrapper -->
+      <div class="table-wrapper" style="overflow-x:auto">
+        <table class="table" style="margin:0">
+          <thead>
+            <tr style="background:#F8FAFC">
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Biển số</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Chủ xe</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Loại xe</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Tên xe / Màu</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">RFID UID</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Mặc định</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Ngày đăng ký</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;text-align:right">Thao tác</th>
+            </tr>
+          </thead>
           <tbody id="vehicle-table">${skeletonRows(7)}</tbody>
         </table>
       </div>
-      <div id="vehicle-pager"></div>
+      <div id="vehicle-pager" style="padding:16px 20px;border-top:1px solid #F1F5F9"></div>
     </div>
 
     <!-- RFID Cards Panel -->
-    <div class="card" style="margin-top:24px">
-      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center">
-        <span class="card-title">Thẻ RFID đã đăng ký trong hệ thống</span>
-        <button class="btn btn-sm btn-outline" onclick="loadRfid()">Làm mới</button>
+    <div class="card" style="border:1px solid rgba(226,232,240,0.8);border-radius:16px;box-shadow:var(--shadow-card)">
+      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid #F1F5F9">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:10px;background:#EEF2FF;color:#4F46E5;display:flex;align-items:center;justify-content:center">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div>
+            <span class="card-title" style="font-size:15px;font-weight:700;color:#0F172A">Thẻ RFID đã đăng ký trong hệ thống</span>
+            <div style="font-size:12px;color:#64748B;margin-top:2px">Danh mục thẻ từ phân quyền ra vào trạm barrier</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline" onclick="loadRfid()" style="border-radius:8px;font-weight:600;display:flex;align-items:center;gap:6px">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          <span>Làm mới</span>
+        </button>
       </div>
-      <div class="table-wrapper">
-        <table class="table">
-          <thead><tr><th>UID Thẻ</th><th>Chủ thẻ</th><th>Biển số liên kết</th><th>Trạng thái</th><th>Đăng ký lúc</th><th>Thao tác</th></tr></thead>
+      <div class="table-wrapper" style="overflow-x:auto">
+        <table class="table" style="margin:0">
+          <thead>
+            <tr style="background:#F8FAFC">
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B">UID THẺ</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B">CHỦ THẺ</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B">BIỂN SỐ LIÊN KẾT</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B">TRẠNG THÁI</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B">ĐĂNG KÝ LÚC</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-align:right">THAO TÁC</th>
+            </tr>
+          </thead>
           <tbody id="rfid-table">${skeletonRows(4)}</tbody>
         </table>
       </div>
@@ -83,65 +123,146 @@
 
     <!-- Vehicle Detail Modal -->
     <div id="vehicle-modal" class="modal-overlay">
-      <div class="modal" style="max-width:540px">
-        <div class="modal-header">
-          <span class="modal-title">Chi tiết phương tiện</span>
+      <div class="modal" style="max-width:540px;border-radius:18px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.18)">
+        <div class="modal-header" style="background:#F8FAFC;padding:18px 24px;border-bottom:1px solid #E2E8F0">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;border-radius:10px;background:#EFF6FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:18px">🚗</div>
+            <div>
+              <span class="modal-title" style="font-size:16px;font-weight:700;color:#0F172A">Chi tiết phương tiện</span>
+              <div style="font-size:12px;color:#64748B">Thông tin kỹ thuật và chủ sở hữu</div>
+            </div>
+          </div>
           <button class="modal-close" onclick="closeVehicleModal()">✕</button>
         </div>
-        <div class="modal-body" id="vehicle-modal-body"></div>
-        <div class="modal-footer" style="display:flex;justify-content:space-between;align-items:center">
+        <div class="modal-body" id="vehicle-modal-body" style="padding:24px"></div>
+        <div class="modal-footer" style="display:flex;justify-content:space-between;align-items:center;background:#FAFAFA;padding:16px 24px;border-top:1px solid #E2E8F0">
           <div id="vehicle-modal-actions"></div>
-          <button class="btn btn-ghost" onclick="closeVehicleModal()">Đóng</button>
+          <button class="btn btn-ghost" onclick="closeVehicleModal()" style="font-weight:600">Đóng</button>
         </div>
       </div>
     </div>
 
     <!-- Add Vehicle Modal -->
     <div id="add-vehicle-modal" class="modal-overlay">
-      <div class="modal" style="max-width:520px">
-        <div class="modal-header">
-          <span class="modal-title">Thêm phương tiện mới</span>
+      <div class="modal" style="max-width:520px;border-radius:18px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.18)">
+        <div class="modal-header" style="background:#F8FAFC;padding:18px 24px;border-bottom:1px solid #E2E8F0">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;border-radius:10px;background:#ECFDF5;color:#10B981;display:flex;align-items:center;justify-content:center;font-size:18px">✨</div>
+            <div>
+              <span class="modal-title" style="font-size:16px;font-weight:700;color:#0F172A">Thêm phương tiện mới</span>
+              <div style="font-size:12px;color:#64748B">Đăng ký xe vào hệ thống Smart Parking</div>
+            </div>
+          </div>
           <button class="modal-close" onclick="closeAddVehicleModal()">✕</button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="padding:24px">
           <form id="add-vehicle-form" onsubmit="submitAddVehicle(event)">
-            <div class="form-group" style="margin-bottom:14px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Biển số xe *</label>
-              <input type="text" class="input" id="new-v-plate" required placeholder="Ví dụ: 30A-999.88" style="width:100%;font-weight:700;letter-spacing:1px">
+            <div class="form-group" style="margin-bottom:16px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Biển số xe *</label>
+              <input type="text" class="input" id="new-v-plate" required placeholder="Ví dụ: 30A-999.88" style="width:100%;font-weight:700;letter-spacing:1.5px;font-size:15px;text-transform:uppercase;border-radius:10px">
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
               <div>
-                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Loại xe *</label>
-                <select class="filter-select" id="new-v-type" style="width:100%;height:38px">
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Loại xe *</label>
+                <select class="filter-select" id="new-v-type" style="width:100%;height:42px;border-radius:10px;border:1px solid #E2E8F0;font-weight:500">
                   <option value="CAR">Ô tô (CAR)</option>
                   <option value="MOTORBIKE">Xe máy (MOTORBIKE)</option>
                   <option value="TRUCK">Xe tải (TRUCK)</option>
                 </select>
               </div>
               <div>
-                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Chủ phương tiện *</label>
-                <select class="filter-select" id="new-v-owner" required style="width:100%;height:38px">
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Chủ phương tiện *</label>
+                <select class="filter-select" id="new-v-owner" required style="width:100%;height:42px;border-radius:10px;border:1px solid #E2E8F0;font-weight:500">
                   <option value="">Đang tải danh sách...</option>
                 </select>
               </div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
               <div>
-                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Tên/Hãng xe</label>
-                <input type="text" class="input" id="new-v-name" placeholder="Ví dụ: Honda Civic" style="width:100%">
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Tên / Hãng xe</label>
+                <input type="text" class="input" id="new-v-name" placeholder="Ví dụ: Honda Civic, Mazda 3" style="width:100%;border-radius:10px">
               </div>
               <div>
-                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Màu sắc</label>
-                <input type="text" class="input" id="new-v-color" placeholder="Ví dụ: Trắng, Đen..." style="width:100%">
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Màu sắc</label>
+                <input type="text" class="input" id="new-v-color" placeholder="Ví dụ: Trắng ngọc trai, Đen..." style="width:100%;border-radius:10px">
               </div>
             </div>
-            <div class="form-group" style="margin-bottom:14px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Mã thẻ RFID (nếu có)</label>
-              <input type="text" class="input" id="new-v-rfid" placeholder="Ví dụ: A1B2C3D4" style="width:100%">
+            <div class="form-group" style="margin-bottom:20px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Mã thẻ RFID (Quét từ ESP32 hoặc nhập tay)</label>
+              <div style="display:flex;gap:8px">
+                <input type="text" class="input" id="new-v-rfid" placeholder="Ví dụ: 56:62:69:03" style="flex:1;font-family:'JetBrains Mono',monospace;border-radius:10px">
+                <button type="button" class="btn btn-outline" id="btn-scan-rfid-new" onclick="listenForRfid('new-v-rfid', this)" style="border-radius:10px;display:flex;align-items:center;gap:6px;white-space:nowrap;font-weight:600">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+                  <span>📡 Quét thẻ</span>
+                </button>
+              </div>
             </div>
-            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px">
-              <button type="button" class="btn btn-ghost" onclick="closeAddVehicleModal()">Hủy</button>
-              <button type="submit" class="btn btn-primary" id="btn-submit-add-vehicle">Lưu phương tiện</button>
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;border-top:1px solid #F1F5F9;padding-top:18px">
+              <button type="button" class="btn btn-ghost" onclick="closeAddVehicleModal()" style="font-weight:600">Hủy</button>
+              <button type="submit" class="btn btn-primary" id="btn-submit-add-vehicle" style="font-weight:600;box-shadow:0 4px 12px rgba(37,99,235,0.25)">Lưu phương tiện</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Vehicle Modal -->
+    <div id="edit-vehicle-modal" class="modal-overlay">
+      <div class="modal" style="max-width:520px;border-radius:18px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.18)">
+        <div class="modal-header" style="background:#F8FAFC;padding:18px 24px;border-bottom:1px solid #E2E8F0">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;border-radius:10px;background:#EFF6FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:18px">✏️</div>
+            <div>
+              <span class="modal-title" style="font-size:16px;font-weight:700;color:#0F172A">Chỉnh sửa phương tiện</span>
+              <div style="font-size:12px;color:#64748B">Sửa biển số xe và gán lại mã thẻ RFID thực tế</div>
+            </div>
+          </div>
+          <button class="modal-close" onclick="closeEditVehicleModal()">✕</button>
+        </div>
+        <div class="modal-body" style="padding:24px">
+          <form id="edit-vehicle-form" onsubmit="submitEditVehicle(event)">
+            <input type="hidden" id="edit-v-id">
+            <div class="form-group" style="margin-bottom:16px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Biển số xe *</label>
+              <input type="text" class="input" id="edit-v-plate" required placeholder="Ví dụ: 30A-999.88" style="width:100%;font-weight:700;letter-spacing:1.5px;font-size:15px;text-transform:uppercase;border-radius:10px">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+              <div>
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Loại xe *</label>
+                <select class="filter-select" id="edit-v-type" style="width:100%;height:42px;border-radius:10px;border:1px solid #E2E8F0;font-weight:500">
+                  <option value="CAR">Ô tô (CAR)</option>
+                  <option value="MOTORBIKE">Xe máy (MOTORBIKE)</option>
+                  <option value="TRUCK">Xe tải (TRUCK)</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Chủ phương tiện</label>
+                <input type="text" class="input" id="edit-v-owner-name" readonly disabled style="width:100%;background:#F1F5F9;border-radius:10px;color:#64748B">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+              <div>
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Tên / Hãng xe</label>
+                <input type="text" class="input" id="edit-v-name" placeholder="Ví dụ: Mazda CX-5" style="width:100%;border-radius:10px">
+              </div>
+              <div>
+                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Màu sắc</label>
+                <input type="text" class="input" id="edit-v-color" placeholder="Ví dụ: Đỏ pha lê" style="width:100%;border-radius:10px">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:20px">
+              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;color:#334155">Mã thẻ RFID (Quét từ ESP32 hoặc nhập tay)</label>
+              <div style="display:flex;gap:8px">
+                <input type="text" class="input" id="edit-v-rfid" placeholder="Ví dụ: 56:62:69:03" style="flex:1;font-family:'JetBrains Mono',monospace;border-radius:10px">
+                <button type="button" class="btn btn-outline" id="btn-scan-rfid-edit" onclick="listenForRfid('edit-v-rfid', this)" style="border-radius:10px;display:flex;align-items:center;gap:6px;white-space:nowrap;font-weight:600">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+                  <span>📡 Quét thẻ</span>
+                </button>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;border-top:1px solid #F1F5F9;padding-top:18px">
+              <button type="button" class="btn btn-ghost" onclick="closeEditVehicleModal()" style="font-weight:600">Hủy</button>
+              <button type="submit" class="btn btn-primary" id="btn-submit-edit-vehicle" style="font-weight:600;box-shadow:0 4px 12px rgba(37,99,235,0.25)">Cập nhật thay đổi</button>
             </div>
           </form>
         </div>
@@ -205,40 +326,51 @@ async function loadVehicles(page = 1) {
 
     if (!tbody) return;
     if (!data.length) {
-      tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-state-icon">🚗</div><div class="empty-state-title">Không tìm thấy phương tiện nào</div></div></td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state" style="padding:40px;text-align:center"><div class="empty-state-icon" style="font-size:36px;margin-bottom:8px">🚗</div><div class="empty-state-title" style="font-size:15px;font-weight:600;color:#64748B">Không tìm thấy phương tiện nào</div></div></td></tr>`;
       return;
     }
 
-    tbody.innerHTML = data.map(v => `
-      <tr>
-        <td>
-          <code style="background:var(--bg);padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:1px">${v.plate_number || '—'}</code>
-        </td>
-        <td>
-          <div style="font-weight:500">${v.owner_name || v.user_name || '—'}</div>
-          <div style="font-size:11px;color:var(--text-light)">${v.owner_email || v.email || ''}</div>
-        </td>
-        <td>
-          <span class="badge ${v.vehicle_type === 'CAR' ? 'badge-primary' : v.vehicle_type === 'MOTORBIKE' ? 'badge-success' : 'badge-warning'}">
-            ${Format.vehicleType(v.vehicle_type)}
-          </span>
-        </td>
-        <td style="font-size:12px">
-          ${v.vehicle_name || '—'}${v.color ? ` <span style="color:var(--text-light)">(${v.color})</span>` : ''}
-        </td>
-        <td>
-          ${v.rfid_uid ? `<code style="font-size:11px;background:var(--teal-light);color:var(--teal);padding:2px 8px;border-radius:4px">${v.rfid_uid}</code>` : '<span style="color:var(--text-light);font-size:12px">Chưa gắn</span>'}
-        </td>
-        <td>${v.is_default ? '<span class="badge badge-success">✓ Mặc định</span>' : '—'}</td>
-        <td style="font-size:12px">${Format.date(v.created_at)}</td>
-        <td>
-          <div style="display:flex;gap:6px">
-            <button class="btn btn-sm btn-ghost" onclick="viewVehicle(${v.id})">Chi tiết</button>
-            <button class="btn btn-sm btn-error" onclick="deleteVehicleAction(${v.id}, '${v.plate_number}')">Xóa</button>
-          </div>
-        </td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = data.map(v => {
+      const typeBadge = v.vehicle_type === 'CAR'
+        ? `<span class="badge badge-primary" style="display:inline-flex;align-items:center;gap:4px">🚗 Ô tô</span>`
+        : v.vehicle_type === 'MOTORBIKE'
+        ? `<span class="badge badge-success" style="display:inline-flex;align-items:center;gap:4px">🏍️ Xe máy</span>`
+        : `<span class="badge badge-warning" style="display:inline-flex;align-items:center;gap:4px">🚚 Xe tải</span>`;
+
+      return `
+        <tr style="border-bottom:1px solid #F1F5F9;transition:background 0.15s ease">
+          <td style="padding:14px 18px">
+            <span class="vn-plate" style="font-size:13px;font-weight:800;letter-spacing:1px">${v.plate_number || '—'}</span>
+          </td>
+          <td style="padding:14px 18px">
+            <div style="font-weight:600;color:#0F172A">${v.owner_name || v.user_name || '—'}</div>
+            <div style="font-size:12px;color:#64748B">${v.owner_email || v.email || ''}</div>
+          </td>
+          <td style="padding:14px 18px">
+            ${typeBadge}
+          </td>
+          <td style="padding:14px 18px;font-size:13px;color:#334155">
+            <span style="font-weight:500">${v.vehicle_name || '—'}</span>
+            ${v.color ? `<span style="font-size:12px;color:#94A3B8;margin-left:4px">(${v.color})</span>` : ''}
+          </td>
+          <td style="padding:14px 18px">
+            ${v.rfid_uid 
+              ? `<code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#F0FDFA;color:#0D9488;padding:3px 8px;border-radius:6px;border:1px solid rgba(13,148,136,0.2);font-weight:600">${v.rfid_uid}</code>` 
+              : '<span style="color:#94A3B8;font-size:12px;font-style:italic">Chưa gắn thẻ</span>'}
+          </td>
+          <td style="padding:14px 18px">
+            ${v.is_default ? '<span class="badge badge-success" style="font-weight:600">✓ Mặc định</span>' : '<span style="color:#CBD5E1">—</span>'}
+          </td>
+          <td style="padding:14px 18px;font-size:12px;color:#64748B;white-space:nowrap">${Format.date(v.created_at)}</td>
+          <td style="padding:14px 18px;text-align:right">
+            <div style="display:inline-flex;gap:6px">
+              <button class="btn btn-sm btn-ghost" onclick="viewVehicle(${v.id})" style="border-radius:8px;font-weight:600">Chi tiết</button>
+              <button class="btn btn-sm btn-error" onclick="deleteVehicleAction(${v.id}, '${v.plate_number}')" style="border-radius:8px;font-weight:600">Xóa</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
 
     new Pagination({ container: 'vehicle-pager', total, page, limit: 15, onChange: loadVehicles }).render();
   } catch (err) {
@@ -255,21 +387,31 @@ async function loadRfid() {
 
     if (!tbody) return;
     if (!data.length) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-light);padding:20px">Chưa có thẻ RFID nào</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#64748B;padding:24px">Chưa có thẻ RFID nào được ghi nhận</td></tr>`;
       return;
     }
 
     tbody.innerHTML = data.map(r => `
-      <tr>
-        <td><code style="font-size:12px;background:var(--bg);padding:3px 8px;border-radius:4px;font-weight:600">${r.rfid_uid || '—'}</code></td>
-        <td>${r.user_name || r.owner_name || '—'}</td>
-        <td><code style="font-size:12px;font-weight:600">${r.plate_number || 'Chưa gắn'}</code></td>
-        <td>${r.status === 'ACTIVE' ? '<span class="badge badge-success">Hoạt động</span>' : '<span class="badge badge-error">Vô hiệu</span>'}</td>
-        <td style="font-size:12px">${Format.datetime(r.registered_at || r.created_at)}</td>
-        <td>
+      <tr style="border-bottom:1px solid #F1F5F9">
+        <td style="padding:14px 18px">
+          <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#F8FAFC;border:1px solid #E2E8F0;padding:3px 8px;border-radius:6px;font-weight:600;color:#0F172A">${r.rfid_uid || '—'}</code>
+        </td>
+        <td style="padding:14px 18px;font-weight:500;color:#0F172A">${r.user_name || r.owner_name || '—'}</td>
+        <td style="padding:14px 18px">
+          ${r.plate_number 
+            ? `<span class="vn-plate" style="font-size:12px;padding:2px 8px">${r.plate_number}</span>` 
+            : '<span style="color:#94A3B8;font-size:12px;font-style:italic">Chưa liên kết</span>'}
+        </td>
+        <td style="padding:14px 18px">
+          ${r.status === 'ACTIVE' 
+            ? '<span class="badge badge-success" style="font-weight:600">Hoạt động</span>' 
+            : '<span class="badge badge-error" style="font-weight:600">Vô hiệu</span>'}
+        </td>
+        <td style="padding:14px 18px;font-size:12px;color:#64748B;white-space:nowrap">${Format.datetime(r.registered_at || r.created_at)}</td>
+        <td style="padding:14px 18px;text-align:right">
           ${r.status === 'ACTIVE'
-            ? `<button class="btn btn-sm btn-error" onclick="setRfidStatus(${r.id},'DISABLED')">Vô hiệu hóa</button>`
-            : `<button class="btn btn-sm btn-success" onclick="setRfidStatus(${r.id},'ACTIVE')">Kích hoạt</button>`
+            ? `<button class="btn btn-sm btn-error" onclick="setRfidStatus(${r.id},'DISABLED')" style="border-radius:8px;font-weight:600">Vô hiệu hóa</button>`
+            : `<button class="btn btn-sm btn-success" onclick="setRfidStatus(${r.id},'ACTIVE')" style="border-radius:8px;font-weight:600">Kích hoạt</button>`
           }
         </td>
       </tr>
@@ -278,7 +420,11 @@ async function loadRfid() {
 }
 
 async function setRfidStatus(id, status) {
-  const ok = await showConfirm({ title: `${status === 'ACTIVE' ? 'Kích hoạt' : 'Vô hiệu hóa'} thẻ RFID`, message: `Xác nhận thay đổi trạng thái thẻ RFID?`, confirmText: 'Xác nhận' });
+  const ok = await showConfirm({ 
+    title: `${status === 'ACTIVE' ? 'Kích hoạt' : 'Vô hiệu hóa'} thẻ RFID`, 
+    message: `Xác nhận thay đổi trạng thái thẻ RFID?`, 
+    confirmText: 'Xác nhận' 
+  });
   if (!ok) return;
   try {
     await RfidAPI.setStatus(id, status);
@@ -302,35 +448,46 @@ async function viewVehicle(id) {
     const v = res?.data || {};
 
     body.innerHTML = `
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-light)">
-        <div style="font-size:36px">🚗</div>
+      <div style="display:flex;align-items:center;gap:18px;margin-bottom:24px;padding:16px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:14px">
+        <div style="width:54px;height:54px;border-radius:12px;background:#FFF;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 2px 6px rgba(0,0,0,0.04)">
+          ${v.vehicle_type === 'CAR' ? '🚗' : v.vehicle_type === 'MOTORBIKE' ? '🏍️' : '🚚'}
+        </div>
         <div>
-          <div style="font-size:20px;font-weight:700;letter-spacing:1px;font-family:monospace">${v.plate_number || '—'}</div>
-          <div style="font-size:13px;color:var(--text-light);margin-top:2px">${v.vehicle_name || 'Phương tiện'} ${v.color ? `(${v.color})` : ''}</div>
-          <div style="margin-top:6px">
+          <div style="margin-bottom:6px">
+            <span class="vn-plate" style="font-size:16px;font-weight:800;letter-spacing:1px;padding:4px 12px">${v.plate_number || '—'}</span>
+          </div>
+          <div style="font-size:14px;font-weight:600;color:#0F172A">${v.vehicle_name || 'Phương tiện'} ${v.color ? `<span style="font-weight:400;color:#64748B">(${v.color})</span>` : ''}</div>
+          <div style="margin-top:6px;display:flex;gap:6px;align-items:center">
             <span class="badge ${v.vehicle_type === 'CAR' ? 'badge-primary' : 'badge-success'}">${Format.vehicleType(v.vehicle_type)}</span>
-            ${v.is_default ? '<span class="badge badge-teal" style="margin-left:4px">Mặc định</span>' : ''}
+            ${v.is_default ? '<span class="badge badge-teal">Mặc định</span>' : ''}
           </div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         ${[
           ['Chủ sở hữu', v.owner_name || v.user_name || '—'],
           ['Email chủ xe', v.owner_email || v.email || '—'],
           ['Điện thoại', v.owner_phone || v.phone || '—'],
-          ['Mã thẻ RFID', v.rfid_uid ? `<code style="background:var(--bg);padding:2px 6px;border-radius:4px">${v.rfid_uid}</code>` : 'Chưa liên kết'],
+          ['Mã thẻ RFID', v.rfid_uid ? `<code style="font-family:'JetBrains Mono',monospace;background:#F0FDFA;color:#0D9488;padding:2px 8px;border-radius:6px;border:1px solid rgba(13,148,136,0.2);font-weight:600">${v.rfid_uid}</code>` : '<span style="color:#94A3B8;font-style:italic">Chưa liên kết</span>'],
           ['Ngày đăng ký', Format.datetime(v.created_at)],
           ['Trạng thái', v.status === 'ACTIVE' ? '<span class="badge badge-success">Hoạt động</span>' : '<span class="badge badge-gray">Khóa</span>']
         ].map(([k,val]) => `
-          <div><div style="font-size:11px;color:var(--text-light);margin-bottom:4px">${k}</div><div style="font-size:13px;font-weight:500">${val}</div></div>
+          <div style="background:#FFF;border:1px solid #F1F5F9;padding:12px 14px;border-radius:10px">
+            <div style="font-size:11px;color:#64748B;font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px">${k}</div>
+            <div style="font-size:13px;font-weight:600;color:#0F172A">${val}</div>
+          </div>
         `).join('')}
       </div>
     `;
 
     if (actions) {
       actions.innerHTML = `
-        <button class="btn btn-sm btn-error" onclick="deleteVehicleAction(${v.id}, '${v.plate_number}')">
-          Xóa phương tiện
+        <button class="btn btn-sm btn-primary" onclick="openEditVehicleModal(${v.id})" style="border-radius:8px;font-weight:600;display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span>Sửa xe</span>
+        </button>
+        <button class="btn btn-sm btn-error" onclick="deleteVehicleAction(${v.id}, '${v.plate_number}')" style="border-radius:8px;font-weight:600">
+          Xóa xe
         </button>
       `;
     }
@@ -344,13 +501,69 @@ function closeVehicleModal() {
 }
 
 function openAddVehicleModal() {
+  stopRfidListening();
   document.getElementById('add-vehicle-form')?.reset();
   loadUsersDropdown();
   document.getElementById('add-vehicle-modal')?.classList.add('open');
 }
 
 function closeAddVehicleModal() {
+  stopRfidListening();
   document.getElementById('add-vehicle-modal')?.classList.remove('open');
+}
+
+async function openEditVehicleModal(id) {
+  stopRfidListening();
+  closeVehicleModal();
+  try {
+    const res = await VehicleAPI.getById(id);
+    const v = res?.data || {};
+    document.getElementById('edit-v-id').value = v.id;
+    document.getElementById('edit-v-plate').value = v.plate_number || '';
+    document.getElementById('edit-v-type').value = v.vehicle_type || 'CAR';
+    document.getElementById('edit-v-owner-name').value = `${v.owner_name || v.user_name || 'Chủ xe'} (#${v.user_id})`;
+    document.getElementById('edit-v-name').value = v.vehicle_name || '';
+    document.getElementById('edit-v-color').value = v.color || '';
+    document.getElementById('edit-v-rfid').value = v.rfid_uid || '';
+    document.getElementById('edit-vehicle-modal')?.classList.add('open');
+  } catch (err) {
+    Toast.error('Lỗi', 'Không thể lấy thông tin xe để chỉnh sửa');
+  }
+}
+
+function closeEditVehicleModal() {
+  stopRfidListening();
+  document.getElementById('edit-vehicle-modal')?.classList.remove('open');
+}
+
+async function submitEditVehicle(e) {
+  e.preventDefault();
+  const id = document.getElementById('edit-v-id')?.value;
+  const plate_number = document.getElementById('edit-v-plate')?.value.trim();
+  const vehicle_type = document.getElementById('edit-v-type')?.value;
+  const vehicle_name = document.getElementById('edit-v-name')?.value.trim();
+  const color = document.getElementById('edit-v-color')?.value.trim();
+  const rfid_uid = document.getElementById('edit-v-rfid')?.value.trim() || null;
+
+  if (!plate_number) {
+    Toast.error('Lỗi', 'Biển số xe không được để trống');
+    return;
+  }
+
+  const btn = document.getElementById('btn-submit-edit-vehicle');
+  if (btn) { btn.disabled = true; btn.textContent = 'Đang lưu...'; }
+
+  try {
+    await VehicleAPI.update(id, { plate_number, vehicle_type, vehicle_name, color, rfid_uid });
+    Toast.success('Thành công', `Đã cập nhật phương tiện ${plate_number}`);
+    closeEditVehicleModal();
+    loadVehicles(1);
+    loadRfid();
+  } catch (err) {
+    Toast.error('Lỗi', err.message || 'Không thể cập nhật phương tiện');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Cập nhật thay đổi'; }
+  }
 }
 
 async function submitAddVehicle(e) {
@@ -399,6 +612,96 @@ async function deleteVehicleAction(id, plate) {
     loadVehicles(1);
   } catch (err) {
     Toast.error('Lỗi', err.message || 'Không thể xóa phương tiện');
+  }
+}
+
+// ============================================================
+// LOGIC QUÉT THẺ TỰ ĐỘNG TỪ ESP32 QUA SOCKET.IO
+// ============================================================
+let activeRfidSocket = null;
+let activeListeningBtn = null;
+let activeTargetInputId = null;
+
+function listenForRfid(targetInputId, btn) {
+  const input = document.getElementById(targetInputId);
+  if (!input) return;
+
+  // Nếu đang quét mà bấm lại -> Hủy
+  if (activeListeningBtn === btn) {
+    stopRfidListening();
+    Toast.info('Đã dừng', 'Đã hủy chế độ chờ quẹt thẻ');
+    return;
+  }
+
+  stopRfidListening();
+  activeListeningBtn = btn;
+  activeTargetInputId = targetInputId;
+
+  btn.dataset.originalHtml = btn.innerHTML;
+  btn.classList.remove('btn-outline');
+  btn.classList.add('btn-warning');
+  btn.style.background = '#FEF3C7';
+  btn.style.color = '#B45309';
+  btn.style.borderColor = '#F59E0B';
+  btn.innerHTML = `<span class="spinner spinner-sm" style="margin-right:6px"></span><span>Quẹt thẻ vào ESP32...</span>`;
+
+  input.placeholder = ">> Đang chờ quét thẻ vào đầu đọc RC522... <<";
+  input.style.borderColor = "#F59E0B";
+  input.style.boxShadow = "0 0 0 3px rgba(245, 158, 11, 0.25)";
+
+  Toast.info('Sẵn sàng', 'Hãy quẹt thẻ từ vào đầu đọc RC522 của ESP32 để tự động điền mã!');
+
+  if (!window.io) {
+    Toast.error('Lỗi', 'Socket.IO chưa sẵn sàng');
+    stopRfidListening();
+    return;
+  }
+
+  if (!activeRfidSocket) {
+    activeRfidSocket = io(window.SOCKET_URL || 'http://localhost:3000', {
+      auth: { token: window.Auth?.getToken() }
+    });
+  }
+
+  activeRfidSocket.off('rfid_event');
+  activeRfidSocket.on('rfid_event', (data) => {
+    const uid = data?.rfid_uid || data?.uid;
+    if (uid) {
+      const targetInput = document.getElementById(activeTargetInputId);
+      if (targetInput) {
+        targetInput.value = uid;
+        targetInput.style.borderColor = "#10B981";
+        targetInput.style.boxShadow = "0 0 0 3px rgba(16, 185, 129, 0.25)";
+      }
+      Toast.success('Đã đọc thẻ!', `Mã thẻ: ${uid} đã được tự động điền`);
+      stopRfidListening();
+    }
+  });
+}
+
+function stopRfidListening() {
+  if (activeListeningBtn) {
+    if (activeListeningBtn.dataset.originalHtml) {
+      activeListeningBtn.innerHTML = activeListeningBtn.dataset.originalHtml;
+    }
+    activeListeningBtn.classList.remove('btn-warning');
+    activeListeningBtn.classList.add('btn-outline');
+    activeListeningBtn.style.background = '';
+    activeListeningBtn.style.color = '';
+    activeListeningBtn.style.borderColor = '';
+    activeListeningBtn = null;
+  }
+  if (activeTargetInputId) {
+    const input = document.getElementById(activeTargetInputId);
+    if (input) {
+      input.placeholder = "Ví dụ: 56:62:69:03";
+      input.style.borderColor = "";
+      input.style.boxShadow = "";
+    }
+    activeTargetInputId = null;
+  }
+  if (activeRfidSocket) {
+    activeRfidSocket.off('rfid_event');
   }
 }
 </script>

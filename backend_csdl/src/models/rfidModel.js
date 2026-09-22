@@ -1,13 +1,19 @@
 const { query, queryOne } = require('../config/db');
 
 const RfidModel = {
-  findByUid: (uid) =>
-    queryOne(`SELECT r.*, v.plate_number, v.vehicle_type, v.color, v.status as vehicle_status,
+  findByUid: (uid) => {
+    const cleanUid = uid ? uid.replace(/[:\s\-]/g, '').toUpperCase() : '';
+    return queryOne(
+      `SELECT r.*, v.plate_number, v.vehicle_type, v.color, v.status as vehicle_status,
               u.name as owner_name, u.email as owner_email, u.wallet_balance, u.status as user_status
-              FROM rfid_cards r
-              LEFT JOIN vehicles v ON r.vehicle_id = v.id
-              LEFT JOIN users u ON r.user_id = u.id
-              WHERE r.uid = ?`, [uid]),
+       FROM rfid_cards r
+       LEFT JOIN vehicles v ON r.vehicle_id = v.id
+       LEFT JOIN users u ON r.user_id = u.id
+       WHERE r.uid = ? 
+          OR REPLACE(REPLACE(REPLACE(UPPER(r.uid), ':', ''), '-', ''), ' ', '') = ?`,
+      [uid, cleanUid]
+    );
+  },
 
   findById: (id) =>
     queryOne('SELECT * FROM rfid_cards WHERE id = ?', [id]),

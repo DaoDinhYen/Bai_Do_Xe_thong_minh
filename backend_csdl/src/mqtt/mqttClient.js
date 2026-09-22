@@ -1,11 +1,15 @@
 const mqtt = require('mqtt');
 const logger = require('../utils/logger');
 const { MQTT_TOPICS } = require('../config/mqtt');
-const { handleMqttMessage } = require('./mqttHandler');
 
 let client = null;
 
+function getMqttClient() {
+  return client;
+}
+
 function initMQTT(io) {
+  const { handleMqttMessage } = require('./mqttHandler');
   const brokerUrl = process.env.MQTT_BROKER_URL || 'mqtt://localhost:1883';
 
   const options = {
@@ -28,6 +32,7 @@ function initMQTT(io) {
     // Subscribe to all ESP32 topics
     const topics = [
       `${MQTT_TOPICS.SLOT_PREFIX}/+`,         // parking/esp32_1/slot/+
+      MQTT_TOPICS.RFID,                       // parking/esp32_2/rfid (1 RFID RC522 duy nhất)
       MQTT_TOPICS.RFID_IN,
       MQTT_TOPICS.RFID_OUT,
       MQTT_TOPICS.GATE_IN,

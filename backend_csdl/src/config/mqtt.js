@@ -6,7 +6,8 @@ const MQTT_TOPICS = {
   // ESP32 #1 — Slot sensors
   SLOT_PREFIX: process.env.MQTT_TOPIC_SLOT_PREFIX || 'parking/esp32_1/slot',
 
-  // ESP32 #2 — RFID
+  // ESP32 #2 — RFID (Hỗ trợ 1 đầu đọc duy nhất hoặc 2 đầu đọc riêng biệt)
+  RFID:     process.env.MQTT_TOPIC_RFID     || 'parking/esp32_2/rfid',
   RFID_IN:  process.env.MQTT_TOPIC_RFID_IN  || 'parking/esp32_2/rfid/in',
   RFID_OUT: process.env.MQTT_TOPIC_RFID_OUT || 'parking/esp32_2/rfid/out',
 
@@ -23,7 +24,8 @@ const MQTT_TOPICS = {
   // Commands to ESP32
   CMD_GATE_IN:  process.env.MQTT_TOPIC_CMD_GATE_IN  || 'parking/cmd/gate_in',
   CMD_GATE_OUT: process.env.MQTT_TOPIC_CMD_GATE_OUT || 'parking/cmd/gate_out',
-  CMD_LIGHT:    process.env.MQTT_TOPIC_CMD_LIGHT    || 'parking/cmd/light'
+  CMD_LIGHT:    process.env.MQTT_TOPIC_CMD_LIGHT    || 'parking/cmd/light',
+  CMD_ALERT:    process.env.MQTT_TOPIC_CMD_ALERT    || 'parking/cmd/alert'
 };
 
 // Commands server can send

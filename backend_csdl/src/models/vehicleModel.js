@@ -8,8 +8,17 @@ const VehicleModel = {
   findByUserId: (userId) =>
     query('SELECT * FROM vehicles WHERE user_id = ? ORDER BY is_default DESC, created_at DESC', [userId]),
 
-  findByPlate: (plateNumber) =>
-    queryOne('SELECT v.*, u.name as owner_name, u.email as owner_email FROM vehicles v LEFT JOIN users u ON v.user_id = u.id WHERE v.plate_number = ?', [plateNumber]),
+  findByPlate: (plateNumber) => {
+    const cleanPlate = plateNumber ? plateNumber.replace(/[\s\-\.]/g, '').toUpperCase() : '';
+    return queryOne(
+      `SELECT v.*, u.name as owner_name, u.email as owner_email 
+       FROM vehicles v 
+       LEFT JOIN users u ON v.user_id = u.id 
+       WHERE v.plate_number = ? 
+          OR REPLACE(REPLACE(REPLACE(v.plate_number, '-', ''), '.', ''), ' ', '') = ?`,
+      [plateNumber, cleanPlate]
+    );
+  },
 
   findByRfidUid: (rfidUid) =>
     queryOne(`SELECT v.*, u.name as owner_name, u.email as owner_email, u.wallet_balance 
@@ -19,7 +28,7 @@ const VehicleModel = {
   create: ({ user_id, plate_number, vehicle_type, vehicle_name, color, rfid_uid }) =>
     query(
       'INSERT INTO vehicles (user_id, plate_number, vehicle_type, vehicle_name, color, rfid_uid, is_default, status) VALUES (?, ?, ?, ?, ?, ?, 0, "ACTIVE")',
-      [user_id, plate_number, vehicle_type || 'CAR', vehicle_name, color, rfid_uid || null]
+      [user_id, plate_number, vehicle_type || 'CAR', vehicle_name || null, color || null, rfid_uid || null]
     ),
 
   updateById: (id, fields) => {

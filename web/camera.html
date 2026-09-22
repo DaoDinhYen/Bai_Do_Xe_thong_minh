@@ -1,47 +1,137 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camera ANPR — Smart Parking</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera ANPR — Smart Parking System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/animations.css">
   <style>
-    .cam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-    @media(max-width:900px) { .cam-grid { grid-template-columns: 1fr; } }
+    .cam-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 960px) { .cam-grid { grid-template-columns: 1fr; } }
+
     .cam-card {
-      background: white; border-radius: 16px; border: 1px solid var(--border);
-      overflow: hidden; box-shadow: var(--shadow-sm);
+      background: var(--white);
+      border-radius: var(--radius-2xl);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: all var(--transition);
+    }
+    .cam-card:hover {
+      box-shadow: var(--shadow-lg);
     }
     .cam-header {
-      padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       border-bottom: 1px solid var(--border-light);
     }
-    .cam-title { font-weight: 600; font-size: 15px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
+    .cam-title {
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.2px;
+    }
+
+    /* High-tech CCTV Viewport */
     .cam-feed {
-      position: relative; background: #0F172A; height: 260px;
-      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      background: #0B1120;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
     }
-    .cam-feed img { width: 100%; height: 100%; object-fit: cover; }
-    .cam-placeholder { text-align: center; color: #94A3B8; }
+    .cam-feed img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .cam-overlay-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .cam-tag-rec {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #EF4444;
+      letter-spacing: 0.5px;
+      font-family: 'JetBrains Mono', monospace;
+      z-index: 5;
+    }
+    .cam-tag-res {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #94A3B8;
+      font-family: 'JetBrains Mono', monospace;
+      z-index: 5;
+    }
+
+    /* ANPR Result Panel below feed */
     .anpr-result {
-      padding: 16px 20px; background: white;
+      padding: 20px 24px;
+      background: var(--white);
       border-top: 1px solid var(--border-light);
     }
-    .anpr-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; }
+    .anpr-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
     .anpr-row:last-child { margin-bottom: 0; }
-    .anpr-label { color: var(--text-light); }
-    .anpr-val   { font-weight: 600; color: var(--text-dark); }
-    .plate-display {
-      font-family: monospace; font-size: 16px; font-weight: 700;
-      letter-spacing: 2px; color: var(--primary);
-      background: var(--bg); padding: 4px 10px; border-radius: 6px;
-    }
+    .anpr-label { color: var(--text-muted); font-weight: 600; font-size: 12.5px; }
+    .anpr-val   { font-weight: 700; color: var(--text-dark); }
+
     .confidence-bar {
-      height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 4px;
+      height: 8px;
+      background: var(--bg-tertiary);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-top: 4px;
     }
-    .confidence-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+    .confidence-fill {
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
   </style>
 </head>
 <body>
@@ -53,126 +143,176 @@
   if (!requireAdmin()) return;
 
   const content = `
-    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+    <div class="page-header flex justify-between items-center" style="flex-wrap:wrap;gap:16px">
       <div>
         <div class="page-title">Camera & Nhận diện biển số (ANPR)</div>
-        <div class="page-subtitle">Giám sát hình ảnh trực tiếp và đối soát biển số tại 2 cổng</div>
+        <div class="page-subtitle">Giám sát hình ảnh trực tiếp và đối soát biển số tự động qua AI tại 2 luồng cổng vào/ra</div>
       </div>
       <button class="btn btn-outline" onclick="loadLatest(); loadRecords(1)">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        Làm mới
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Làm mới hình ảnh
       </button>
     </div>
 
-    <!-- Live Feeds -->
+    <!-- Live Feeds 2 Cams -->
     <div class="cam-grid stagger-children">
       <!-- Camera IN -->
       <div class="cam-card">
         <div class="cam-header">
-          <div class="cam-title">📷 Camera IN — Cổng vào</div>
-          <span class="badge" id="cam-in-status" style="background:#F0FDF4;color:#22C55E">● Sẵn sàng</span>
+          <div class="cam-title">
+            <span>📷</span> Camera Cổng Vào (IN)
+          </div>
+          <span class="badge badge-success badge-dot" id="cam-in-status">
+            <span class="live-radar-dot" style="margin-right:4px"></span>Sẵn sàng
+          </span>
         </div>
         <div class="cam-feed" id="cam-in-feed">
-          <div class="cam-placeholder" id="cam-in-placeholder">
-            <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 10px"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-            <div style="font-size:13px;font-weight:500">Camera IN — Giám sát luồng vào</div>
-            <div style="font-size:11px;opacity:0.6;margin-top:4px">Tự động nhận diện biển số khi xe dừng trước barrier</div>
+          <div class="cam-overlay-grid"></div>
+          <div class="cam-tag-rec"><span style="animation:pulse 1s infinite">●</span> REC LIVE</div>
+          <div class="cam-tag-res">1080P • 30FPS</div>
+          <div style="text-align:center;color:#94A3B8;z-index:2">
+            <div style="font-size:42px;margin-bottom:12px;opacity:0.8">🚗</div>
+            <div style="font-size:14px;font-weight:700;color:#F8FAFC">Luồng Giám sát Cổng Vào</div>
+            <div style="font-size:11.5px;color:#94A3B8;margin-top:4px">Tự động nhận diện biển số khi xe dừng trước vạch cảm biến</div>
           </div>
         </div>
         <div class="anpr-result" id="anpr-in-result">
-          <div class="anpr-row"><span class="anpr-label">Biển số nhận diện</span><div class="plate-display" id="plate-in">—  —  —</div></div>
+          <div class="anpr-row">
+            <span class="anpr-label">Biển số nhận diện</span>
+            <div id="plate-in"><span class="vn-plate">— — —</span></div>
+          </div>
           <div class="anpr-row">
             <div>
-              <span class="anpr-label">Độ chính xác AI</span>
-              <div class="confidence-bar" style="width:120px"><div class="confidence-fill" id="conf-in-bar" style="width:0%;background:#22C55E"></div></div>
+              <span class="anpr-label">Độ tin cậy AI</span>
+              <div class="confidence-bar" style="width:140px"><div class="confidence-fill" id="conf-in-bar" style="width:0%;background:#10B981"></div></div>
             </div>
             <span class="anpr-val" id="conf-in">—</span>
           </div>
-          <div class="anpr-row"><span class="anpr-label">Thời gian chụp</span><span class="anpr-val" id="time-in">—</span></div>
-          <div class="anpr-row"><span class="anpr-label">Thẻ RFID quẹt</span><span id="rfid-in" style="font-size:13px">—</span></div>
-          <div class="anpr-row"><span class="anpr-label">Đối soát hệ thống</span><span id="result-in">—</span></div>
+          <div class="anpr-row">
+            <span class="anpr-label">Thời gian chụp</span>
+            <span class="anpr-val" id="time-in">—</span>
+          </div>
+          <div class="anpr-row">
+            <span class="anpr-label">Thẻ RFID quẹt</span>
+            <span id="rfid-in" style="font-size:13px">—</span>
+          </div>
+          <div class="anpr-row">
+            <span class="anpr-label">Đối soát hệ thống</span>
+            <span id="result-in">—</span>
+          </div>
         </div>
       </div>
 
       <!-- Camera OUT -->
       <div class="cam-card">
         <div class="cam-header">
-          <div class="cam-title">📷 Camera OUT — Cổng ra</div>
-          <span class="badge" id="cam-out-status" style="background:#F0FDF4;color:#22C55E">● Sẵn sàng</span>
+          <div class="cam-title">
+            <span>📷</span> Camera Cổng Ra (OUT)
+          </div>
+          <span class="badge badge-success badge-dot" id="cam-out-status">
+            <span class="live-radar-dot" style="margin-right:4px"></span>Sẵn sàng
+          </span>
         </div>
         <div class="cam-feed" id="cam-out-feed">
-          <div class="cam-placeholder" id="cam-out-placeholder">
-            <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 10px"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-            <div style="font-size:13px;font-weight:500">Camera OUT — Giám sát luồng ra</div>
-            <div style="font-size:11px;opacity:0.6;margin-top:4px">Đối chiếu biển số lúc vào trước khi mở barrier ra</div>
+          <div class="cam-overlay-grid"></div>
+          <div class="cam-tag-rec"><span style="animation:pulse 1s infinite">●</span> REC LIVE</div>
+          <div class="cam-tag-res">1080P • 30FPS</div>
+          <div style="text-align:center;color:#94A3B8;z-index:2">
+            <div style="font-size:42px;margin-bottom:12px;opacity:0.8">🚙</div>
+            <div style="font-size:14px;font-weight:700;color:#F8FAFC">Luồng Giám sát Cổng Ra</div>
+            <div style="font-size:11.5px;color:#94A3B8;margin-top:4px">Đối chiếu biển số lúc vào trước khi chấp thuận mở barrier ra</div>
           </div>
         </div>
         <div class="anpr-result" id="anpr-out-result">
-          <div class="anpr-row"><span class="anpr-label">Biển số nhận diện</span><div class="plate-display" id="plate-out">—  —  —</div></div>
+          <div class="anpr-row">
+            <span class="anpr-label">Biển số nhận diện</span>
+            <div id="plate-out"><span class="vn-plate">— — —</span></div>
+          </div>
           <div class="anpr-row">
             <div>
-              <span class="anpr-label">Độ chính xác AI</span>
-              <div class="confidence-bar" style="width:120px"><div class="confidence-fill" id="conf-out-bar" style="width:0%;background:#22C55E"></div></div>
+              <span class="anpr-label">Độ tin cậy AI</span>
+              <div class="confidence-bar" style="width:140px"><div class="confidence-fill" id="conf-out-bar" style="width:0%;background:#10B981"></div></div>
             </div>
             <span class="anpr-val" id="conf-out">—</span>
           </div>
-          <div class="anpr-row"><span class="anpr-label">Thời gian chụp</span><span class="anpr-val" id="time-out">—</span></div>
-          <div class="anpr-row"><span class="anpr-label">Thẻ RFID quẹt</span><span id="rfid-out" style="font-size:13px">—</span></div>
-          <div class="anpr-row"><span class="anpr-label">Đối soát hệ thống</span><span id="result-out">—</span></div>
+          <div class="anpr-row">
+            <span class="anpr-label">Thời gian chụp</span>
+            <span class="anpr-val" id="time-out">—</span>
+          </div>
+          <div class="anpr-row">
+            <span class="anpr-label">Thẻ RFID quẹt</span>
+            <span id="rfid-out" style="font-size:13px">—</span>
+          </div>
+          <div class="anpr-row">
+            <span class="anpr-label">Đối soát hệ thống</span>
+            <span id="result-out">—</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Detection History -->
+    <!-- ANPR Detection History -->
     <div class="card">
-      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-        <span class="card-title">Nhật ký nhận diện biển số</span>
-        <div class="search-bar" style="display:flex;gap:8px;padding:0;align-items:center;flex-wrap:wrap">
-          <div class="search-input-wrap" style="width:200px">
-            <svg class="search-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+        <span class="card-title">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+          Nhật ký nhận diện biển số xe (ANPR Records)
+        </span>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div class="search-input-wrap" style="width:220px">
+            <svg class="search-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="search" class="search-input" placeholder="Tìm biển số, RFID..." id="cam-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchCam()">
           </div>
-          <select class="filter-select" id="cam-filter" onchange="loadRecords(1)" style="height:36px;font-size:12px">
+          <select class="filter-select" id="cam-filter" onchange="loadRecords(1)">
             <option value="">Tất cả camera</option>
             <option value="1">Cổng vào (Camera IN)</option>
             <option value="2">Cổng ra (Camera OUT)</option>
           </select>
-          <select class="filter-select" id="cam-status" onchange="loadRecords(1)" style="height:36px;font-size:12px">
+          <select class="filter-select" id="cam-status" onchange="loadRecords(1)">
             <option value="">Tất cả kết quả</option>
             <option value="VERIFIED">Đã xác thực (Khớp)</option>
             <option value="FAILED">Từ chối (Sai lệch)</option>
             <option value="PENDING">Chờ xử lý</option>
           </select>
-          <input type="date" class="filter-select" id="cam-date" onchange="loadRecords(1)" style="height:36px;font-size:12px" title="Lọc theo ngày">
+          <input type="date" class="filter-select" id="cam-date" onchange="loadRecords(1)" title="Lọc theo ngày">
           <button class="btn btn-outline btn-sm" onclick="resetCameraFilters()">Xóa lọc</button>
         </div>
       </div>
       <div class="table-wrapper">
         <table class="table">
-          <thead><tr>
-            <th>Thời gian</th><th>Cổng</th><th>Biển số nhận diện</th><th>Độ chính xác</th>
-            <th>RFID</th><th>Chủ sở hữu</th><th>Kết quả xác thực</th><th>Thao tác</th>
-          </tr></thead>
+          <thead>
+            <tr>
+              <th>Thời gian</th>
+              <th>Cổng</th>
+              <th>Biển số nhận diện</th>
+              <th>Độ tin cậy AI</th>
+              <th>Thẻ RFID</th>
+              <th>Chủ xe / Loại khách</th>
+              <th>Kết quả xác thực</th>
+              <th style="text-align:right">Thao tác</th>
+            </tr>
+          </thead>
           <tbody id="cam-records">${skeletonRows(6)}</tbody>
         </table>
       </div>
       <div id="cam-pager"></div>
     </div>
 
-    <!-- Camera Record Modal -->
+    <!-- Camera Record Detail Modal -->
     <div id="cam-modal" class="modal-overlay">
-      <div class="modal" style="max-width:520px">
+      <div class="modal" style="max-width:540px">
         <div class="modal-header">
-          <span class="modal-title">Chi tiết lượt nhận diện</span>
+          <span class="modal-title">Chi tiết lượt nhận diện ANPR</span>
           <button class="modal-close" onclick="closeCamModal()">✕</button>
         </div>
         <div class="modal-body" id="cam-modal-body"></div>
         <div class="modal-footer">
-          <button class="btn btn-ghost" onclick="closeCamModal()">Đóng</button>
+          <button class="btn btn-primary" onclick="closeCamModal()">Đóng</button>
         </div>
       </div>
     </div>
   `;
+
   createAdminPage('camera', content, () => {
     loadLatest();
     loadRecords(1);
@@ -225,21 +365,35 @@ function updateCameraPanel(type, record) {
   const resultEl = document.getElementById(`result-${type}`);
   const feedEl   = document.getElementById(`cam-${type}-feed`);
 
-  if (plate)    plate.textContent = record.detected_plate || record.plate_number || '—';
+  const pNum = record.detected_plate || record.plate_number;
+  if (plate) {
+    plate.innerHTML = pNum ? `<span class="vn-plate" style="font-size:15px;padding:4px 12px">${pNum}</span>` : '<span class="vn-plate">— — —</span>';
+  }
+
   const confVal = parseFloat(record.confidence || 0);
   const conf = Math.round(confVal > 1 ? confVal : confVal * 100);
-  if (confEl)   confEl.textContent = `${conf}%`;
-  if (confBar)  { confBar.style.width = `${conf}%`; confBar.style.background = conf >= 80 ? '#22C55E' : conf >= 60 ? '#F97316' : '#EF4444'; }
-  if (timeEl)   timeEl.textContent = Format.datetime(record.captured_at || record.created_at);
-  if (rfidEl)   rfidEl.innerHTML = record.rfid_uid ? `<code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:12px;font-weight:600">${record.rfid_uid}</code>` : '<span style="color:var(--text-light)">—</span>';
+  if (confEl)  confEl.textContent = `${conf}%`;
+  if (confBar) {
+    confBar.style.width = `${conf}%`;
+    confBar.style.background = conf >= 80 ? 'var(--success)' : conf >= 60 ? 'var(--warning)' : 'var(--error)';
+  }
+  if (timeEl) timeEl.textContent = Format.datetime(record.captured_at || record.created_at);
+  if (rfidEl) {
+    rfidEl.innerHTML = record.rfid_uid ? `<code style="background:#F1F5F9;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace">${record.rfid_uid}</code>` : '<span style="color:var(--text-light)">—</span>';
+  }
   if (resultEl) {
     const ok = record.verification_status === 'VERIFIED' || record.verification_result === 'VERIFIED' || record.is_verified;
     const failed = record.verification_status === 'FAILED' || record.verification_result === 'FAILED';
-    resultEl.innerHTML = ok ? '<span class="badge badge-success">✓ Hợp lệ — Mở barrier</span>' : (failed ? '<span class="badge badge-error">✗ Sai lệch biển số</span>' : '<span class="badge badge-gray">Đang đối soát</span>');
+    resultEl.innerHTML = ok ? '<span class="badge badge-success">✓ Hợp lệ — Đã mở barrier</span>' : (failed ? '<span class="badge badge-error">✗ Không khớp biển số</span>' : '<span class="badge badge-gray">Đang đối soát</span>');
   }
 
   if (feedEl && record.image_path) {
-    feedEl.innerHTML = `<img src="${record.image_path}" alt="Captured Plate" style="width:100%;height:100%;object-fit:cover">`;
+    feedEl.innerHTML = `
+      <div class="cam-overlay-grid"></div>
+      <div class="cam-tag-rec"><span style="animation:pulse 1s infinite">●</span> REC LIVE</div>
+      <div class="cam-tag-res">1080P • 30FPS</div>
+      <img src="${record.image_path}" alt="Captured Plate" style="width:100%;height:100%;object-fit:cover">
+    `;
   }
 }
 
@@ -248,6 +402,7 @@ async function loadRecords(page = 1) {
   const search = (document.getElementById('cam-search')?.value || '').trim();
   const status = document.getElementById('cam-status')?.value || '';
   const date = document.getElementById('cam-date')?.value || '';
+
   const tbody = document.getElementById('cam-records');
   if (tbody) tbody.innerHTML = skeletonRows(6);
 
@@ -260,8 +415,7 @@ async function loadRecords(page = 1) {
 
     const res = await CameraAPI.getRecords(params);
     let data = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
-    
-    // Strict client-side date safety filter
+
     if (date) {
       const toYMD = (val) => {
         if (!val) return '';
@@ -289,22 +443,22 @@ async function loadRecords(page = 1) {
 
       return `
         <tr>
-          <td style="font-size:12px">${Format.datetime(r.captured_at || r.created_at)}</td>
+          <td style="font-size:12.5px;color:var(--text-medium)">${Format.datetime(r.captured_at || r.created_at)}</td>
           <td>${isIN ? '<span class="badge badge-primary">Cổng vào</span>' : '<span class="badge badge-teal">Cổng ra</span>'}</td>
-          <td><code style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:13px;font-weight:700;letter-spacing:1px">${r.detected_plate || r.plate_number || '—'}</code></td>
+          <td><span class="vn-plate" style="font-size:12px;padding:2px 8px">${r.detected_plate || r.plate_number || '—'}</span></td>
           <td>
             <div style="display:flex;align-items:center;gap:8px">
-              <div style="height:5px;width:55px;background:var(--border);border-radius:3px;overflow:hidden">
-                <div style="height:100%;width:${conf}%;background:${conf>=80?'#22C55E':conf>=60?'#F97316':'#EF4444'}"></div>
+              <div style="height:6px;width:60px;background:var(--bg-tertiary);border-radius:4px;overflow:hidden">
+                <div style="height:100%;width:${conf}%;background:${conf>=80?'var(--success)':conf>=60?'var(--warning)':'var(--error)'}"></div>
               </div>
-              <span style="font-size:12px;font-weight:600">${conf}%</span>
+              <span style="font-size:12px;font-weight:700">${conf}%</span>
             </div>
           </td>
-          <td>${r.rfid_uid ? `<code style="font-size:11px;background:var(--bg);padding:2px 6px;border-radius:4px">${r.rfid_uid}</code>` : '—'}</td>
-          <td style="font-size:12px">${r.user_name || (r.vehicle_id ? 'Xe đã đăng ký' : '<span style="color:var(--text-light)">Khách vãng lai</span>')}</td>
+          <td>${r.rfid_uid ? `<code style="font-size:11px;background:#F1F5F9;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace">${r.rfid_uid}</code>` : '—'}</td>
+          <td style="font-size:12.5px">${r.user_name || (r.vehicle_id ? 'Xe đã đăng ký' : '<span style="color:var(--text-light)">Khách vãng lai</span>')}</td>
           <td>${isVerified ? '<span class="badge badge-success">✓ Khớp</span>' : (isFailed ? '<span class="badge badge-error">✗ Không khớp</span>' : '<span class="badge badge-gray">Chờ</span>')}</td>
-          <td>
-            <button class="btn btn-sm btn-ghost" onclick="viewCamRecord(${r.id})">Chi tiết</button>
+          <td style="text-align:right">
+            <button class="btn btn-sm btn-outline" onclick="viewCamRecord(${r.id})">Chi tiết</button>
           </td>
         </tr>
       `;
@@ -330,26 +484,29 @@ function viewCamRecord(id) {
   const isVerified = r.verification_status === 'VERIFIED' || r.verification_result === 'VERIFIED' || r.is_verified;
 
   body.innerHTML = `
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border-light)">
-      <div style="font-size:32px">📷</div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-light)">
+      <div style="font-size:36px">📷</div>
       <div>
-        <div style="font-size:18px;font-weight:700;letter-spacing:1px;font-family:monospace">${r.detected_plate || r.plate_number || '—'}</div>
-        <div style="font-size:12px;color:var(--text-light);margin-top:2px">Thời gian: ${Format.datetime(r.captured_at || r.created_at)}</div>
+        <div style="margin-bottom:4px"><span class="vn-plate" style="font-size:16px;padding:4px 12px">${r.detected_plate || r.plate_number || '—'}</span></div>
+        <div style="font-size:12px;color:var(--text-light)">Thời gian: ${Format.datetime(r.captured_at || r.created_at)}</div>
       </div>
       <div style="margin-left:auto">
         <span class="badge ${isIN ? 'badge-primary' : 'badge-teal'}">${isIN ? 'Camera Cổng Vào' : 'Camera Cổng Ra'}</span>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;background:#F8FAFC;padding:16px;border-radius:12px;border:1px solid #E2E8F0">
       ${[
-        ['Biển số nhận dạng', `<code>${r.detected_plate || r.plate_number || '—'}</code>`],
-        ['Biển số đăng ký', r.registered_plate ? `<code>${r.registered_plate}</code>` : 'Khách vãng lai'],
-        ['Độ tin cậy AI', `<span style="font-weight:700;color:${conf>=80?'var(--success)':'var(--warning)'}">${conf}%</span>`],
-        ['Thẻ RFID đi kèm', r.rfid_uid ? `<code>${r.rfid_uid}</code>` : 'Không có thẻ'],
-        ['Chủ sở hữu xe', r.user_name || 'Khách vãng lai'],
-        ['Trạng thái xác thực', isVerified ? '<span class="badge badge-success">✓ Xác thực thành công</span>' : '<span class="badge badge-error">Chưa đạt yêu cầu</span>']
+        ['Biển số nhận dạng', `<span class="vn-plate" style="font-size:11.5px">${r.detected_plate || r.plate_number || '—'}</span>`],
+        ['Biển số đối soát', r.registered_plate ? `<span class="vn-plate" style="font-size:11.5px">${r.registered_plate}</span>` : 'Khách vãng lai'],
+        ['Độ tin cậy AI', `<span style="font-weight:800;color:${conf>=80?'var(--success)':'var(--warning)'}">${conf}%</span>`],
+        ['Mã thẻ RFID', r.rfid_uid ? `<code style="font-family:'JetBrains Mono',monospace">${r.rfid_uid}</code>` : 'Không có thẻ'],
+        ['Chủ sở hữu phương tiện', r.user_name || 'Khách vãng lai'],
+        ['Trạng thái xác thực', isVerified ? '<span class="badge badge-success">✓ Xác thực thành công</span>' : '<span class="badge badge-error">Không đạt</span>']
       ].map(([k,v]) => `
-        <div><div style="font-size:11px;color:var(--text-light);margin-bottom:4px">${k}</div><div style="font-size:13px;font-weight:500">${v}</div></div>
+        <div>
+          <div style="font-size:11.5px;color:var(--text-muted);font-weight:600;margin-bottom:4px">${k}</div>
+          <div style="font-size:13px;font-weight:600">${v}</div>
+        </div>
       `).join('')}
     </div>
   `;

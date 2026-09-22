@@ -1,47 +1,114 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Điều khiển — Smart Parking</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Điều khiển thiết bị — Smart Parking System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/animations.css">
   <style>
-    .control-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
-    @media(max-width:900px) { .control-grid { grid-template-columns: repeat(2,1fr); } }
-    @media(max-width:600px) { .control-grid { grid-template-columns: 1fr; } }
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1024px) { .control-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .control-grid { grid-template-columns: 1fr; } }
 
     .ctrl-card {
-      background: white;
-      border-radius: 16px;
-      border: 1px solid var(--border);
+      background: var(--white);
+      border-radius: var(--radius-2xl);
+      border: 1px solid var(--border-subtle);
       padding: 28px 24px;
-      box-shadow: var(--shadow-sm);
+      box-shadow: var(--shadow-card);
       text-align: center;
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
     }
-    .ctrl-icon {
-      width: 72px; height: 72px;
-      border-radius: 20px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 32px;
-      margin: 0 auto 20px;
+    .ctrl-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
     }
-    .ctrl-title    { font-size: 17px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
-    .ctrl-status   { font-size: 13px; margin-bottom: 24px; font-weight: 500; }
-    .ctrl-btns     { display: flex; gap: 10px; }
-    .ctrl-btn-full { flex: 1; padding: 12px; border-radius: 10px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .ctrl-btn-full:hover:not(:disabled) { filter: brightness(0.92); transform: translateY(-1px); }
+
+    .ctrl-visual {
+      width: 84px;
+      height: 84px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      margin-bottom: 18px;
+      box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.8), 0 8px 16px rgba(0, 0, 0, 0.04);
+      transition: all var(--transition);
+    }
+    .ctrl-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+    .ctrl-status {
+      margin-bottom: 24px;
+    }
+
+    .ctrl-btns {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+    .ctrl-btn-full {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      border: none;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      user-select: none;
+    }
+    .ctrl-btn-full:active:not(:disabled) { transform: scale(0.97); }
     .ctrl-btn-full:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .log-panel { background: #0F172A; border-radius: 12px; padding: 16px; font-family: monospace; max-height: 300px; overflow-y: auto; }
-    .log-line  { font-size: 12px; margin-bottom: 4px; }
-    .log-line.success { color: #4ADE80; }
+    /* Modern Terminal Log */
+    .log-panel {
+      background: #0F172A;
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      max-height: 280px;
+      overflow-y: auto;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    .log-line {
+      font-size: 12.5px;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+    .log-line.success { color: #34D399; }
     .log-line.error   { color: #F87171; }
     .log-line.info    { color: #93C5FD; }
-    .log-line.warn    { color: #FCD34D; }
+    .log-line.warn    { color: #FBBF24; }
   </style>
 </head>
 <body>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="js/api.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/admin-layout.js"></script>
@@ -50,96 +117,147 @@
   if (!requireAdmin()) return;
 
   const content = `
-    <div class="page-header">
-      <div class="page-title">Điều khiển</div>
-      <div class="page-subtitle">Điều khiển barrier và đèn bãi xe từ xa</div>
+    <div class="page-header flex justify-between items-center" style="flex-wrap:wrap;gap:16px">
+      <div>
+        <div class="page-title">Điều khiển thiết bị</div>
+        <div class="page-subtitle">Vận hành từ xa cơ cấu chấp hành barrier và hệ thống chiếu sáng qua giao thức MQTT / ESP32</div>
+      </div>
+      <span class="badge badge-success badge-dot">
+        <span class="live-radar-dot" style="margin-right:4px"></span>MQTT Broker Kết nối
+      </span>
     </div>
 
+    <!-- 3 Core Controls -->
     <div class="control-grid stagger-children">
-      <!-- Barrier IN -->
+      <!-- 1. Barrier IN -->
       <div class="ctrl-card">
-        <div class="ctrl-icon" style="background:#EFF6FF">🚧</div>
-        <div class="ctrl-title">Barrier IN</div>
-        <div class="ctrl-status" id="barrier-in-status"><span class="badge badge-gray">Chưa xác định</span></div>
+        <div>
+          <div class="ctrl-visual" style="background:#EFF6FF">🚧</div>
+          <div class="ctrl-title">Barrier Cổng Vào (IN)</div>
+          <div class="ctrl-status" id="barrier-in-status">
+            <span class="badge badge-gray">Chưa xác định</span>
+          </div>
+        </div>
         <div class="ctrl-btns">
-          <button class="ctrl-btn-full" style="background:#22C55E;color:white" onclick="ctrlBarrier('barrier_in','OPEN')" id="btn-in-open">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
-            Mở
+          <button class="ctrl-btn-full" style="background:linear-gradient(135deg, #10B981 0%, #059669 100%);color:white;box-shadow:0 4px 12px rgba(16,185,129,0.3)" onclick="ctrlBarrier('barrier_in','OPEN')" id="btn-in-open">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+            Mở Barrier
           </button>
-          <button class="ctrl-btn-full" style="background:#EF4444;color:white" onclick="ctrlBarrier('barrier_in','CLOSE')" id="btn-in-close">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          <button class="ctrl-btn-full" style="background:linear-gradient(135deg, #EF4444 0%, #DC2626 100%);color:white;box-shadow:0 4px 12px rgba(239,68,68,0.3)" onclick="ctrlBarrier('barrier_in','CLOSE')" id="btn-in-close">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
             Đóng
           </button>
         </div>
       </div>
 
-      <!-- Barrier OUT -->
+      <!-- 2. Barrier OUT -->
       <div class="ctrl-card">
-        <div class="ctrl-icon" style="background:#FEF3C7">🚧</div>
-        <div class="ctrl-title">Barrier OUT</div>
-        <div class="ctrl-status" id="barrier-out-status"><span class="badge badge-gray">Chưa xác định</span></div>
+        <div>
+          <div class="ctrl-visual" style="background:#F0FDFA">🚧</div>
+          <div class="ctrl-title">Barrier Cổng Ra (OUT)</div>
+          <div class="ctrl-status" id="barrier-out-status">
+            <span class="badge badge-gray">Chưa xác định</span>
+          </div>
+        </div>
         <div class="ctrl-btns">
-          <button class="ctrl-btn-full" style="background:#22C55E;color:white" onclick="ctrlBarrier('barrier_out','OPEN')" id="btn-out-open">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
-            Mở
+          <button class="ctrl-btn-full" style="background:linear-gradient(135deg, #10B981 0%, #059669 100%);color:white;box-shadow:0 4px 12px rgba(16,185,129,0.3)" onclick="ctrlBarrier('barrier_out','OPEN')" id="btn-out-open">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+            Mở Barrier
           </button>
-          <button class="ctrl-btn-full" style="background:#EF4444;color:white" onclick="ctrlBarrier('barrier_out','CLOSE')" id="btn-out-close">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          <button class="ctrl-btn-full" style="background:linear-gradient(135deg, #EF4444 0%, #DC2626 100%);color:white;box-shadow:0 4px 12px rgba(239,68,68,0.3)" onclick="ctrlBarrier('barrier_out','CLOSE')" id="btn-out-close">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
             Đóng
           </button>
         </div>
       </div>
 
-      <!-- Đèn bãi xe -->
+      <!-- 3. Bãi xe Lights -->
       <div class="ctrl-card">
-        <div class="ctrl-icon" style="background:#FFFBEB">💡</div>
-        <div class="ctrl-title">Đèn bãi xe</div>
-        <div class="ctrl-status" id="light-status"><span class="badge badge-gray">Chưa xác định</span></div>
+        <div>
+          <div class="ctrl-visual" style="background:#FFFBEB">💡</div>
+          <div class="ctrl-title">Đèn Chiếu Sáng Bãi Xe</div>
+          <div class="ctrl-status" id="light-status">
+            <span class="badge badge-gray">Chưa xác định</span>
+          </div>
+        </div>
         <div class="ctrl-btns">
-          <button class="ctrl-btn-full" style="background:#F97316;color:white" onclick="ctrlLight('ON')">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-            Bật
+          <button class="ctrl-btn-full" style="background:linear-gradient(135deg, #F59E0B 0%, #D97706 100%);color:white;box-shadow:0 4px 12px rgba(245,158,11,0.3)" onclick="ctrlLight('ON')">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            Bật Đèn
           </button>
-          <button class="ctrl-btn-full" style="background:#64748B;color:white" onclick="ctrlLight('OFF')">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="6"/><path d="M17.66 4.34A6 6 0 1 1 6.34 17.66"/></svg>
-            Tắt
+          <button class="ctrl-btn-full" style="background:#64748B;color:white;box-shadow:0 4px 12px rgba(100,116,139,0.25)" onclick="ctrlLight('OFF')">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="1" y1="1" x2="23" y2="23"/><path d="M17.66 4.34A6 6 0 1 1 6.34 17.66"/></svg>
+            Tắt Đèn
           </button>
         </div>
       </div>
     </div>
 
     <!-- Emergency Controls -->
-    <div class="card mb-6">
+    <div class="card mb-6" style="border-left: 5px solid var(--error)">
       <div class="card-header">
-        <span class="card-title">Khẩn cấp</span>
-        <span class="badge badge-error">⚠️ Cẩn thận</span>
+        <span class="card-title" style="color:var(--error)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Chế độ khẩn cấp (Emergency Override)
+        </span>
+        <span class="badge badge-error">Cẩn trọng</span>
       </div>
-      <div style="padding:20px;display:flex;gap:12px;flex-wrap:wrap">
+      <div style="padding:20px 24px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">
         <button class="btn btn-error" onclick="openAllBarriers()">
-          🔓 Mở tất cả barrier khẩn cấp
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+          Mở tất cả barrier khẩn cấp
         </button>
-        <button class="btn btn-ghost" onclick="closeAllBarriers()">
-          🔒 Đóng tất cả barrier
+        <button class="btn btn-outline" onclick="closeAllBarriers()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Đóng tất cả barrier
         </button>
+        <span style="font-size:12px;color:var(--text-light);margin-left:auto">Gửi tín hiệu MQTT tức thời đến ESP32 #2</span>
       </div>
     </div>
 
-    <!-- Control Log -->
+    <!-- Control Terminal Log -->
     <div class="card">
       <div class="card-header">
-        <span class="card-title">Nhật ký điều khiển</span>
-        <button class="btn btn-sm btn-ghost" onclick="clearLog()">Xóa</button>
+        <span class="card-title">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          Nhật ký lệnh điều khiển thời gian thực
+        </span>
+        <button class="btn btn-sm btn-outline" onclick="clearLog()">Xóa nhật ký</button>
       </div>
-      <div class="log-panel" id="ctrl-log">
-        <div class="log-line info">[${new Date().toLocaleTimeString('vi-VN')}] Hệ thống sẵn sàng...</div>
+      <div style="padding:16px">
+        <div class="log-panel" id="ctrl-log">
+          <div class="log-line info">[${new Date().toLocaleTimeString('vi-VN')}] Hệ thống điều khiển vi điều khiển sẵn sàng...</div>
+        </div>
       </div>
     </div>
   `;
 
   createAdminPage('parking-control', content, () => {
     loadBarrierStatus();
+    initSocket();
   });
 })();
+
+function initSocket() {
+  if (!window.io) return;
+  try {
+    const socket = io(window.SOCKET_URL, { auth: { token: Auth.getToken() } });
+    socket.on('barrier_status', (data) => {
+      const { target, action } = data;
+      const statusEl = document.getElementById(target === 'barrier_in' ? 'barrier-in-status' : 'barrier-out-status');
+      if (statusEl) {
+        const open = action === 'OPEN';
+        statusEl.innerHTML = `<span class="badge ${open ? 'badge-success' : 'badge-error'}">${open ? '🔓 Đang mở' : '🔒 Đã đóng'}</span>`;
+      }
+      const label = target === 'barrier_in' ? 'Barrier Cổng Vào (IN)' : 'Barrier Cổng Ra (OUT)';
+      if (action === 'CLOSE') {
+        addLog(`⏱️ [Tự động] ${label} đã đóng lại an toàn (sau 5s)`, 'info');
+      } else {
+        addLog(`📢 ${label} đã mở`, 'warn');
+      }
+    });
+  } catch {}
+}
 
 function addLog(msg, type = 'info') {
   const log = document.getElementById('ctrl-log');
@@ -148,27 +266,29 @@ function addLog(msg, type = 'info') {
   line.className = `log-line ${type}`;
   line.textContent = `[${new Date().toLocaleTimeString('vi-VN')}] ${msg}`;
   log.insertBefore(line, log.firstChild);
-  if (log.children.length > 50) log.lastChild?.remove();
+  if (log.children.length > 60) log.lastChild?.remove();
 }
 
 async function loadBarrierStatus() {
   try {
     const res = await DeviceAPI.getAll();
-    const devices = res?.data || [];
-    // Extract status from device logs if available
-    addLog('Đã kết nối với hệ thống', 'success');
+    addLog('Đã kết nối máy chủ điều khiển và MQTT Broker', 'success');
   } catch {
-    addLog('Không thể kết nối với hệ thống', 'error');
+    addLog('Không thể kết nối máy chủ điều khiển', 'error');
   }
 }
 
 async function ctrlBarrier(target, action) {
   const label = target === 'barrier_in' ? 'Barrier IN' : 'Barrier OUT';
   const actionLabel = action === 'OPEN' ? 'Mở' : 'Đóng';
-  const ok = await showConfirm({ title: `${actionLabel} ${label}`, message: `Xác nhận ${actionLabel.toLowerCase()} ${label}?`, confirmText: actionLabel });
+  const ok = await showConfirm({
+    title: `${actionLabel} ${label}`,
+    message: `Xác nhận gửi lệnh ${actionLabel.toLowerCase()} ${label}?${action === 'OPEN' ? ' (Hệ thống sẽ tự động đóng lại sau 5 giây)' : ''}`,
+    confirmText: actionLabel
+  });
   if (!ok) return;
 
-  addLog(`Đang ${actionLabel.toLowerCase()} ${label}...`, 'warn');
+  addLog(`Đang gửi lệnh ${actionLabel.toLowerCase()} ${label}...`, 'warn');
   try {
     await DeviceAPI.controlBarrier({ target, action });
     const statusEl = document.getElementById(target === 'barrier_in' ? 'barrier-in-status' : 'barrier-out-status');
@@ -176,8 +296,13 @@ async function ctrlBarrier(target, action) {
       const open = action === 'OPEN';
       statusEl.innerHTML = `<span class="badge ${open ? 'badge-success' : 'badge-error'}">${open ? '🔓 Đang mở' : '🔒 Đã đóng'}</span>`;
     }
-    addLog(`✓ ${label} đã ${actionLabel.toLowerCase()} thành công`, 'success');
-    Toast.success('Thành công', `${label} đã ${actionLabel.toLowerCase()}`);
+    if (action === 'OPEN') {
+      addLog(`✓ ${label} đã mở thành công (sẽ tự động đóng sau 5 giây)`, 'success');
+      Toast.success('Thành công', `${label} đã mở (tự đóng sau 5s)`);
+    } else {
+      addLog(`✓ ${label} đã đóng thành công`, 'success');
+      Toast.success('Thành công', `${label} đã đóng`);
+    }
   } catch (e) {
     addLog(`✗ Lỗi: ${e.message}`, 'error');
     Toast.error('Lỗi', e.message || 'Không thể điều khiển barrier');
@@ -185,32 +310,53 @@ async function ctrlBarrier(target, action) {
 }
 
 async function ctrlLight(action) {
-  const ok = await showConfirm({ title: `${action === 'ON' ? 'Bật' : 'Tắt'} đèn`, message: `Xác nhận ${action === 'ON' ? 'bật' : 'tắt'} đèn bãi xe?`, confirmText: action === 'ON' ? 'Bật đèn' : 'Tắt đèn' });
+  const ok = await showConfirm({
+    title: `${action === 'ON' ? 'Bật' : 'Tắt'} đèn bãi xe`,
+    message: `Xác nhận gửi lệnh ${action === 'ON' ? 'BẬT' : 'TẮT'} toàn bộ đèn chiếu sáng bãi xe?`,
+    confirmText: action === 'ON' ? 'Bật đèn' : 'Tắt đèn'
+  });
   if (!ok) return;
+
   try {
     await DeviceAPI.controlLight({ action });
     const statusEl = document.getElementById('light-status');
-    if (statusEl) statusEl.innerHTML = `<span class="badge ${action === 'ON' ? 'badge-warning' : 'badge-gray'}">${action === 'ON' ? '💡 Đang bật' : '🌑 Đã tắt'}</span>`;
-    addLog(`✓ Đèn đã ${action === 'ON' ? 'bật' : 'tắt'} thành công`, 'success');
+    if (statusEl) {
+      statusEl.innerHTML = `<span class="badge ${action === 'ON' ? 'badge-warning' : 'badge-gray'}">${action === 'ON' ? '💡 Đang bật' : '🌑 Đã tắt'}</span>`;
+    }
+    addLog(`✓ Đèn bãi xe đã ${action === 'ON' ? 'bật' : 'tắt'} thành công`, 'success');
     Toast.success('Thành công', `Đèn bãi xe đã ${action === 'ON' ? 'bật' : 'tắt'}`);
   } catch (e) {
     addLog(`✗ Lỗi đèn: ${e.message}`, 'error');
-    Toast.error('Lỗi', e.message);
+    Toast.error('Lỗi', e.message || 'Không thể điều khiển đèn');
   }
 }
 
 async function openAllBarriers() {
-  const ok = await showConfirm({ title: '⚠️ Mở khẩn cấp', message: 'Mở tất cả barrier? Hành động này có thể gây nguy hiểm.', confirmText: 'Mở tất cả', danger: true });
+  const ok = await showConfirm({
+    title: '⚠️ Mở khẩn cấp tất cả Barrier',
+    message: 'Mở toàn bộ Barrier IN và OUT ngay lập tức? Chỉ sử dụng khi xảy ra sự cố khẩn cấp.',
+    confirmText: 'Mở tất cả ngay',
+    danger: true
+  });
   if (!ok) return;
+
   await ctrlBarrier('barrier_in', 'OPEN').catch(() => {});
   await ctrlBarrier('barrier_out', 'OPEN').catch(() => {});
-  addLog('⚠️ Mở tất cả barrier khẩn cấp', 'warn');
+  addLog('⚠️ Kích hoạt mở tất cả barrier khẩn cấp!', 'warn');
 }
 
 async function closeAllBarriers() {
-  const ok = await showConfirm({ title: 'Đóng tất cả barrier', message: 'Đóng cả Barrier IN và Barrier OUT?', confirmText: 'Đóng tất cả' });
+  const ok = await showConfirm({
+    title: 'Đóng tất cả Barrier',
+    message: 'Đóng cả Barrier IN và Barrier OUT về trạng thái an toàn ban đầu?',
+    confirmText: 'Đóng tất cả'
+  });
   if (!ok) return;
-  await Promise.allSettled([DeviceAPI.controlBarrier({ target: 'barrier_in', action: 'CLOSE' }), DeviceAPI.controlBarrier({ target: 'barrier_out', action: 'CLOSE' })]);
+
+  await Promise.allSettled([
+    DeviceAPI.controlBarrier({ target: 'barrier_in', action: 'CLOSE' }),
+    DeviceAPI.controlBarrier({ target: 'barrier_out', action: 'CLOSE' })
+  ]);
   addLog('Đã đóng tất cả barrier', 'info');
   Toast.success('Thành công', 'Đã đóng tất cả barrier');
 }

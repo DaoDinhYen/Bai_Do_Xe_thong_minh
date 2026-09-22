@@ -173,6 +173,7 @@ const ParkingAPI = {
   updateSlot:   (id, d)  => api.put(`/parking/slots/${id}`, d),
   getRates:     ()       => api.get('/parking/rates'),
   updateRate:   (id, d)  => api.put(`/parking/rates/${id}`, d),
+  batchUpdateRates: (rates) => api.put('/parking/rates/batch', { rates }),
 };
 
 // ── Bookings ──

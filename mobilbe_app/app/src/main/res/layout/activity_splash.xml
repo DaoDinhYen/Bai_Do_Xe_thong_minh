@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Background Image matching clean parking entrance -->
+    <ImageView
+        android:id="@+id/iv_splash_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_login_clean"
+        android:contentDescription="Smart Parking Background" />
+
+    <!-- Subtle semi-transparent gradient overlay to ensure top text readability -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:background="@drawable/bg_splash_overlay" />
+
+    <!-- Content Container -->
+    <LinearLayout
+        android:id="@+id/layout_splash_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="90dp"
+        android:paddingHorizontal="24dp">
+
+        <!-- Logo Icon (Blue with P and car) -->
+        <ImageView
+            android:id="@+id/iv_splash_logo"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:src="@drawable/ic_parking_logo"
+            android:contentDescription="Smart Parking Logo" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tv_splash_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Smart Parking System"
+            android:textColor="#1677FF"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:shadowColor="#FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="4" />
+
+        <!-- Slogan -->
+        <TextView
+            android:id="@+id/tv_splash_slogan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/app_slogan"
+            android:textColor="@color/navy"
+            android:textSize="@dimen/text_subtitle"
+            android:alpha="0.9" />
+    </LinearLayout>
+
+    <!-- Bottom Loading indicator -->
+    <ProgressBar
+        android:id="@+id/pb_splash"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:indeterminateTint="@color/primary" />
+</RelativeLayout>

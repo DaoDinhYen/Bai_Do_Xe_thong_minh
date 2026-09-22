@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nhật ký hệ thống — Smart Parking</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/animations.css">
 </head>
@@ -15,79 +17,102 @@
 (function init() {
   if (!requireAdmin()) return;
   const content = `
-    <div class="page-header flex justify-between items-center">
+    <!-- Page Header -->
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:24px">
       <div>
-        <div class="page-title">Nhật ký hệ thống</div>
-        <div class="page-subtitle">Theo dõi toàn bộ hoạt động, sự kiện bảo mật và điều khiển thiết bị</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <h1 class="page-title" style="margin:0">Nhật ký hệ thống</h1>
+          <span style="font-size:12px;font-weight:600;background:rgba(37,99,235,0.08);color:#2563EB;padding:3px 10px;border-radius:20px;border:1px solid rgba(37,99,235,0.15)">Audit Logs</span>
+        </div>
+        <div class="page-subtitle" style="margin-top:4px">Theo dõi toàn bộ lịch sử thao tác người dùng, sự kiện bảo mật và điều khiển thiết bị IoT</div>
       </div>
-      <button class="btn btn-outline" onclick="loadLogs(1)">
+      <button class="btn btn-outline" onclick="loadLogs(1)" style="display:flex;align-items:center;gap:8px;border-radius:10px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        Làm mới
+        <span>Làm mới nhật ký</span>
       </button>
     </div>
 
-    <div class="card">
-      <div class="search-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <div class="search-input-wrap" style="flex:1;min-width:220px">
-          <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="search" class="search-input" placeholder="Tìm mô tả, người dùng, IP, hành động..." id="log-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchL()">
+    <!-- Main Card -->
+    <div class="card" style="border:1px solid rgba(226,232,240,0.8);border-radius:16px;box-shadow:var(--shadow-card)">
+      <!-- Filter Bar -->
+      <div style="padding:16px 20px;border-bottom:1px solid rgba(226,232,240,0.7);background:#FAFAFA;border-radius:16px 16px 0 0">
+        <div class="search-bar" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:0">
+          <div class="search-input-wrap" style="flex:1;min-width:260px;position:relative">
+            <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94A3B8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="search" class="search-input" placeholder="Tìm mô tả, người dùng, địa chỉ IP, hành động..." id="log-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchL()" style="padding-left:40px;border-radius:10px;background:#FFF;border:1px solid #E2E8F0">
+          </div>
+          <select class="filter-select" id="log-action" onchange="loadLogs(1)" style="border-radius:10px;background:#FFF;border:1px solid #E2E8F0;font-weight:500">
+            <option value="">Tất cả loại hành động</option>
+            <optgroup label="Tài khoản & Xác thực">
+              <option value="LOGIN">Đăng nhập (LOGIN)</option>
+              <option value="LOGOUT">Đăng xuất (LOGOUT)</option>
+              <option value="REGISTER">Đăng ký mới (REGISTER)</option>
+            </optgroup>
+            <optgroup label="Bãi xe & Cổng barrier">
+              <option value="VEHICLE_ENTRY">Xe vào bãi (ENTRY)</option>
+              <option value="VEHICLE_EXIT">Xe ra bãi (EXIT)</option>
+              <option value="BARRIER_OPEN">Mở barrier</option>
+              <option value="BARRIER_CLOSE">Đóng barrier</option>
+              <option value="LIGHT_ON">Bật đèn chiếu sáng</option>
+              <option value="LIGHT_OFF">Tắt đèn chiếu sáng</option>
+            </optgroup>
+            <optgroup label="Thanh toán & Booking">
+              <option value="BOOKING_CREATED">Đặt chỗ mới</option>
+              <option value="BOOKING_CANCELLED">Hủy đặt chỗ</option>
+              <option value="PAYMENT">Thanh toán phí gửi</option>
+              <option value="WALLET_TOPUP">Nạp tiền vào ví</option>
+            </optgroup>
+            <optgroup label="RFID & Thiết bị IoT">
+              <option value="RFID_SCAN">Quẹt thẻ RFID hợp lệ</option>
+              <option value="RFID_INVALID">Thẻ RFID không hợp lệ</option>
+              <option value="DEVICE_ONLINE">Thiết bị trực tuyến</option>
+              <option value="DEVICE_OFFLINE">Thiết bị mất kết nối</option>
+            </optgroup>
+          </select>
+          <input type="date" class="filter-select" id="log-date" onchange="loadLogs(1)" title="Lọc theo ngày" style="border-radius:10px;background:#FFF;border:1px solid #E2E8F0;font-weight:500">
+          <button class="btn btn-outline btn-sm" onclick="resetLogFilters()" title="Xóa toàn bộ bộ lọc" style="border-radius:10px;display:flex;align-items:center;gap:6px;font-weight:600">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            <span>Xóa lọc</span>
+          </button>
         </div>
-        <select class="filter-select" id="log-action" onchange="loadLogs(1)">
-          <option value="">Tất cả hành động</option>
-          <optgroup label="Tài khoản & Xác thực">
-            <option value="LOGIN">Đăng nhập (LOGIN)</option>
-            <option value="LOGOUT">Đăng xuất (LOGOUT)</option>
-            <option value="REGISTER">Đăng ký mới (REGISTER)</option>
-          </optgroup>
-          <optgroup label="Bãi xe & Cổng">
-            <option value="VEHICLE_ENTRY">Xe vào bãi (ENTRY)</option>
-            <option value="VEHICLE_EXIT">Xe ra bãi (EXIT)</option>
-            <option value="BARRIER_OPEN">Mở barrier</option>
-            <option value="BARRIER_CLOSE">Đóng barrier</option>
-            <option value="LIGHT_ON">Bật đèn</option>
-            <option value="LIGHT_OFF">Tắt đèn</option>
-          </optgroup>
-          <optgroup label="Thanh toán & Booking">
-            <option value="BOOKING_CREATED">Đặt chỗ mới</option>
-            <option value="BOOKING_CANCELLED">Hủy đặt chỗ</option>
-            <option value="PAYMENT">Thanh toán phí gửi</option>
-            <option value="WALLET_TOPUP">Nạp tiền vào ví</option>
-          </optgroup>
-          <optgroup label="RFID & Thiết bị">
-            <option value="RFID_SCAN">Quẹt thẻ RFID hợp lệ</option>
-            <option value="RFID_INVALID">Thẻ RFID không hợp lệ</option>
-            <option value="DEVICE_ONLINE">Thiết bị Online</option>
-            <option value="DEVICE_OFFLINE">Thiết bị Mất kết nối</option>
-          </optgroup>
-        </select>
-        <input type="date" class="filter-select" id="log-date" onchange="loadLogs(1)" title="Lọc theo ngày">
-        <button class="btn btn-outline btn-sm" onclick="resetLogFilters()" title="Xóa toàn bộ bộ lọc">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-          Xóa lọc
-        </button>
       </div>
 
-      <div class="table-wrapper">
-        <table class="table">
-          <thead><tr>
-            <th>Thời gian</th><th>Hành động</th><th>Mô tả sự kiện</th><th>Người thực hiện</th><th>Địa chỉ IP</th><th>Thiết bị ID</th><th>Thao tác</th>
-          </tr></thead>
+      <!-- Table -->
+      <div class="table-wrapper" style="overflow-x:auto">
+        <table class="table" style="margin:0">
+          <thead>
+            <tr style="background:#F8FAFC">
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Thời gian</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Hành động</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Mô tả sự kiện</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Người thực hiện</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Địa chỉ IP</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">Thiết bị ID</th>
+              <th style="padding:14px 18px;font-weight:600;font-size:12px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;text-align:right">Thao tác</th>
+            </tr>
+          </thead>
           <tbody id="log-table">${skeletonRows(10)}</tbody>
         </table>
       </div>
-      <div id="log-pager"></div>
+      <div id="log-pager" style="padding:16px 20px;border-top:1px solid #F1F5F9"></div>
     </div>
 
     <!-- Log Detail Modal -->
     <div id="log-modal" class="modal-overlay">
-      <div class="modal" style="max-width:540px">
-        <div class="modal-header">
-          <span class="modal-title">Chi tiết bản ghi sự kiện</span>
+      <div class="modal" style="max-width:540px;border-radius:18px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.18)">
+        <div class="modal-header" style="background:#F8FAFC;padding:18px 24px;border-bottom:1px solid #E2E8F0">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;border-radius:10px;background:#EFF6FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:18px">📋</div>
+            <div>
+              <span class="modal-title" style="font-size:16px;font-weight:700;color:#0F172A">Chi tiết bản ghi sự kiện</span>
+              <div style="font-size:12px;color:#64748B">Thông tin kỹ thuật và bối cảnh ghi log</div>
+            </div>
+          </div>
           <button class="modal-close" onclick="closeLogModal()">✕</button>
         </div>
-        <div class="modal-body" id="log-modal-body"></div>
-        <div class="modal-footer">
-          <button class="btn btn-ghost" onclick="closeLogModal()">Đóng</button>
+        <div class="modal-body" id="log-modal-body" style="padding:24px"></div>
+        <div class="modal-footer" style="background:#FAFAFA;padding:16px 24px;border-top:1px solid #E2E8F0;display:flex;justify-content:flex-end">
+          <button class="btn btn-ghost" onclick="closeLogModal()" style="font-weight:600">Đóng</button>
         </div>
       </div>
     </div>
@@ -112,17 +137,26 @@ function resetLogFilters() {
 
 const actionBadge = (action) => {
   const map = {
-    LOGIN: '#2563EB', LOGOUT: '#64748B', REGISTER: '#8B5CF6',
-    VEHICLE_ENTRY: '#22C55E', VEHICLE_EXIT: '#3B82F6',
-    BARRIER_OPEN: '#10B981', BARRIER_CLOSE: '#EF4444',
-    LIGHT_ON: '#F59E0B', LIGHT_OFF: '#64748B',
-    BOOKING_CREATED: '#F97316', BOOKING_CANCELLED: '#DC2626',
-    PAYMENT: '#059669', WALLET_TOPUP: '#16A34A',
-    RFID_SCAN: '#06B6D4', RFID_INVALID: '#E11D48',
-    DEVICE_ONLINE: '#22C55E', DEVICE_OFFLINE: '#EF4444'
+    LOGIN: { color: '#2563EB', bg: '#EFF6FF', border: 'rgba(37,99,235,0.2)' },
+    LOGOUT: { color: '#64748B', bg: '#F1F5F9', border: 'rgba(100,116,139,0.2)' },
+    REGISTER: { color: '#8B5CF6', bg: '#F5F3FF', border: 'rgba(139,92,246,0.2)' },
+    VEHICLE_ENTRY: { color: '#10B981', bg: '#ECFDF5', border: 'rgba(16,185,129,0.2)' },
+    VEHICLE_EXIT: { color: '#0284C7', bg: '#F0F9FF', border: 'rgba(2,132,199,0.2)' },
+    BARRIER_OPEN: { color: '#059669', bg: '#ECFDF5', border: 'rgba(5,150,105,0.2)' },
+    BARRIER_CLOSE: { color: '#EF4444', bg: '#FEF2F2', border: 'rgba(239,68,68,0.2)' },
+    LIGHT_ON: { color: '#D97706', bg: '#FFFBEB', border: 'rgba(217,119,6,0.2)' },
+    LIGHT_OFF: { color: '#64748B', bg: '#F1F5F9', border: 'rgba(100,116,139,0.2)' },
+    BOOKING_CREATED: { color: '#EA580C', bg: '#FFF7ED', border: 'rgba(234,88,12,0.2)' },
+    BOOKING_CANCELLED: { color: '#E11D48', bg: '#FFF1F2', border: 'rgba(225,29,72,0.2)' },
+    PAYMENT: { color: '#059669', bg: '#ECFDF5', border: 'rgba(5,150,105,0.2)' },
+    WALLET_TOPUP: { color: '#16A34A', bg: '#F0FDF4', border: 'rgba(22,163,74,0.2)' },
+    RFID_SCAN: { color: '#0D9488', bg: '#F0FDFA', border: 'rgba(13,148,136,0.2)' },
+    RFID_INVALID: { color: '#EF4444', bg: '#FEF2F2', border: 'rgba(239,68,68,0.2)' },
+    DEVICE_ONLINE: { color: '#10B981', bg: '#ECFDF5', border: 'rgba(16,185,129,0.2)' },
+    DEVICE_OFFLINE: { color: '#EF4444', bg: '#FEF2F2', border: 'rgba(239,68,68,0.2)' }
   };
-  const bg = map[action] || '#475569';
-  return `<span class="badge" style="background:${bg}1A;color:${bg};border:1px solid ${bg}33;font-weight:600">${action || 'SYSTEM'}</span>`;
+  const c = map[action] || { color: '#475569', bg: '#F8FAFC', border: '#E2E8F0' };
+  return `<span class="badge" style="background:${c.bg};color:${c.color};border:1px solid ${c.border};font-weight:700;font-size:11px;letter-spacing:0.5px;padding:3px 8px">${action || 'SYSTEM'}</span>`;
 };
 
 async function loadLogs(page = 1) {
@@ -155,24 +189,36 @@ async function loadLogs(page = 1) {
 
     if (!tbody) return;
     if (!data.length) {
-      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-title">Không tìm thấy nhật ký sự kiện nào</div></div></td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state" style="padding:40px;text-align:center"><div class="empty-state-icon" style="font-size:36px;margin-bottom:8px">📋</div><div class="empty-state-title" style="font-size:15px;font-weight:600;color:#64748B">Không tìm thấy nhật ký sự kiện nào</div></div></td></tr>`;
       return;
     }
 
     tbody.innerHTML = data.map(log => `
-      <tr>
-        <td style="font-size:12px;color:var(--text-light);white-space:nowrap">${Format.datetime(log.created_at)}</td>
-        <td>${actionBadge(log.action)}</td>
-        <td style="font-size:13px;max-width:280px;font-weight:500" title="${log.description || ''}">
+      <tr style="border-bottom:1px solid #F1F5F9;transition:background 0.15s ease">
+        <td style="padding:14px 18px;font-size:12px;color:#64748B;white-space:nowrap;font-family:'JetBrains Mono',monospace">
+          ${Format.datetime(log.created_at)}
+        </td>
+        <td style="padding:14px 18px">
+          ${actionBadge(log.action)}
+        </td>
+        <td style="padding:14px 18px;font-size:13px;max-width:320px;font-weight:500;color:#0F172A" title="${log.description || ''}">
           ${log.description || '—'}
         </td>
-        <td style="font-size:12px">
-          ${log.user_name ? `<strong>${log.user_name}</strong>` : (log.user_id ? `User #${log.user_id}` : '<span style="color:var(--text-light)">Hệ thống</span>')}
+        <td style="padding:14px 18px;font-size:13px">
+          ${log.user_name 
+            ? `<span style="font-weight:600;color:#0F172A">${log.user_name}</span>` 
+            : (log.user_id ? `<span style="color:#64748B">User #${log.user_id}</span>` : '<span style="color:#94A3B8;font-style:italic">Hệ thống tự động</span>')}
         </td>
-        <td style="font-size:11px;font-family:monospace;color:var(--text-light)">${log.ip_address || '—'}</td>
-        <td style="font-size:12px">${log.device_id ? `<code style="font-size:11px">${log.device_id}</code>` : '—'}</td>
-        <td>
-          <button class="btn btn-sm btn-ghost" onclick="viewLogDetail(${log.id})">Chi tiết</button>
+        <td style="padding:14px 18px;font-size:12px;font-family:'JetBrains Mono',monospace;color:#64748B">
+          ${log.ip_address || '—'}
+        </td>
+        <td style="padding:14px 18px">
+          ${log.device_id 
+            ? `<code style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#F8FAFC;border:1px solid #E2E8F0;padding:2px 6px;border-radius:4px;color:#0F172A;font-weight:600">${log.device_id}</code>` 
+            : '<span style="color:#CBD5E1">—</span>'}
+        </td>
+        <td style="padding:14px 18px;text-align:right">
+          <button class="btn btn-sm btn-ghost" onclick="viewLogDetail(${log.id})" style="border-radius:8px;font-weight:600">Chi tiết</button>
         </td>
       </tr>
     `).join('');
@@ -192,26 +238,30 @@ function viewLogDetail(id) {
   if (!modal || !body) return;
 
   body.innerHTML = `
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border-light)">
-      <div style="font-size:28px">📋</div>
-      <div>
-        <div style="font-size:16px;font-weight:700">${log.action || 'SỰ KIỆN HỆ THỐNG'}</div>
-        <div style="font-size:12px;color:var(--text-light)">Thời gian ghi nhận: ${Format.datetime(log.created_at)}</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #E2E8F0">
+      <div style="width:48px;height:48px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;font-size:22px">📋</div>
+      <div style="flex:1">
+        <div style="font-size:16px;font-weight:700;color:#0F172A">${log.action || 'SỰ KIỆN HỆ THỐNG'}</div>
+        <div style="font-size:12px;color:#64748B;margin-top:2px">Thời gian: ${Format.datetime(log.created_at)}</div>
       </div>
-      <div style="margin-left:auto">${actionBadge(log.action)}</div>
+      <div>${actionBadge(log.action)}</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
       ${[
         ['Người thực hiện', log.user_name || (log.user_id ? `User ID #${log.user_id}` : 'Hệ thống tự động')],
         ['Địa chỉ IP', log.ip_address || '—'],
-        ['Thiết bị liên quan', log.device_id ? `<code>${log.device_id}</code>` : 'Không có']
+        ['Thiết bị liên quan', log.device_id ? `<code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#F1F5F9;padding:2px 6px;border-radius:4px">${log.device_id}</code>` : 'Không có'],
+        ['Mã sự kiện ID', `#${log.id}`]
       ].map(([k,v]) => `
-        <div><div style="font-size:11px;color:var(--text-light);margin-bottom:4px">${k}</div><div style="font-size:13px;font-weight:500">${v}</div></div>
+        <div style="background:#FFF;border:1px solid #F1F5F9;padding:12px 14px;border-radius:10px">
+          <div style="font-size:11px;color:#64748B;font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px">${k}</div>
+          <div style="font-size:13px;font-weight:600;color:#0F172A">${v}</div>
+        </div>
       `).join('')}
     </div>
-    <div style="background:var(--bg);border-radius:8px;padding:14px">
-      <div style="font-size:12px;color:var(--text-light);margin-bottom:6px">Nội dung / Mô tả chi tiết:</div>
-      <div style="font-size:13px;line-height:1.5;color:var(--text-dark);white-space:pre-wrap">${log.description || 'Không có mô tả chi tiết'}</div>
+    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:16px">
+      <div style="font-size:12px;font-weight:600;color:#64748B;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">Nội dung / Payload sự kiện</div>
+      <div style="font-size:13px;line-height:1.6;color:#0F172A;white-space:pre-wrap;font-family:'JetBrains Mono',monospace;word-break:break-all">${log.description || 'Không có mô tả chi tiết'}</div>
     </div>
   `;
   modal.classList.add('open');

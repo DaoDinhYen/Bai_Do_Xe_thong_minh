@@ -61,9 +61,17 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 //  Static Files
 // =====================
 const path = require('path');
+const fs = require('fs');
 
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Serve ANPR captures
+const captureDir = path.join(__dirname, '..', 'anpr-service', 'captures');
+if (!fs.existsSync(captureDir)) {
+  try { fs.mkdirSync(captureDir, { recursive: true }); } catch {}
+}
+app.use('/captures', express.static(captureDir));
 
 // =====================
 //  Serve Admin Web Frontend
@@ -124,11 +132,53 @@ app.use(errorHandler);
 // =====================
 const PORT = process.env.PORT || 3000;
 
+async function ensureAdminAccount() {
+  try {
+    const UserModel = require('./src/models/userModel');
+    const bcrypt = require('bcryptjs');
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@smartparking.com';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123456';
+    const admin = await UserModel.findByEmail(adminEmail);
+    if (admin) {
+      const match = await bcrypt.compare(adminPassword, admin.password).catch(() => false);
+      if (!match) {
+        const newHash = await bcrypt.hash(adminPassword, 10);
+        await UserModel.updatePassword(admin.id, newHash);
+        logger.info(`🔒 Admin password synchronized with configuration (.env)`);
+      }
+    }
+  } catch (err) {
+    logger.warn(`Could not auto-sync admin account: ${err.message}`);
+  }
+}
+
+async function ensureDatabaseColumns() {
+  try {
+    const { query } = require('./src/config/db');
+    const cols = await query('SHOW COLUMNS FROM parking_history');
+    const names = cols.map(c => c.Field);
+    if (!names.includes('entry_image')) {
+      await query('ALTER TABLE parking_history ADD COLUMN entry_image VARCHAR(500) NULL');
+      logger.info('Added entry_image column to parking_history');
+    }
+    if (!names.includes('exit_image')) {
+      await query('ALTER TABLE parking_history ADD COLUMN exit_image VARCHAR(500) NULL');
+      logger.info('Added exit_image column to parking_history');
+    }
+  } catch (err) {
+    logger.warn(`Could not ensure database columns: ${err.message}`);
+  }
+}
+
 async function startServer() {
   try {
     // 1. Connect to MySQL
     await connectDB();
     logger.info('✅ MySQL Database connected');
+
+    // Tự động kiểm tra & đồng bộ CSDL và tài khoản admin từ code
+    await ensureAdminAccount();
+    await ensureDatabaseColumns();
 
     // 2. Initialize Socket.IO
     initSocketIO(io);

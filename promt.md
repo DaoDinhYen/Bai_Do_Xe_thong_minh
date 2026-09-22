@@ -17,7 +17,7 @@ GHI CHÚ SỬA: Đây là bản hợp nhất: đã áp dụng phần đính chí
 1. KIẾN TRÚC TỔNG THỂ
 Hệ thống gồm các thành phần chính:
 ●ESP32 #1 — quản lý 6 cảm biến IR cho 6 vị trí đỗ xe A01–A06.
-●ESP32 #2 — quản lý cổng IN/OUT: 2 đầu đọc RFID RC522, 2 servo barie, 2 cảm biến IR phát hiện xe đã đi qua barie, 1 relay điều khiển đèn.
+●ESP32 #2 — quản lý cổng IN/OUT: 1 đầu đọc RFID RC522 DUY NHẤT (dùng chung cho cả cổng IN và OUT, phân định chiều vào/ra qua context ANPR/trạng thái xe), 2 servo barie, 2 cảm biến IR phát hiện xe đã đi qua barie, 1 relay điều khiển đèn.
 ●2 Webcam (IN, OUT) — kết nối với PC/Raspberry Pi chạy dịch vụ ANPR/LPR, KHÔNG kết nối trực tiếp ESP32.
 ●Backend Server Node.js (Express).
 ●MySQL Database.
@@ -393,44 +393,43 @@ camera_records (bảng DUY NHẤT, gộp 2 bản trùng lặp ở văn bản g�
 ●captured_at
 ●created_at
 GHI CHÚ SỬA: Đã gộp 2 định nghĩa camera_records mâu thuẫn nhau ở mục 58 và 61 của bản gốc thành một bảng duy nhất; thêm cột is_virtual cho parking_slots để phân biệt chỗ có cảm biến thật (A01–A06) với chỗ demo/ảo.
-31. PHẦN CỨNG (ĐÃ SỬA THEO BẢN ĐÍNH CHÍNH — 2 ESP32 + WEBCAM)
-Kiến trúc phần cứng: hệ thống dùng 2 ESP32.
+31. PHẦN CỨNG (ĐÃ SỬA THEO PROMPT 4 — 2 ESP32 + 1 RFID RC522 DUY NHẤT + 2 WEBCAM CẮM PC)
+Kiến trúc phần cứng: hệ thống dùng 2 ESP32 lập trình bằng Arduino IDE (C/C++), KHÔNG dùng PlatformIO.
 ●ESP32 #1: quản lý 6 cảm biến IR tương ứng 6 vị trí đỗ xe A01–A06.
-●ESP32 #2: quản lý hệ thống cổng IN/OUT gồm 2 RFID RC522, 2 servo barie, 2 cảm biến IR phát hiện xe đã đi qua barie, và relay điều khiển đèn.
+●ESP32 #2: quản lý hệ thống cổng gồm 1 RFID RC522 DUY NHẤT (dùng chung cho cả vào và ra, phân định chiều qua context ANPR và trạng thái xe), 2 servo barie (IN & OUT), 2 cảm biến IR sau barie (IN & OUT), và 1 relay điều khiển đèn.
 ●Hai ESP32 giao tiếp Wi-Fi với Node.js Server thông qua MQTT.
 ●Không sử dụng keypad.
 ●Không sử dụng LED báo riêng cho từng vị trí đỗ.
 Webcam:
-●Webcam IN: chỉ phục vụ nhận diện biển số tại cổng vào.
-●Webcam OUT: chỉ phục vụ nhận diện biển số tại cổng ra.
-●Webcam KHÔNG kết nối trực tiếp với ESP32; webcam kết nối với PC/Raspberry Pi chạy dịch vụ ANPR/LPR.
-●Dịch vụ ANPR gửi kết quả biển số + confidence score về Node.js Server qua HTTP API.
+●Webcam IN: cắm trực tiếp USB vào máy tính, phục vụ nhận diện biển số tại cổng vào.
+●Webcam OUT: cắm trực tiếp USB vào máy tính, phục vụ nhận diện biển số tại cổng ra.
+●Webcam KHÔNG kết nối trực tiếp với ESP32; webcam kết nối với PC/Raspberry Pi chạy dịch vụ ANPR/LPR độc lập.
+●Dịch vụ ANPR gửi kết quả biển số + confidence score về Node.js Server qua HTTP API (`POST /api/camera/detection`).
 Danh sách linh kiện (Hardware List):
 ●ESP32 DevKit × 2
 ●IR sensor cho chỗ đỗ × 6 (A01–A06)
 ●IR sensor cho barie IN/OUT × 2
-●RC522 RFID × 2
+●RC522 RFID × 1 DUY NHẤT
 ●Thẻ RFID × 5–10
-●Servo motor × 2
-●Webcam × 2
-●Relay 1 kênh × 1
-●OLED I2C × 1 (tùy chọn)
+●Servo motor × 2 (IN & OUT)
+●Webcam USB × 2 (IN & OUT)
+●Relay 1 kênh × 1 (điều khiển đèn)
 ●Không dùng Keypad
 ●Không dùng LED riêng cho từng chỗ
 32. LOGIC ESP32 (tách riêng theo từng board)
 ESP32 #1 phải:
 ●1. Kết nối Wi-Fi và MQTT.
-●2. Đọc 6 IR sensor (A01–A06) theo chu kỳ.
-●3. Gửi trạng thái từng chỗ lên Server khi có thay đổi.
-●4. Gửi heartbeat định kỳ.
+●2. Đọc 6 IR sensor (A01–A06) theo chu kỳ (có debounce lọc nhiễu).
+●3. Gửi trạng thái từng chỗ lên Server khi có thay đổi (chỉ gửi khi thay đổi, không spam).
+●4. Gửi heartbeat định kỳ (`parking/device/status`).
 ●5. Tự reconnect khi mất Wi-Fi/MQTT.
 ESP32 #2 phải:
 ●1. Kết nối Wi-Fi và MQTT.
-●2. Đọc RFID IN và RFID OUT.
+●2. Đọc thẻ RFID từ 1 đầu đọc RC522 duy nhất, gửi UID lên Server qua MQTT `parking/esp32_2/rfid` (có cooldown chống quét liên tục).
 ●3. Đọc 2 IR sensor sau barie (phát hiện xe đã đi qua).
-●4. Điều khiển Servo IN và Servo OUT (mở/đóng theo logic mục 10).
+●4. Điều khiển Servo IN và Servo OUT (mở khi nhận lệnh, tự đóng khi xe đã qua kèm timeout 15s).
 ●5. Điều khiển Relay đèn.
-●6. Nhận lệnh điều khiển từ Server (OPEN/CLOSE/LIGHT_ON/LIGHT_OFF).
+●6. Nhận lệnh điều khiển từ Server (`OPEN_GATE_IN`, `CLOSE_GATE_IN`, `OPEN_GATE_OUT`, `CLOSE_GATE_OUT`, `LIGHT_ON`, `LIGHT_OFF`).
 ●7. Gửi heartbeat định kỳ.
 ●8. Tự reconnect khi mất Wi-Fi/MQTT.
 Cả 2 board không được block chương trình quá lâu (dùng non-blocking / millis(), tránh delay() dài).

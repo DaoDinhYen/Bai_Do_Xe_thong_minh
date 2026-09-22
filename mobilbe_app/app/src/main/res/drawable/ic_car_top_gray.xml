@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="80dp"
+    android:viewportWidth="48"
+    android:viewportHeight="80">
+    <!-- Gray Car Body -->
+    <path
+        android:fillColor="#FF94A3B8"
+        android:pathData="M14,4C10,4 6,8 6,14v52c0,6 4,10 8,10h20c4,0 8,-4 8,-10V14c0,-6 -4,-10 -8,-10H14z"/>
+    <!-- Windshield front -->
+    <path
+        android:fillColor="#33000000"
+        android:pathData="M11,18h26c1,0 2,1 1.7,2.2l-3,10c-0.2,0.8 -1,1.4 -1.8,1.4H14.1c-0.8,0 -1.6,-0.6 -1.8,-1.4l-3,-10C9,19 10,18 11,18z"/>
+    <!-- Roof -->
+    <path
+        android:fillColor="#22000000"
+        android:pathData="M12,34h24v18H12z"/>
+    <!-- Rear window -->
+    <path
+        android:fillColor="#33000000"
+        android:pathData="M13,54h22c0.8,0 1.6,0.6 1.8,1.4l2,7c0.2,1 -0.6,2 -1.7,2H10.9c-1.1,0 -1.9,-1 -1.7,-2l2,-7C11.4,54.6 12.2,54 13,54z"/>
+</vector>

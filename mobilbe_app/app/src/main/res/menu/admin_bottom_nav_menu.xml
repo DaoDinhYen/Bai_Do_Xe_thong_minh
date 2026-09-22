@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_admin_dashboard"
+        android:icon="@drawable/ic_admin_dashboard"
+        android:title="Tổng quan" />
+    <item
+        android:id="@+id/nav_admin_parking"
+        android:icon="@drawable/ic_car"
+        android:title="Bãi xe" />
+    <item
+        android:id="@+id/nav_admin_camera"
+        android:icon="@drawable/ic_admin_camera"
+        android:title="Camera" />
+    <item
+        android:id="@+id/nav_admin_operations"
+        android:icon="@drawable/ic_admin_operations"
+        android:title="Vận hành" />
+    <item
+        android:id="@+id/nav_admin_more"
+        android:icon="@drawable/ic_admin_more"
+        android:title="Quản trị" />
+</menu>

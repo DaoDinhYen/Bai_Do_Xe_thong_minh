@@ -23,18 +23,18 @@ const ParkingHistoryModel = {
               ORDER BY ph.entry_time DESC LIMIT 1`, [rfidUid]),
 
   // Create entry record
-  createEntry: ({ user_id, vehicle_id, slot_id, rfid_uid, booking_id }) =>
+  createEntry: ({ user_id, vehicle_id, slot_id, rfid_uid, booking_id, entry_image = null }) =>
     query(
-      `INSERT INTO parking_history (user_id, vehicle_id, slot_id, rfid_uid, booking_id, entry_time, payment_status)
-       VALUES (?, ?, ?, ?, ?, NOW(), 'PENDING')`,
-      [user_id, vehicle_id, slot_id, rfid_uid, booking_id || null]
+      `INSERT INTO parking_history (user_id, vehicle_id, slot_id, rfid_uid, booking_id, entry_time, entry_image, payment_status)
+       VALUES (?, ?, ?, ?, ?, NOW(), ?, 'PENDING')`,
+      [user_id, vehicle_id, slot_id, rfid_uid, booking_id || null, entry_image || null]
     ),
 
   // Update with exit time, duration, fee
-  recordExit: (id, { exit_time, duration, fee, payment_status }) =>
+  recordExit: (id, { exit_time, duration, fee, payment_status, exit_image = null }) =>
     query(
-      'UPDATE parking_history SET exit_time = ?, duration = ?, fee = ?, payment_status = ? WHERE id = ?',
-      [exit_time, duration, fee, payment_status, id]
+      'UPDATE parking_history SET exit_time = ?, duration = ?, fee = ?, payment_status = ?, exit_image = COALESCE(?, exit_image) WHERE id = ?',
+      [exit_time, duration, fee, payment_status, exit_image || null, id]
     ),
 
   getByUser: ({ userId, page = 1, limit = 20 }) => {

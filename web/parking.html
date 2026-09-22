@@ -1,55 +1,198 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Giám sát bãi xe — Smart Parking</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giám sát bãi xe — Smart Parking System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/animations.css">
   <style>
-    .slot-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 24px; }
-    @media(max-width:1100px) { .slot-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media(max-width:600px) { .slot-grid { grid-template-columns: repeat(2, 1fr); } }
+    /* ── Slot Grid ── */
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1200px) { .slot-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 640px)  { .slot-grid { grid-template-columns: repeat(2, 1fr); } }
 
     .slot-card {
-      background: white;
-      border-radius: 14px;
-      border: 2px solid var(--border);
-      padding: 18px 12px;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1.5px solid var(--border);
+      padding: 18px 14px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: var(--shadow-sm);
+      transition: all var(--transition);
+      box-shadow: var(--shadow-card);
       position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 190px;
     }
-    .slot-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-    .slot-card.FREE     { border-color: #4ADE80; background: linear-gradient(135deg, #F0FDF4, #DCFCE7); }
-    .slot-card.OCCUPIED { border-color: #F87171; background: linear-gradient(135deg, #FEF2F2, #FEE2E2); }
-    .slot-card.RESERVED { border-color: #FB923C; background: linear-gradient(135deg, #FFF7ED, #FFEDD5); }
-    .slot-card.DISABLED { border-color: var(--border); background: var(--bg); opacity: 0.7; }
+    .slot-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
 
-    .slot-number { font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
-    .slot-icon   { font-size: 32px; margin-bottom: 6px; }
-    .slot-plate  { font-size: 11px; font-weight: 600; color: var(--text-medium); background: white; border-radius: 4px; padding: 2px 6px; margin-bottom: 6px; min-height: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .slot-status-badge { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-    .slot-time   { font-size: 10px; color: var(--text-light); margin-top: 6px; }
+    .slot-card.FREE {
+      border-color: #A7F3D0;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F0FDF4 100%);
+    }
+    .slot-card.OCCUPIED {
+      border-color: #FECACA;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FEF2F2 100%);
+    }
+    .slot-card.RESERVED {
+      border-color: #FDE68A;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFBEB 100%);
+    }
+    .slot-card.DISABLED {
+      border-color: var(--border);
+      background: var(--bg-secondary);
+      opacity: 0.7;
+    }
+    /* Hiệu ứng nhấp nháy khi xe đỗ sai vị trí (Conflict / Wrong Slot) */
+    @keyframes pulse-wrong-slot {
+      0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.95);
+        border-color: #EF4444;
+        background: linear-gradient(180deg, #FFFFFF 0%, #FEE2E2 100%);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 22px 7px rgba(245, 158, 11, 0.95);
+        border-color: #F59E0B;
+        background: linear-gradient(180deg, #FEF3C7 0%, #FEE2E2 100%);
+        transform: scale(1.03);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.95);
+        border-color: #EF4444;
+        background: linear-gradient(180deg, #FFFFFF 0%, #FEE2E2 100%);
+        transform: scale(1);
+      }
+    }
+    .slot-card.CONFLICT {
+      animation: pulse-wrong-slot 0.9s infinite ease-in-out !important;
+      border: 2.5px solid #EF4444 !important;
+      z-index: 10;
+    }
 
-    .summary-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
-    .summary-item { background: white; border-radius: 12px; padding: 16px; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow-xs); }
-    .summary-val  { font-size: 28px; font-weight: 700; }
-    .summary-lbl  { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+    .slot-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-dark);
+      letter-spacing: 0.5px;
+    }
+    .slot-icon {
+      font-size: 38px;
+      margin: 6px 0;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.08));
+    }
+    .slot-plate-wrap {
+      min-height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    .slot-time {
+      font-size: 11px;
+      color: var(--text-light);
+      font-weight: 500;
+      margin-top: 6px;
+    }
 
-    .last-update { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-light); margin-bottom: 16px; }
-    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 1.5s ease-in-out infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+    /* ── Summary Bar ── */
+    .summary-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) { .summary-bar { grid-template-columns: repeat(2, 1fr); } }
 
-    .esp-status { display: flex; gap: 12px; margin-bottom: 20px; }
-    .esp-card   { background: white; border-radius: 10px; padding: 14px 16px; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex: 1; box-shadow: var(--shadow-xs); }
-    .esp-name   { font-size: 13px; font-weight: 600; }
-    .esp-sub    { font-size: 11px; color: var(--text-light); }
+    .summary-item {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 18px 20px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all var(--transition);
+    }
+    .summary-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .summary-val {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+    .summary-lbl {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── ESP Status Bar ── */
+    .esp-status {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) { .esp-status { flex-direction: column; } }
+
+    .esp-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      box-shadow: var(--shadow-xs);
+    }
+    .esp-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+    .esp-sub {
+      font-size: 11.5px;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    /* Live update bar */
+    .last-update {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script src="js/api.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/admin-layout.js"></script>
@@ -58,66 +201,109 @@
   if (!requireAdmin()) return;
 
   const content = `
-    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+    <div class="page-header flex justify-between items-center" style="flex-wrap:wrap;gap:16px">
       <div>
         <div class="page-title">Giám sát & Quản lý bãi xe</div>
-        <div class="page-subtitle">Theo dõi trạng thái thời gian thực và quản lý các chỗ đỗ</div>
+        <div class="page-subtitle">Theo dõi trạng thái thời gian thực và quản lý các chỗ đỗ trong hệ thống</div>
       </div>
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:10px">
         <button class="btn btn-outline" onclick="loadSlots()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
           Làm mới
         </button>
         <button class="btn btn-primary" onclick="openAddSlotModal()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Thêm chỗ đỗ
         </button>
       </div>
     </div>
 
-    <!-- ESP32 Status -->
+    <!-- ESP32 Hardware Status -->
     <div class="esp-status" id="esp-status">
-      <div class="esp-card"><div class="status-dot" style="width:10px;height:10px;border-radius:50%;background:#94A3B8"></div><div><div class="esp-name">ESP32 #1 (IR Slots)</div><div class="esp-sub">Đang kết nối...</div></div></div>
-      <div class="esp-card"><div class="status-dot" style="width:10px;height:10px;border-radius:50%;background:#94A3B8"></div><div><div class="esp-name">ESP32 #2 (Gate)</div><div class="esp-sub">Đang kết nối...</div></div></div>
+      <div class="esp-card">
+        <div class="status-dot online" style="width:12px;height:12px;border-radius:50%"></div>
+        <div>
+          <div class="esp-name">ESP32 #1 (IR Slots A01–A06)</div>
+          <div class="esp-sub">Đang kết nối WebSocket / MQTT...</div>
+        </div>
+      </div>
+      <div class="esp-card">
+        <div class="status-dot online" style="width:12px;height:12px;border-radius:50%"></div>
+        <div>
+          <div class="esp-name">ESP32 #2 (Gate Cổng Vào/Ra & Đèn)</div>
+          <div class="esp-sub">Đang kết nối WebSocket / MQTT...</div>
+        </div>
+      </div>
     </div>
 
-    <!-- Summary -->
+    <!-- Summary Statistics -->
     <div class="summary-bar stagger-children" id="summary-bar">
-      <div class="summary-item"><div class="summary-val" style="color:var(--text-dark)" id="sum-total">—</div><div class="summary-lbl">Tổng số chỗ</div></div>
-      <div class="summary-item"><div class="summary-val" style="color:var(--success)"   id="sum-free">—</div><div class="summary-lbl">Chỗ trống</div></div>
-      <div class="summary-item"><div class="summary-val" style="color:var(--error)"     id="sum-occ">—</div><div class="summary-lbl">Đang có xe</div></div>
-      <div class="summary-item"><div class="summary-val" style="color:var(--warning)"   id="sum-res">—</div><div class="summary-lbl">Đã đặt trước</div></div>
+      <div class="summary-item">
+        <div class="stat-icon icon-blue">🚘</div>
+        <div>
+          <div class="summary-val" style="color:var(--text-dark)" id="sum-total">—</div>
+          <div class="summary-lbl">Tổng số chỗ</div>
+        </div>
+      </div>
+      <div class="summary-item">
+        <div class="stat-icon icon-green">🚗</div>
+        <div>
+          <div class="summary-val" style="color:var(--success)" id="sum-free">—</div>
+          <div class="summary-lbl">Chỗ trống</div>
+        </div>
+      </div>
+      <div class="summary-item">
+        <div class="stat-icon icon-red">🚙</div>
+        <div>
+          <div class="summary-val" style="color:var(--error)" id="sum-occ">—</div>
+          <div class="summary-lbl">Đang có xe</div>
+        </div>
+      </div>
+      <div class="summary-item">
+        <div class="stat-icon icon-orange">📅</div>
+        <div>
+          <div class="summary-val" style="color:var(--warning)" id="sum-res">—</div>
+          <div class="summary-lbl">Đã đặt trước</div>
+        </div>
+      </div>
     </div>
 
-    <!-- Last Update -->
+    <!-- Last Update & Guide Banner -->
     <div class="last-update">
-      <div class="live-dot"></div>
-      <span>Cập nhật lần cuối: <span id="last-update-time">—</span></span>
-      <span style="margin-left:auto;font-size:11px;color:var(--text-light);font-style:italic">💡 Nhấn vào chỗ đỗ bất kỳ để chỉnh sửa hoặc đổi trạng thái</span>
+      <span class="live-radar-dot"></span>
+      <span>Cập nhật trực tiếp: <strong id="last-update-time" style="color:var(--text-dark)">—</strong></span>
+      <span style="margin-left:auto;font-size:12px;color:var(--text-light);font-style:italic">💡 Nhấn vào chỗ đỗ bất kỳ để quản lý chi tiết hoặc đổi trạng thái</span>
     </div>
 
-    <!-- Slot Grid -->
+    <!-- Slot Visual Grid -->
     <div class="slot-grid" id="slot-grid">
-      ${[1,2,3,4,5,6].map(() => `<div class="card card-body" style="height:170px"><div class="skeleton" style="height:100%"></div></div>`).join('')}
+      ${[1, 2, 3, 4, 5, 6].map(() => `
+        <div class="card card-body" style="height:190px">
+          <div class="skeleton" style="height:100%"></div>
+        </div>
+      `).join('')}
     </div>
 
     <!-- Detailed Slot Table with Filters -->
     <div class="card">
-      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-        <span class="card-title">Danh sách chi tiết chỗ đỗ</span>
-        <div class="search-bar" style="display:flex;gap:8px;padding:0;align-items:center;flex-wrap:wrap">
-          <div class="search-input-wrap" style="width:200px">
-            <svg class="search-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+        <span class="card-title">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+          Danh sách chi tiết chỗ đỗ
+        </span>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div class="search-input-wrap" style="width:220px">
+            <svg class="search-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="search" class="search-input" placeholder="Tìm mã chỗ, biển số..." id="slot-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="filterSlotsView()">
           </div>
-          <select class="filter-select" id="slot-status-filter" onchange="filterSlotsView()" style="height:36px;font-size:12px">
+          <select class="filter-select" id="slot-status-filter" onchange="filterSlotsView()">
             <option value="">Tất cả trạng thái</option>
             <option value="FREE">Chỗ trống</option>
             <option value="OCCUPIED">Đang có xe</option>
             <option value="RESERVED">Đã đặt trước</option>
             <option value="DISABLED">Vô hiệu hóa</option>
           </select>
-          <select class="filter-select" id="slot-zone-filter" onchange="filterSlotsView()" style="height:36px;font-size:12px">
+          <select class="filter-select" id="slot-zone-filter" onchange="filterSlotsView()">
             <option value="">Tất cả khu vực</option>
           </select>
           <button class="btn btn-outline btn-sm" onclick="resetSlotFilters()">Xóa lọc</button>
@@ -125,10 +311,18 @@
       </div>
       <div class="table-wrapper">
         <table class="table">
-          <thead><tr>
-            <th>Chỗ đỗ</th><th>Khu vực</th><th>Trạng thái</th><th>Biển số xe</th><th>Loại xe</th>
-            <th>Thời gian vào</th><th>Thời gian dự kiến ra</th><th>Thao tác</th>
-          </tr></thead>
+          <thead>
+            <tr>
+              <th>Chỗ đỗ</th>
+              <th>Khu vực</th>
+              <th>Trạng thái</th>
+              <th>Biển số xe</th>
+              <th>Loại xe</th>
+              <th>Thời gian vào</th>
+              <th>Thời gian ra dự kiến</th>
+              <th style="text-align:right">Thao tác</th>
+            </tr>
+          </thead>
           <tbody id="slot-table">${skeletonRows(6)}</tbody>
         </table>
       </div>
@@ -136,32 +330,32 @@
 
     <!-- Manage Slot Modal -->
     <div id="slot-modal" class="modal-overlay">
-      <div class="modal" style="max-width:480px">
+      <div class="modal" style="max-width:500px">
         <div class="modal-header">
-          <span class="modal-title" id="slot-modal-title">Cập nhật chỗ đỗ</span>
+          <span class="modal-title" id="slot-modal-title">Quản lý & Cập nhật chỗ đỗ</span>
           <button class="modal-close" onclick="closeSlotModal()">✕</button>
         </div>
         <div class="modal-body">
           <form id="slot-form" onsubmit="submitSlotUpdate(event)">
             <input type="hidden" id="edit-slot-id">
-            <div style="background:var(--bg);border-radius:10px;padding:14px;margin-bottom:16px">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                <span style="font-size:13px;color:var(--text-light)">Mã chỗ:</span>
-                <strong id="edit-slot-code-display" style="font-size:18px;color:var(--primary)">—</strong>
+            <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:16px;margin-bottom:18px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <span style="font-size:13px;color:var(--text-muted);font-weight:600">Mã chỗ đỗ:</span>
+                <strong id="edit-slot-code-display" style="font-size:20px;color:var(--primary);font-family:'JetBrains Mono',monospace">—</strong>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                <span style="font-size:13px;color:var(--text-light)">Xe đang đỗ:</span>
-                <code id="edit-slot-plate-display" style="font-size:13px;font-weight:600">—</code>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <span style="font-size:13px;color:var(--text-muted);font-weight:600">Xe đang gửi:</span>
+                <span id="edit-slot-plate-display" style="font-size:13px;font-weight:700">—</span>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center">
-                <span style="font-size:13px;color:var(--text-light)">Thời gian vào:</span>
-                <span id="edit-slot-time-display" style="font-size:13px">—</span>
+                <span style="font-size:13px;color:var(--text-muted);font-weight:600">Thời gian vào:</span>
+                <span id="edit-slot-time-display" style="font-size:13px;font-weight:500">—</span>
               </div>
             </div>
 
-            <div class="form-group" style="margin-bottom:14px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Trạng thái chỗ đỗ *</label>
-              <select class="filter-select" id="edit-slot-status" required style="width:100%;height:38px">
+            <div class="form-group">
+              <label class="form-label">Trạng thái chỗ đỗ *</label>
+              <select class="filter-select" id="edit-slot-status" required style="width:100%;height:42px">
                 <option value="FREE">🟢 Trống (FREE)</option>
                 <option value="OCCUPIED">🔴 Đang có xe (OCCUPIED)</option>
                 <option value="RESERVED">🟠 Đã đặt trước (RESERVED)</option>
@@ -169,13 +363,13 @@
               </select>
             </div>
 
-            <div class="form-group" style="margin-bottom:20px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Khu vực (Zone) *</label>
-              <input type="text" class="input" id="edit-slot-zone" required style="width:100%" placeholder="Ví dụ: A, B, VIP...">
+            <div class="form-group mb-4">
+              <label class="form-label">Khu vực (Zone) *</label>
+              <input type="text" class="form-control" id="edit-slot-zone" required placeholder="Ví dụ: A">
             </div>
 
-            <div style="display:flex;justify-content:flex-end;gap:8px">
-              <button type="button" class="btn btn-ghost" onclick="closeSlotModal()">Hủy</button>
+            <div style="display:flex;justify-content:flex-end;gap:10px">
+              <button type="button" class="btn btn-outline" onclick="closeSlotModal()">Hủy</button>
               <button type="submit" class="btn btn-primary" id="btn-save-slot">Lưu thay đổi</button>
             </div>
           </form>
@@ -185,27 +379,27 @@
 
     <!-- Add Slot Modal -->
     <div id="add-slot-modal" class="modal-overlay">
-      <div class="modal" style="max-width:480px">
+      <div class="modal" style="max-width:500px">
         <div class="modal-header">
-          <span class="modal-title">Thêm chỗ đỗ mới</span>
+          <span class="modal-title">Thêm chỗ đỗ mới vào hệ thống</span>
           <button class="modal-close" onclick="closeAddSlotModal()">✕</button>
         </div>
         <div class="modal-body">
           <form id="add-slot-form" onsubmit="submitAddSlot(event)">
-            <div class="form-group" style="margin-bottom:14px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Mã chỗ đỗ *</label>
-              <input type="text" class="input" id="new-slot-code" required placeholder="Ví dụ: A07, B01" style="width:100%;font-weight:700">
+            <div class="form-group">
+              <label class="form-label">Mã chỗ đỗ *</label>
+              <input type="text" class="form-control" id="new-slot-code" required placeholder="Ví dụ: A06" style="font-weight:700">
             </div>
-            <div class="form-group" style="margin-bottom:14px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Khu vực (Zone) *</label>
-              <input type="text" class="input" id="new-slot-zone" required value="A" placeholder="Ví dụ: A, B..." style="width:100%">
+            <div class="form-group">
+              <label class="form-label">Khu vực (Zone) *</label>
+              <input type="text" class="form-control" id="new-slot-zone" required value="A" placeholder="Ví dụ: A">
             </div>
-            <div class="form-group" style="margin-bottom:20px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Cảm biến IR / Device ID</label>
-              <input type="text" class="input" id="new-slot-sensor" placeholder="Tùy chọn: IR_A07" style="width:100%">
+            <div class="form-group mb-4">
+              <label class="form-label">Cảm biến hồng ngoại IR / Device ID</label>
+              <input type="text" class="form-control" id="new-slot-sensor" placeholder="Tùy chọn: IR_A07">
             </div>
-            <div style="display:flex;justify-content:flex-end;gap:8px">
-              <button type="button" class="btn btn-ghost" onclick="closeAddSlotModal()">Hủy</button>
+            <div style="display:flex;justify-content:flex-end;gap:10px">
+              <button type="button" class="btn btn-outline" onclick="closeAddSlotModal()">Hủy</button>
               <button type="submit" class="btn btn-primary" id="btn-submit-add-slot">Tạo chỗ đỗ</button>
             </div>
           </form>
@@ -243,13 +437,18 @@ async function loadSlots() {
     const summary = await ParkingAPI.getSummary();
     const s = summary?.data || {};
 
-    document.getElementById('sum-total').textContent = slots.length;
-    document.getElementById('sum-free').textContent  = s.free  || slots.filter(x => x.status === 'FREE').length;
-    document.getElementById('sum-occ').textContent   = s.occupied || slots.filter(x => x.status === 'OCCUPIED').length;
-    document.getElementById('sum-res').textContent   = s.reserved || slots.filter(x => x.status === 'RESERVED').length;
-    document.getElementById('last-update-time').textContent = new Date().toLocaleTimeString('vi-VN');
+    const sumTotal = document.getElementById('sum-total');
+    const sumFree  = document.getElementById('sum-free');
+    const sumOcc   = document.getElementById('sum-occ');
+    const sumRes   = document.getElementById('sum-res');
+    const lastUp   = document.getElementById('last-update-time');
 
-    // Populate zone filter
+    if (sumTotal) sumTotal.textContent = slots.length;
+    if (sumFree)  sumFree.textContent  = s.free  || slots.filter(x => x.status === 'FREE').length;
+    if (sumOcc)   sumOcc.textContent   = s.occupied || slots.filter(x => x.status === 'OCCUPIED').length;
+    if (sumRes)   sumRes.textContent   = s.reserved || slots.filter(x => x.status === 'RESERVED').length;
+    if (lastUp)   lastUp.textContent   = new Date().toLocaleTimeString('vi-VN');
+
     const zoneSelect = document.getElementById('slot-zone-filter');
     if (zoneSelect && zoneSelect.options.length <= 1) {
       const zones = [...new Set(slots.map(x => x.zone).filter(Boolean))];
@@ -260,6 +459,15 @@ async function loadSlots() {
         zoneSelect.appendChild(opt);
       });
     }
+
+    // Đồng bộ trạng thái xung đột từ backend API
+    slots.forEach(s => {
+      const code = s.slot_code || s.slot_name;
+      if (s.is_conflict) {
+        if (!window._conflictSlots) window._conflictSlots = {};
+        window._conflictSlots[code] = s.conflict_info || s;
+      }
+    });
 
     renderSlotGrid(slots);
     filterSlotsView();
@@ -272,22 +480,27 @@ function renderSlotGrid(slots) {
   const grid = document.getElementById('slot-grid');
   if (!grid) return;
 
-  const iconMap = { FREE: '🅿️', OCCUPIED: '🚗', RESERVED: '📅', DISABLED: '🚫' };
-  const badgeMap = { FREE: 'badge-success', OCCUPIED: 'badge-error', RESERVED: 'badge-warning', DISABLED: 'badge-gray' };
-  const labelMap = { FREE: 'Trống', OCCUPIED: 'Có xe', RESERVED: 'Đặt trước', DISABLED: 'Vô hiệu' };
+  const iconMap = { FREE: '🅿️', OCCUPIED: '🚗', RESERVED: '📅', DISABLED: '⛔', CONFLICT: '⚠️' };
+  const badgeMap = { FREE: 'badge-success', OCCUPIED: 'badge-error', RESERVED: 'badge-warning', DISABLED: 'badge-gray', CONFLICT: 'badge-error' };
+  const labelMap = { FREE: 'Trống', OCCUPIED: 'Có xe', RESERVED: 'Đặt trước', DISABLED: 'Vô hiệu', CONFLICT: '⚠️ ĐỖ NHẦM' };
 
   grid.innerHTML = slots.map(slot => {
     const code = slot.slot_code || slot.slot_name || `#${slot.id}`;
-    const plate = slot.current_plate || slot.booked_plate || '';
+    const isConflict = !!(slot.is_conflict || (window._conflictSlots && window._conflictSlots[code]));
+    const effectiveStatus = isConflict ? 'CONFLICT' : (slot.status || 'FREE').toUpperCase();
+    const confInfo = window._conflictSlots ? window._conflictSlots[code] : slot.conflict_info;
+    const plate = isConflict && confInfo?.wrong_plate ? confInfo.wrong_plate : (slot.current_plate || slot.booked_plate || '');
     const timeText = slot.entry_time ? Format.time(slot.entry_time) : (slot.start_time ? Format.time(slot.start_time) : '');
 
     return `
-      <div class="slot-card ${slot.status} animate-fade-in" id="sc-${code}" onclick="openManageSlotModal(${slot.id})" title="Nhấn để chỉnh sửa chỗ ${code}">
+      <div class="slot-card ${effectiveStatus} animate-fade-in" id="sc-${code}" onclick="openManageSlotModal(${slot.id})" title="${isConflict ? '⚠️ CẢNH BÁO: ĐỖ SAI VỊ TRÍ' : 'Nhấn để quản lý chỗ ' + code}">
         <div class="slot-number">${code}</div>
-        <div class="slot-icon">${iconMap[slot.status] || '🏷️'}</div>
-        <div class="slot-plate">${plate || '—'}</div>
-        <span class="slot-status-badge badge ${badgeMap[slot.status] || 'badge-gray'}">${labelMap[slot.status] || slot.status}</span>
-        <div class="slot-time">${timeText ? 'Vào: ' + timeText : 'Khu: ' + (slot.zone || 'A')}</div>
+        <div class="slot-icon">${iconMap[effectiveStatus] || '🏷️'}</div>
+        <div class="slot-plate-wrap">
+          ${plate ? `<span class="vn-plate" style="font-size:11.5px;padding:2px 8px">${plate}</span>` : `<span style="font-size:11px;color:var(--text-light)">—</span>`}
+        </div>
+        <span class="badge ${badgeMap[effectiveStatus] || 'badge-gray'}">${labelMap[effectiveStatus] || effectiveStatus}</span>
+        <div class="slot-time">${isConflict ? '<span style="color:#EF4444;font-weight:700">ĐỖ SAI Ô</span>' : (timeText ? 'Vào: ' + timeText : 'Khu ' + (slot.zone || 'A'))}</div>
       </div>
     `;
   }).join('');
@@ -322,15 +535,15 @@ function filterSlotsView() {
     const plate = slot.current_plate || slot.booked_plate;
     return `
       <tr>
-        <td><strong>${code}</strong></td>
-        <td><span class="badge badge-gray">${slot.zone || 'A'}</span></td>
+        <td><strong style="font-family:'JetBrains Mono',monospace;color:var(--primary);font-size:14px">${code}</strong></td>
+        <td><span class="badge badge-gray">Khu ${slot.zone || 'A'}</span></td>
         <td>${slotBadge(slot.status)}</td>
-        <td>${plate ? `<code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:12px;font-weight:600">${plate}</code>` : '—'}</td>
-        <td>${Format.vehicleType(slot.vehicle_type) || '—'}</td>
-        <td style="font-size:12px">${Format.datetime(slot.entry_time || slot.start_time) || '—'}</td>
-        <td style="font-size:12px">${Format.datetime(slot.expected_exit || slot.end_time) || '—'}</td>
-        <td>
-          <button class="btn btn-sm btn-ghost" onclick="openManageSlotModal(${slot.id})">Quản lý</button>
+        <td>${plate ? `<span class="vn-plate" style="font-size:11.5px;padding:2px 7px">${plate}</span>` : '—'}</td>
+        <td>${Format.vehicleType(slot.vehicle_type) || 'Ô tô'}</td>
+        <td style="font-size:12px;color:var(--text-medium)">${Format.datetime(slot.entry_time || slot.start_time) || '—'}</td>
+        <td style="font-size:12px;color:var(--text-medium)">${Format.datetime(slot.expected_exit || slot.end_time) || '—'}</td>
+        <td style="text-align:right">
+          <button class="btn btn-sm btn-outline" onclick="openManageSlotModal(${slot.id})">Quản lý</button>
         </td>
       </tr>
     `;
@@ -343,7 +556,13 @@ function openManageSlotModal(id) {
 
   document.getElementById('edit-slot-id').value = slot.id;
   document.getElementById('edit-slot-code-display').textContent = slot.slot_code || slot.slot_name || `#${slot.id}`;
-  document.getElementById('edit-slot-plate-display').textContent = slot.current_plate || slot.booked_plate || 'Không có xe';
+  
+  const plateEl = document.getElementById('edit-slot-plate-display');
+  const curPlate = slot.current_plate || slot.booked_plate;
+  if (plateEl) {
+    plateEl.innerHTML = curPlate ? `<span class="vn-plate" style="font-size:12px">${curPlate}</span>` : '<span style="color:var(--text-light)">Không có xe</span>';
+  }
+
   document.getElementById('edit-slot-time-display').textContent = slot.entry_time ? Format.datetime(slot.entry_time) : (slot.start_time ? Format.datetime(slot.start_time) : '—');
   document.getElementById('edit-slot-status').value = slot.status || 'FREE';
   document.getElementById('edit-slot-zone').value = slot.zone || 'A';
@@ -427,17 +646,46 @@ function updateEspCard(card, device) {
   const dot = card.querySelector('.status-dot');
   const sub = card.querySelector('.esp-sub');
   const online = device.status === 'ONLINE';
-  if (dot) dot.style.background = online ? '#22C55E' : '#EF4444';
-  if (sub) sub.textContent = online ? `Online • ${Format.timeAgo(device.last_seen)}` : `Offline • ${Format.timeAgo(device.last_seen)}`;
+  if (dot) {
+    dot.className = `status-dot ${online ? 'online' : 'offline'}`;
+  }
+  if (sub) {
+    sub.textContent = online ? `Online • ${Format.timeAgo(device.last_seen)}` : `Offline • ${Format.timeAgo(device.last_seen)}`;
+  }
 }
 
 function connectSocket() {
   try {
     const socket = io(window.SOCKET_URL, { auth: { token: Auth.getToken() } });
     socket.on('slot_status_changed', (data) => {
+      if (!window._conflictSlots) window._conflictSlots = {};
+      const slotCode = data.slot_code || data.slot_name;
+      if (data.is_conflict) {
+        window._conflictSlots[slotCode] = data;
+      } else {
+        delete window._conflictSlots[slotCode];
+      }
       loadSlots();
-      Toast.info('Cập nhật chỗ đỗ', `Chỗ ${data.slot_code || data.slot_name} → ${data.new_status || data.status}`);
+      if (data.is_conflict) {
+        Toast.error('⚠️ CẢNH BÁO ĐỖ SAI VỊ TRÍ', `Xe ${data.wrong_plate || ''} đỗ NHẦM vào ô ${slotCode}!`);
+      } else {
+        Toast.info('Cập nhật chỗ đỗ', `Chỗ ${slotCode} → ${data.new_status || data.status}`);
+      }
     });
+
+    socket.on('slot_conflict_detected', (data) => {
+      if (!window._conflictSlots) window._conflictSlots = {};
+      window._conflictSlots[data.slot_code] = data;
+      loadSlots();
+      Toast.error('⚠️ ĐỖ SAI VỊ TRÍ!', `Xe ${data.wrong_plate} đỗ NHẦM vào ô ${data.slot_code} (Đã có người đặt trước)!`);
+    });
+
+    socket.on('slot_conflict_resolved', (data) => {
+      if (window._conflictSlots) delete window._conflictSlots[data.slot_code];
+      loadSlots();
+      Toast.info('Giải phóng ô đỗ', `Ô ${data.slot_code} đã khôi phục trạng thái ĐẶT CHỖ.`);
+    });
+
     socket.on('device_status', () => loadDevices());
   } catch {}
 }

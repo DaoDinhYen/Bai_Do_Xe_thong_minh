@@ -25,17 +25,39 @@ const CameraModel = {
       [camera_id, user_id || null, vehicle_id || null, rfid_uid || null, plate_number, detected_plate, image_path || null, confidence, direction, verification_status || 'PENDING']
     ),
 
-  updateRecordVerification: (id, { user_id, vehicle_id, rfid_uid, verification_status }) =>
-    query(
+  updateRecordVerification: (id, { user_id, vehicle_id, rfid_uid, verification_status }) => {
+    if (!id) return null;
+    return query(
       'UPDATE camera_records SET user_id = ?, vehicle_id = ?, rfid_uid = ?, verification_status = ? WHERE id = ?',
-      [user_id, vehicle_id, rfid_uid, verification_status, id]
-    ),
+      [user_id || null, vehicle_id || null, rfid_uid || null, verification_status || 'ACCEPTED', id]
+    );
+  },
 
   // Get most recent detection for a direction within time window
   getRecentDetection: (direction, windowSeconds = 30) =>
     queryOne(`SELECT * FROM camera_records 
               WHERE direction = ? AND captured_at >= DATE_SUB(NOW(), INTERVAL ? SECOND)
-              ORDER BY captured_at DESC LIMIT 1`, [direction, windowSeconds]),
+              ORDER BY captured_at DESC, id DESC LIMIT 1`, [direction, windowSeconds]),
+
+  // Get most recent UNCONSUMED detection (status = PENDING)
+  getRecentUnconsumedDetection: (direction, windowSeconds = 30) =>
+    queryOne(`SELECT * FROM camera_records 
+              WHERE direction = ? AND verification_status = 'PENDING' AND captured_at >= DATE_SUB(NOW(), INTERVAL ? SECOND)
+              ORDER BY captured_at DESC, id DESC LIMIT 1`, [direction, windowSeconds]),
+
+  // Find detection specifically matching a plate number within time window
+  findMatchingDetection: (direction, plateNumber, windowSeconds = 30) =>
+    queryOne(`SELECT * FROM camera_records 
+              WHERE direction = ? AND (plate_number = ? OR detected_plate LIKE ?) 
+                AND captured_at >= DATE_SUB(NOW(), INTERVAL ? SECOND)
+              ORDER BY captured_at DESC, id DESC LIMIT 1`,
+      [direction, plateNumber, `%${plateNumber}%`, windowSeconds]),
+
+  // Get absolute latest detection regardless of time window
+  getLatestRecord: (direction) =>
+    queryOne(`SELECT * FROM camera_records 
+              WHERE direction = ?
+              ORDER BY captured_at DESC, id DESC LIMIT 1`, [direction]),
 
   getRecords: ({ page = 1, limit = 20, direction = '', status = '', search = '', camera_id = null, date = '' }) => {
     const offset = (page - 1) * limit;

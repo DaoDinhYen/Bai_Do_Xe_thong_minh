@@ -48,3 +48,4 @@
 - **Ưu tiên sự đơn giản**: Làm cho mọi thay đổi đơn giản nhất có thể. Tác động đến ít nhất.
 - **Không lười biếng**: Tìm nguyên nhân gốc rễ. Không dùng các bản sửa lỗi tạm thời. Tiêu chuẩn của kỹ sư cấp cao.
 - **Tối thiểu hóa tiếp xúc**: Các thay đổi chỉ nên chạm đến những gì cần thiết. Tránh đưa lỗi mới vào.
+- **Phát hiện chủ động các thay đổi của con người**: Nếu hệ thống không phản hồi như mong đợi, hãy tự mình điều tra. Đừng chỉ chờ đợi người dùng chỉ ra vấn đề.

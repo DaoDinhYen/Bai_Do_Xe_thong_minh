@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card_rounded"
+    android:padding="24dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_badge_disabled"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nạp tiền vào ví mô phỏng"
+        android:textColor="@color/navy"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="6dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chọn mệnh giá hoặc nhập số tiền bạn muốn nạp vào ví điện tử."
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_body_sm"
+        android:layout_marginBottom="20dp" />
+
+    <!-- 4 Quick Amount Buttons Grid (2x2) -->
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:layout_marginBottom="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_amt_50k"
+            style="@style/Widget.App.Button.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_columnWeight="1"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="8dp"
+            android:text="50.000 VNĐ" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_amt_100k"
+            style="@style/Widget.App.Button.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_columnWeight="1"
+            android:layout_marginStart="6dp"
+            android:layout_marginBottom="8dp"
+            android:text="100.000 VNĐ" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_amt_200k"
+            style="@style/Widget.App.Button.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_columnWeight="1"
+            android:layout_marginEnd="6dp"
+            android:text="200.000 VNĐ" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_amt_500k"
+            style="@style/Widget.App.Button.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_columnWeight="1"
+            android:layout_marginStart="6dp"
+            android:text="500.000 VNĐ" />
+    </GridLayout>
+
+    <!-- Custom amount input -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hoặc nhập số tiền khác"
+        android:textColor="@color/navy"
+        android:textSize="@dimen/text_body_sm"
+        android:textStyle="bold"
+        android:layout_marginBottom="6dp" />
+
+    <EditText
+        android:id="@+id/edt_topup_amount"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_input_field"
+        android:hint="Nhập số tiền (VNĐ)"
+        android:inputType="number"
+        android:textColor="@color/navy"
+        android:textColorHint="@color/text_hint"
+        android:textSize="@dimen/text_title"
+        android:textStyle="bold"
+        android:paddingHorizontal="14dp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Submit Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_do_topup"
+        style="@style/Widget.App.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/btn_confirm_topup"
+        android:textSize="@dimen/text_subtitle" />
+</LinearLayout>

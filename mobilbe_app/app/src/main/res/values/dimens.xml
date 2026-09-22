@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Card & Shape Dimensions -->
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_corner_radius_large">20dp</dimen>
+    <dimen name="card_corner_radius_small">10dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_elevation_hover">6dp</dimen>
+    <dimen name="button_corner_radius">12dp</dimen>
+    <dimen name="button_pill_radius">24dp</dimen>
+
+    <!-- Spacing & Padding -->
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_sm">8dp</dimen>
+    <dimen name="space_md">12dp</dimen>
+    <dimen name="space_lg">16dp</dimen>
+    <dimen name="space_xl">20dp</dimen>
+    <dimen name="space_xxl">24dp</dimen>
+    <dimen name="space_32">32dp</dimen>
+
+    <!-- Typography -->
+    <dimen name="text_caption">11sp</dimen>
+    <dimen name="text_subtext">12sp</dimen>
+    <dimen name="text_body_sm">13sp</dimen>
+    <dimen name="text_body">14sp</dimen>
+    <dimen name="text_body_lg">15sp</dimen>
+    <dimen name="text_subtitle">16sp</dimen>
+    <dimen name="text_title">18sp</dimen>
+    <dimen name="text_header">22sp</dimen>
+    <dimen name="text_hero">28sp</dimen>
+</resources>

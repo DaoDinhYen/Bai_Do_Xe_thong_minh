@@ -30,10 +30,28 @@ const ParkingSlotModel = {
         ph.entry_time,
         b.end_time as expected_exit
       FROM parking_slots ps
-      LEFT JOIN bookings b ON ps.id = b.slot_id AND b.status IN ('CONFIRMED','ACTIVE')
+      LEFT JOIN (
+        SELECT b1.*
+        FROM bookings b1
+        INNER JOIN (
+          SELECT slot_id, MAX(id) as max_id
+          FROM bookings
+          WHERE status IN ('CONFIRMED','ACTIVE')
+          GROUP BY slot_id
+        ) b_latest ON b1.id = b_latest.max_id
+      ) b ON ps.id = b.slot_id
       LEFT JOIN users u ON b.user_id = u.id
       LEFT JOIN vehicles v ON b.vehicle_id = v.id
-      LEFT JOIN parking_history ph ON ps.id = ph.slot_id AND ph.exit_time IS NULL
+      LEFT JOIN (
+        SELECT ph1.*
+        FROM parking_history ph1
+        INNER JOIN (
+          SELECT slot_id, MAX(id) as max_id
+          FROM parking_history
+          WHERE exit_time IS NULL
+          GROUP BY slot_id
+        ) ph_latest ON ph1.id = ph_latest.max_id
+      ) ph ON ps.id = ph.slot_id
       LEFT JOIN vehicles v_parked ON ph.vehicle_id = v_parked.id
       ORDER BY ps.zone, ps.slot_code
     `),

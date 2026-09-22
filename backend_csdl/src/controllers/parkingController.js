@@ -7,7 +7,25 @@ const parkingController = {
   async getAllSlots(req, res, next) {
     try {
       const slots = await ParkingSlotModel.getWithCurrentBooking();
-      return success(res, slots);
+      let conflictMap = {};
+      try {
+        const { getConflictSlots } = require('../mqtt/mqttHandler');
+        conflictMap = getConflictSlots() || {};
+      } catch (_) {}
+
+      const enriched = slots.map(s => {
+        const code = s.slot_code || s.slot_name;
+        if (conflictMap[code]) {
+          return {
+            ...s,
+            is_conflict: true,
+            conflict_info: conflictMap[code],
+            wrong_plate: conflictMap[code].wrong_plate
+          };
+        }
+        return s;
+      });
+      return success(res, enriched);
     } catch (err) { next(err); }
   },
 
@@ -87,17 +105,60 @@ const parkingController = {
     } catch (err) { next(err); }
   },
 
-  // PUT /api/admin/parking/rates/:id
+  // PUT /api/parking/rates/:id
   async updateRate(req, res, next) {
     try {
       const { price_per_hour, minimum_fee, maximum_fee, status } = req.body;
       const updates = {};
-      if (price_per_hour) updates.price_per_hour = price_per_hour;
+      if (price_per_hour !== undefined) updates.price_per_hour = price_per_hour;
       if (minimum_fee !== undefined) updates.minimum_fee = minimum_fee;
       if (maximum_fee !== undefined) updates.maximum_fee = maximum_fee;
       if (status) updates.status = status;
       await ParkingRateModel.updateById(req.params.id, updates);
-      return success(res, null, 'Cập nhật bảng giá thành công');
+
+      const allRates = await ParkingRateModel.getAll();
+      const io = req.app.get('io');
+      if (io) {
+        io.emit('rates_updated', { rates: allRates, timestamp: new Date().toISOString() });
+      }
+
+      return success(res, allRates, 'Cập nhật bảng giá thành công');
+    } catch (err) { next(err); }
+  },
+
+  // PUT /api/parking/rates/batch (Admin)
+  async batchUpdateRates(req, res, next) {
+    try {
+      const rates = req.body.rates || req.body;
+      if (!Array.isArray(rates) || rates.length === 0) {
+        return badRequest(res, 'Dữ liệu bảng giá (rates) phải là một mảng');
+      }
+
+      for (const item of rates) {
+        if (!item.id && !item.vehicle_type) continue;
+        const updates = {};
+        if (item.price_per_hour !== undefined) updates.price_per_hour = item.price_per_hour;
+        if (item.minimum_fee !== undefined) updates.minimum_fee = item.minimum_fee;
+        if (item.maximum_fee !== undefined) updates.maximum_fee = item.maximum_fee;
+        if (item.status) updates.status = item.status;
+
+        if (item.id) {
+          await ParkingRateModel.updateById(item.id, updates);
+        } else if (item.vehicle_type) {
+          const existing = await ParkingRateModel.getByVehicleType(item.vehicle_type);
+          if (existing) {
+            await ParkingRateModel.updateById(existing.id, updates);
+          }
+        }
+      }
+
+      const allRates = await ParkingRateModel.getAll();
+      const io = req.app.get('io');
+      if (io) {
+        io.emit('rates_updated', { rates: allRates, timestamp: new Date().toISOString() });
+      }
+
+      return success(res, allRates, 'Cập nhật toàn bộ bảng giá thành công');
     } catch (err) { next(err); }
   }
 };

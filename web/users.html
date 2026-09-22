@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Người dùng — Smart Parking</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý người dùng — Smart Parking System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/animations.css">
 </head>
@@ -14,31 +17,61 @@
 <script>
 (function init() {
   if (!requireAdmin()) return;
+
   const content = `
-    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+    <div class="page-header flex justify-between items-center" style="flex-wrap:wrap;gap:16px">
       <div>
-        <div class="page-title">Người dùng</div>
-        <div class="page-subtitle">Quản lý tài khoản và phân quyền người dùng</div>
+        <div class="page-title">Quản lý Người dùng & Tài khoản</div>
+        <div class="page-subtitle">Danh sách thành viên, phân quyền quản trị, số dư ví và phương tiện đăng ký</div>
       </div>
       <button class="btn btn-primary" onclick="openAddUserModal()">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Thêm người dùng
+        Thêm người dùng mới
       </button>
     </div>
 
-    <!-- Stats -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700" id="u-total">—</div><div style="font-size:12px;color:var(--text-light)">Tổng người dùng</div></div>
-      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--success)" id="u-active">—</div><div style="font-size:12px;color:var(--text-light)">Đang hoạt động</div></div>
-      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--primary)" id="u-admins">—</div><div style="font-size:12px;color:var(--text-light)">Admin</div></div>
-      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--error)" id="u-banned">—</div><div style="font-size:12px;color:var(--text-light)">Bị khóa</div></div>
+    <!-- 4 Metric Cards -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px" class="stagger-children">
+      <div class="stat-card">
+        <div class="stat-icon icon-blue">👥</div>
+        <div>
+          <div class="stat-value" id="u-total">—</div>
+          <div class="stat-label">Tổng người dùng</div>
+          <div class="stat-sub">Đã đăng ký tài khoản</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-green">🟢</div>
+        <div>
+          <div class="stat-value" style="color:var(--success)" id="u-active">—</div>
+          <div class="stat-label">Đang hoạt động</div>
+          <div class="stat-sub">Trạng thái bình thường</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-purple">🛡️</div>
+        <div>
+          <div class="stat-value" style="color:var(--purple)" id="u-admins">—</div>
+          <div class="stat-label">Quản trị viên (Admin)</div>
+          <div class="stat-sub">Có toàn quyền hệ thống</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-red">🔒</div>
+        <div>
+          <div class="stat-value" style="color:var(--error)" id="u-banned">—</div>
+          <div class="stat-label">Tài khoản bị khóa</div>
+          <div class="stat-sub">Tạm ngưng truy cập</div>
+        </div>
+      </div>
     </div>
 
+    <!-- Data Table & Search Filter -->
     <div class="card">
-      <div class="search-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <div class="search-input-wrap" style="flex:1;min-width:220px">
+      <div class="search-bar" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+        <div class="search-input-wrap" style="flex:1;min-width:240px">
           <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="search" class="search-input" placeholder="Tìm tên, email, điện thoại..." id="u-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchU()">
+          <input type="search" class="search-input" placeholder="Tìm tên, email, số điện thoại..." id="u-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchU()">
         </div>
         <select class="filter-select" id="u-role" onchange="loadUsers(1)">
           <option value="">Tất cả vai trò</option>
@@ -47,8 +80,8 @@
         </select>
         <select class="filter-select" id="u-status" onchange="loadUsers(1)">
           <option value="">Tất cả trạng thái</option>
-          <option value="ACTIVE">Hoạt động</option>
-          <option value="BLOCKED">Bị khóa</option>
+          <option value="ACTIVE">Hoạt động bình thường</option>
+          <option value="BLOCKED">Đang bị khóa</option>
         </select>
         <select class="filter-select" id="u-sort" onchange="loadUsers(1)">
           <option value="created_at:desc">Mới nhất</option>
@@ -57,17 +90,26 @@
           <option value="name:desc">Tên (Z-A)</option>
           <option value="wallet_balance:desc">Số dư cao nhất</option>
         </select>
-        <button class="btn btn-outline btn-sm" onclick="resetUserFilters()" title="Xóa toàn bộ bộ lọc">
+        <button class="btn btn-outline btn-sm" onclick="resetUserFilters()">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
           Xóa lọc
         </button>
       </div>
-      <div class="table-wrapper">
+
+      <div class="table-wrapper" style="box-shadow:none;border:none">
         <table class="table">
-          <thead><tr>
-            <th>Người dùng</th><th>Vai trò</th><th>Email</th><th>Điện thoại</th>
-            <th>Số dư ví</th><th>Trạng thái</th><th>Ngày tạo</th><th>Thao tác</th>
-          </tr></thead>
+          <thead>
+            <tr>
+              <th>Người dùng</th>
+              <th>Vai trò</th>
+              <th>Email</th>
+              <th>Số điện thoại</th>
+              <th>Số dư ví</th>
+              <th>Trạng thái</th>
+              <th>Ngày tham gia</th>
+              <th style="text-align:right">Thao tác</th>
+            </tr>
+          </thead>
           <tbody id="user-table">${skeletonRows(7)}</tbody>
         </table>
       </div>
@@ -78,13 +120,13 @@
     <div id="user-modal" class="modal-overlay">
       <div class="modal" style="max-width:580px">
         <div class="modal-header">
-          <span class="modal-title" id="user-modal-title">Chi tiết người dùng</span>
+          <span class="modal-title" id="user-modal-title">Chi tiết tài khoản người dùng</span>
           <button class="modal-close" onclick="closeUserModal()">✕</button>
         </div>
         <div class="modal-body" id="user-modal-body"></div>
         <div class="modal-footer" id="user-modal-footer" style="display:flex;justify-content:space-between;align-items:center">
-          <div id="user-modal-actions" style="display:flex;gap:8px"></div>
-          <button class="btn btn-ghost" onclick="closeUserModal()">Đóng</button>
+          <div id="user-modal-actions" style="display:flex;gap:10px"></div>
+          <button class="btn btn-outline" onclick="closeUserModal()">Đóng</button>
         </div>
       </div>
     </div>
@@ -93,49 +135,50 @@
     <div id="add-user-modal" class="modal-overlay">
       <div class="modal" style="max-width:520px">
         <div class="modal-header">
-          <span class="modal-title">Thêm người dùng mới</span>
+          <span class="modal-title">Thêm tài khoản người dùng mới</span>
           <button class="modal-close" onclick="closeAddUserModal()">✕</button>
         </div>
         <div class="modal-body">
           <form id="add-user-form" onsubmit="submitAddUser(event)">
-            <div class="form-group" style="margin-bottom:14px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Họ và tên *</label>
-              <input type="text" class="input" id="new-u-name" required placeholder="Nguyễn Văn A" style="width:100%">
+            <div class="form-group">
+              <label class="form-label">Họ và tên *</label>
+              <input type="text" class="form-control" id="new-u-name" required placeholder="Nguyễn Văn A">
             </div>
-            <div class="form-group" style="margin-bottom:14px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Địa chỉ Email *</label>
-              <input type="email" class="input" id="new-u-email" required placeholder="user@example.com" style="width:100%">
+            <div class="form-group">
+              <label class="form-label">Địa chỉ Email *</label>
+              <input type="email" class="form-control" id="new-u-email" required placeholder="user@example.com">
             </div>
-            <div class="form-group" style="margin-bottom:14px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Số điện thoại</label>
-              <input type="tel" class="input" id="new-u-phone" placeholder="0901234567" style="width:100%">
+            <div class="form-group">
+              <label class="form-label">Số điện thoại</label>
+              <input type="tel" class="form-control" id="new-u-phone" placeholder="0901234567">
             </div>
-            <div class="form-group" style="margin-bottom:14px">
-              <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Mật khẩu ban đầu *</label>
-              <input type="password" class="input" id="new-u-password" required minlength="6" placeholder="Tối thiểu 6 ký tự" style="width:100%">
+            <div class="form-group">
+              <label class="form-label">Mật khẩu ban đầu *</label>
+              <input type="password" class="form-control" id="new-u-password" required minlength="6" placeholder="Tối thiểu 6 ký tự">
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
               <div>
-                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Vai trò</label>
-                <select class="filter-select" id="new-u-role" style="width:100%;height:38px">
+                <label class="form-label">Phân quyền</label>
+                <select class="filter-select" id="new-u-role" style="width:100%;height:42px">
                   <option value="USER">Người dùng (USER)</option>
                   <option value="ADMIN">Quản trị viên (ADMIN)</option>
                 </select>
               </div>
               <div>
-                <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Số dư ban đầu (VNĐ)</label>
-                <input type="number" class="input" id="new-u-wallet" value="0" min="0" step="10000" style="width:100%">
+                <label class="form-label">Số dư ban đầu (VNĐ)</label>
+                <input type="number" class="form-control" id="new-u-wallet" value="0" min="0" step="10000" style="height:42px;font-weight:700">
               </div>
             </div>
-            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px">
-              <button type="button" class="btn btn-ghost" onclick="closeAddUserModal()">Hủy</button>
-              <button type="submit" class="btn btn-primary" id="btn-submit-add-user">Lưu người dùng</button>
+            <div style="display:flex;justify-content:flex-end;gap:10px">
+              <button type="button" class="btn btn-outline" onclick="closeAddUserModal()">Hủy</button>
+              <button type="submit" class="btn btn-primary" id="btn-submit-add-user">Lưu tài khoản</button>
             </div>
           </form>
         </div>
       </div>
     </div>
   `;
+
   createAdminPage('users-list', content, () => {
     loadUsers(1);
     window.debouncedSearchU = debounce(() => loadUsers(1), 400);
@@ -172,10 +215,15 @@ async function loadUsers(page = 1) {
     const data  = Array.isArray(res?.data) ? res.data : [];
     const total = res?.pagination?.total ?? res?.total ?? data.length;
 
-    document.getElementById('u-total').textContent  = total;
-    document.getElementById('u-active').textContent = data.filter(u => u.status === 'ACTIVE').length;
-    document.getElementById('u-admins').textContent = data.filter(u => u.role === 'ADMIN').length;
-    document.getElementById('u-banned').textContent = data.filter(u => u.status !== 'ACTIVE').length;
+    const uTotal  = document.getElementById('u-total');
+    const uActive = document.getElementById('u-active');
+    const uAdmins = document.getElementById('u-admins');
+    const uBanned = document.getElementById('u-banned');
+
+    if (uTotal)  uTotal.textContent  = total;
+    if (uActive) uActive.textContent = data.filter(u => u.status === 'ACTIVE').length;
+    if (uAdmins) uAdmins.textContent = data.filter(u => u.role === 'ADMIN').length;
+    if (uBanned) uBanned.textContent = data.filter(u => u.status !== 'ACTIVE').length;
 
     if (!tbody) return;
     if (!data.length) {
@@ -183,34 +231,39 @@ async function loadUsers(page = 1) {
       return;
     }
 
-    tbody.innerHTML = data.map(u => `
-      <tr>
-        <td>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="avatar avatar-sm" style="background:${u.role === 'ADMIN' ? 'var(--primary)' : '#8B5CF6'}">${(u.name || 'U').split(' ').slice(-1)[0][0]}</div>
-            <div>
-              <div style="font-weight:500">${u.name || '—'}</div>
-              <div style="font-size:11px;color:var(--text-light)">ID: #${u.id}</div>
+    tbody.innerHTML = data.map(u => {
+      const initial = (u.name || 'U').split(' ').filter(Boolean).slice(-1)[0][0] || 'U';
+      return `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="avatar avatar-sm" style="background:${u.role === 'ADMIN' ? 'linear-gradient(135deg, #2563EB, #1D4ED8)' : 'linear-gradient(135deg, #8B5CF6, #6D28D9)'}">
+                ${initial}
+              </div>
+              <div>
+                <div style="font-weight:700;color:var(--text-dark)">${u.name || '—'}</div>
+                <div style="font-size:11.5px;color:var(--text-light)">ID: #${u.id}</div>
+              </div>
             </div>
-          </div>
-        </td>
-        <td>${u.role === 'ADMIN' ? '<span class="badge badge-primary">Admin</span>' : '<span class="badge badge-gray">User</span>'}</td>
-        <td style="font-size:12px">${u.email || '—'}</td>
-        <td style="font-size:12px">${u.phone || '—'}</td>
-        <td style="font-weight:600;color:var(--success)">${Format.money(u.wallet_balance)}</td>
-        <td>${userStatusBadge(u.status)}</td>
-        <td style="font-size:12px">${Format.date(u.created_at)}</td>
-        <td>
-          <div style="display:flex;gap:6px">
-            <button class="btn btn-sm btn-ghost" onclick="viewUser(${u.id})">Chi tiết</button>
-            ${u.status === 'ACTIVE'
-              ? `<button class="btn btn-sm btn-error" onclick="toggleUserStatus(${u.id},'BLOCKED')">Khóa</button>`
-              : `<button class="btn btn-sm btn-success" onclick="toggleUserStatus(${u.id},'ACTIVE')">Mở khóa</button>`
-            }
-          </div>
-        </td>
-      </tr>
-    `).join('');
+          </td>
+          <td>${u.role === 'ADMIN' ? '<span class="badge badge-primary">Admin</span>' : '<span class="badge badge-gray">User</span>'}</td>
+          <td style="font-size:12.5px;color:var(--text-medium)">${u.email || '—'}</td>
+          <td style="font-size:12.5px;color:var(--text-medium)">${u.phone || '—'}</td>
+          <td style="font-weight:800;color:var(--success);font-size:13.5px">${Format.money(u.wallet_balance)}</td>
+          <td>${userStatusBadge(u.status)}</td>
+          <td style="font-size:12px;color:var(--text-light)">${Format.date(u.created_at)}</td>
+          <td style="text-align:right">
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+              <button class="btn btn-sm btn-outline" onclick="viewUser(${u.id})">Chi tiết</button>
+              ${u.status === 'ACTIVE'
+                ? `<button class="btn btn-sm btn-error" onclick="toggleUserStatus(${u.id},'BLOCKED')">Khóa</button>`
+                : `<button class="btn btn-sm btn-success" onclick="toggleUserStatus(${u.id},'ACTIVE')">Mở khóa</button>`
+              }
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
 
     new Pagination({ container: 'user-pager', total, page, limit: 15, onChange: loadUsers }).render();
   } catch (err) {
@@ -232,41 +285,58 @@ async function viewUser(id) {
     const res = await UserAPI.getById(id);
     const u = res?.data || {};
     currentUserObj = u;
+    const initial = (u.name || 'U').split(' ').filter(Boolean).slice(-1)[0][0] || 'U';
 
     body.innerHTML = `
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border-light)">
-        <div class="avatar" style="width:56px;height:56px;font-size:20px;background:${u.role==='ADMIN'?'var(--primary)':'#8B5CF6'}">${(u.name||'U').split(' ').slice(-1)[0][0]}</div>
-        <div>
-          <div style="font-size:18px;font-weight:700">${u.name || '—'}</div>
-          <div style="font-size:13px;color:var(--text-light)">${u.email || '—'}</div>
-          <div style="margin-top:6px">${u.role==='ADMIN'?'<span class="badge badge-primary">Admin</span>':'<span class="badge badge-gray">User</span>'} ${userStatusBadge(u.status)}</div>
+      <div style="display:flex;align-items:center;gap:18px;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border-light)">
+        <div class="avatar" style="width:60px;height:60px;font-size:22px;background:${u.role==='ADMIN'?'linear-gradient(135deg, #2563EB, #1D4ED8)':'linear-gradient(135deg, #8B5CF6, #6D28D9)'}">
+          ${initial}
         </div>
-        <div class="ml-auto text-center">
-          <div style="font-size:22px;font-weight:700;color:var(--success)">${Format.money(u.wallet_balance)}</div>
-          <div style="font-size:11px;color:var(--text-light)">Số dư ví</div>
+        <div>
+          <div style="font-size:19px;font-weight:800;color:var(--text-dark)">${u.name || '—'}</div>
+          <div style="font-size:13px;color:var(--text-light)">${u.email || '—'}</div>
+          <div style="margin-top:6px;display:flex;gap:6px">
+            ${u.role==='ADMIN'?'<span class="badge badge-primary">Admin</span>':'<span class="badge badge-gray">User</span>'} 
+            ${userStatusBadge(u.status)}
+          </div>
+        </div>
+        <div class="ml-auto text-right">
+          <div style="font-size:24px;font-weight:800;color:var(--success)">${Format.money(u.wallet_balance)}</div>
+          <div style="font-size:11.5px;color:var(--text-light);font-weight:600">Số dư ví điện tử</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        ${[['ID người dùng', `#${u.id}`], ['Điện thoại',u.phone||'—'],['Ngày sinh',Format.date(u.date_of_birth)],['Ngày tạo',Format.datetime(u.created_at)],['Lần đăng nhập cuối',Format.datetime(u.last_login)]].map(([k,v]) => `
-          <div><div style="font-size:11px;color:var(--text-light);margin-bottom:4px">${k}</div><div style="font-size:13px;font-weight:500">${v}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;background:#F8FAFC;padding:16px;border-radius:12px;border:1px solid #E2E8F0">
+        ${[
+          ['Mã người dùng', `#${u.id}`],
+          ['Số điện thoại', u.phone || '—'],
+          ['Ngày sinh', Format.date(u.date_of_birth) || '—'],
+          ['Ngày đăng ký', Format.datetime(u.created_at)],
+          ['Lần truy cập cuối', Format.datetime(u.last_login) || '—']
+        ].map(([k,v]) => `
+          <div>
+            <div style="font-size:11.5px;color:var(--text-muted);font-weight:600;margin-bottom:3px">${k}</div>
+            <div style="font-size:13px;font-weight:600">${v}</div>
+          </div>
         `).join('')}
       </div>
       ${u.vehicles?.length ? `
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light)">
-          <div style="font-size:12px;color:var(--text-light);margin-bottom:8px">Phương tiện đã đăng ký (${u.vehicles.length})</div>
-          ${u.vehicles.map(v => `<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg);border-radius:8px;margin-bottom:6px;font-size:13px">
-            <code style="background:white;padding:2px 8px;border-radius:4px;font-weight:600">${v.plate_number}</code>
-            <span>${Format.vehicleType(v.vehicle_type)}</span>
-            ${v.rfid_uid ? `<span class="badge badge-teal" style="margin-left:auto">RFID: ${v.rfid_uid}</span>` : '<span style="margin-left:auto;color:var(--text-light);font-size:11px">Không có RFID</span>'}
-          </div>`).join('')}
+        <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border-light)">
+          <div style="font-size:12.5px;font-weight:700;color:var(--text-dark);margin-bottom:10px">Phương tiện đã đăng ký (${u.vehicles.length})</div>
+          ${u.vehicles.map(v => `
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;margin-bottom:8px">
+              <span class="vn-plate" style="font-size:12px;padding:2px 8px">${v.plate_number}</span>
+              <span style="font-size:13px;font-weight:600">${Format.vehicleType(v.vehicle_type) || 'Ô tô'}</span>
+              ${v.rfid_uid ? `<span class="badge badge-teal" style="margin-left:auto;font-family:'JetBrains Mono',monospace">RFID: ${v.rfid_uid}</span>` : '<span style="margin-left:auto;color:var(--text-light);font-size:11px">Không có RFID</span>'}
+            </div>
+          `).join('')}
         </div>
-      ` : '<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);color:var(--text-light);font-size:12px">Chưa đăng ký phương tiện nào</div>'}
+      ` : '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border-light);color:var(--text-light);font-size:12.5px">Chưa đăng ký phương tiện nào</div>'}
     `;
 
     if (actions) {
       actions.innerHTML = `
         <button class="btn btn-sm btn-primary" onclick="quickTopUpForUser(${u.id}, '${u.name}')">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Nạp tiền ví
         </button>
         <button class="btn btn-sm btn-outline" onclick="resetUserPasswordPrompt(${u.id}, '${u.name}')">
@@ -275,7 +345,7 @@ async function viewUser(id) {
       `;
     }
   } catch {
-    body.innerHTML = `<div style="text-align:center;color:var(--error);padding:20px">Không thể tải chi tiết</div>`;
+    body.innerHTML = `<div style="text-align:center;color:var(--error);padding:24px">Không thể tải thông tin chi tiết</div>`;
   }
 }
 
@@ -317,7 +387,7 @@ async function submitAddUser(e) {
   } catch (err) {
     Toast.error('Lỗi', err.message || 'Không thể tạo tài khoản');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = 'Lưu người dùng'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Lưu tài khoản'; }
   }
 }
 
@@ -326,7 +396,7 @@ async function quickTopUpForUser(id, name) {
   if (!amountStr) return;
   const amount = parseFloat(amountStr);
   if (isNaN(amount) || amount <= 0) {
-    Toast.error('Lỗi', 'Số tiền không hợp lệ');
+    Toast.error('Lỗi', 'Số tiền nạp không hợp lệ');
     return;
   }
   const reason = prompt(`Nhập lý do nạp tiền:`, 'Admin nạp tiền trực tiếp') || 'Admin nạp tiền trực tiếp';
@@ -368,7 +438,7 @@ async function toggleUserStatus(id, newStatus) {
   if (!ok) return;
   try {
     await UserAPI.setStatus(id, isBlocking ? 'BLOCKED' : 'ACTIVE');
-    Toast.success('Thành công', `Đã ${action} tài khoản`);
+    Toast.success('Thành công', `Đã ${action} tài khoản thành công`);
     loadUsers(1);
   } catch (e) { Toast.error('Lỗi', e.message); }
 }

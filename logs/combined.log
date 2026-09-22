@@ -1,2 +1,14 @@
 [2026-09-09 21:08:17] ERROR: DB Query Error:
 [2026-09-09 21:25:46] ERROR: DB Query Error:
+[2026-09-18 23:34:16] ERROR: DB Query Error:
+[2026-09-18 23:35:12] ERROR: DB Query Error:
+[2026-09-18 23:35:38] WARN: ⚠️ [ĐỖ NHẦM Ô] Xe 15B-999.99 đỗ NHẦM vào ô A04 (Đã đặt cho: Administrator - 30A-111.11)!
+[2026-09-18 23:35:38] WARN: MQTT not connected — cannot publish to parking/cmd/alert
+[2026-09-18 23:35:38] INFO: 🔄 [Khôi phục ô đặt trước] Xe đã rời ô A04. Ô chuyển lại màu đặt chỗ: RESERVED
+[2026-09-18 23:35:38] ERROR: DB Query Error:
+[2026-09-18 23:35:38] ERROR: MQTT handler error [parking/esp32_1/slot/A04]:
+[2026-09-18 23:36:26] WARN: ⚠️ [ĐỖ NHẦM Ô] Xe 15B-999.99 đỗ NHẦM vào ô A04 (Đã đặt cho: Administrator - 30A-111.11)!
+[2026-09-18 23:36:26] WARN: MQTT not connected — cannot publish to parking/cmd/alert
+[2026-09-18 23:36:26] INFO: 🔄 [Khôi phục ô đặt trước] Xe đã rời ô A04. Ô chuyển lại màu đặt chỗ: RESERVED
+[2026-09-18 23:36:26] INFO: [IR SLOT] Ô A01: FREE → OCCUPIED
+[2026-09-18 23:36:26] INFO: 📍 [Gán vị trí đỗ] Xe 15B-999.99 đã vào đỗ hợp lệ tại ô: A01

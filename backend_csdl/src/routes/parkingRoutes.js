@@ -13,6 +13,7 @@ router.get('/rates',           ctrl.getRates);  // public — used for fee estim
 router.post('/slots',          authenticate, requireAdmin, ctrl.createSlot);
 router.put('/slots/:id',       authenticate, requireAdmin, ctrl.updateSlot);
 router.post('/rates',          authenticate, requireAdmin, ctrl.createRate);
+router.put('/rates/batch',     authenticate, requireAdmin, ctrl.batchUpdateRates);
 router.put('/rates/:id',       authenticate, requireAdmin, ctrl.updateRate);
 
 module.exports = router;

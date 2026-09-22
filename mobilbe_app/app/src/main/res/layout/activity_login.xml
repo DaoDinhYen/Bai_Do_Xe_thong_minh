@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Background Image (Clean parking entrance without any baked-in logo) -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_login_clean"
+        android:contentDescription="Background" />
+
+    <!-- Scrollable Content with Logo and Login Form -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="30dp">
+
+            <!-- App Logo (Vector Icon - Crisp & Clean) -->
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@drawable/ic_parking_logo"
+                android:contentDescription="Logo" />
+
+            <!-- Title & Slogan -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Smart Parking System"
+                android:textColor="@color/primary"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:shadowColor="#FFFFFF"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="6" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="24dp"
+                android:text="@string/app_slogan"
+                android:textColor="@color/navy"
+                android:textSize="@dimen/text_subtext"
+                android:textStyle="bold" />
+
+            <!-- Modern Form Container Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/surface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/login_title"
+                        android:textColor="@color/navy"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="@string/login_subtitle"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/text_body_sm" />
+
+                    <!-- Email / Username Input -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_input_field"
+                        android:paddingHorizontal="14dp"
+                        android:layout_marginBottom="14dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_email"
+                            app:tint="@color/text_secondary"
+                            android:contentDescription="Email" />
+
+                        <EditText
+                            android:id="@+id/edt_login_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:background="@null"
+                            android:hint="@string/email_hint"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/navy"
+                            android:textColorHint="@color/text_hint"
+                            android:textSize="@dimen/text_body"
+                            android:singleLine="true" />
+                    </LinearLayout>
+
+                    <!-- Password Input with Toggle -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_input_field"
+                        android:paddingHorizontal="14dp"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_lock"
+                            app:tint="@color/text_secondary"
+                            android:contentDescription="Password" />
+
+                        <EditText
+                            android:id="@+id/edt_login_password"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginStart="10dp"
+                            android:background="@null"
+                            android:hint="@string/password_hint"
+                            android:inputType="textPassword"
+                            android:textColor="@color/navy"
+                            android:textColorHint="@color/text_hint"
+                            android:textSize="@dimen/text_body"
+                            android:singleLine="true" />
+
+                        <ImageView
+                            android:id="@+id/iv_toggle_password"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_visibility"
+                            app:tint="@color/text_secondary"
+                            android:contentDescription="Ẩn hiện mật khẩu" />
+                    </LinearLayout>
+
+                    <!-- Forgot password link -->
+                    <TextView
+                        android:id="@+id/tv_forgot_password"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginBottom="20dp"
+                        android:text="@string/forgot_password"
+                        android:textColor="@color/primary"
+                        android:textSize="@dimen/text_body_sm"
+                        android:textStyle="bold" />
+
+                    <!-- Login Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_do_login"
+                        style="@style/Widget.App.Button.Primary"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:text="@string/btn_login"
+                        android:textSize="@dimen/text_subtitle" />
+
+                    <!-- Register Button (Outlined) -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_go_register"
+                        style="@style/Widget.App.Button.Outlined"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/btn_register"
+                        android:textSize="@dimen/text_subtitle" />
+
+                    <!-- Bottom Server Config Link for Easy Tapping -->
+                    <TextView
+                        android:id="@+id/tv_server_config_bottom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:padding="8dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:text="⚙️ Cài đặt kết nối máy chủ (Server IP)"
+                        android:textColor="@color/primary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Top Server Config Button - Placed at the very end on highest Z-layer so clicks always work -->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="16dp"
+        android:elevation="20dp">
+
+        <ImageView
+            android:id="@+id/iv_server_config"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_button_white_pill"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="10dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_dns"
+            app:tint="@color/primary"
+            android:contentDescription="@string/server_config" />
+    </FrameLayout>
+</RelativeLayout>

@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="72"
+    android:viewportHeight="72">
+    <!-- Blue Rounded Background -->
+    <path
+        android:fillColor="#FF1677FF"
+        android:pathData="M16,0h40c8.84,0 16,7.16 16,16v40c0,8.84 -7.16,16 -16,16H16c-8.84,0 -16,-7.16 -16,-16V16C0,7.16 7.16,0 16,0z"/>
+    <!-- Letter P -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M24,14h16c6.63,0 12,5.37 12,12s-5.37,12 -12,12h-8v18h-8V14zM32,22v8h8c2.21,0 4,-1.79 4,-4s-1.79,-4 -4,-4h-8z"/>
+    <!-- Small Car Symbol inside/beside P -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M48,42c-0.3,-0.7 -0.9,-1.2 -1.7,-1.2h-11c-0.8,0 -1.4,0.5 -1.7,1.2l-2.6,7.8v9.2c0,0.5 0.5,1 1,1h1c0.5,0 1,-0.5 1,-1v-1h14v1c0,0.5 0.5,1 1,1h1c0.5,0 1,-0.5 1,-1v-9.2L48,42zM35,44h11l1.3,4h-13.6L35,44zM36,53c-0.8,0 -1.5,-0.7 -1.5,-1.5s0.7,-1.5 1.5,-1.5 1.5,0.7 1.5,1.5S36.8,53 36,53zM45,53c-0.8,0 -1.5,-0.7 -1.5,-1.5s0.7,-1.5 1.5,-1.5 1.5,0.7 1.5,1.5S45.8,53 45,53z"/>
+</vector>

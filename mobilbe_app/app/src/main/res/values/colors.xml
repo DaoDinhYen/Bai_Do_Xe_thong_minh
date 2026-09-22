@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Primary Colors -->
+    <color name="primary">#1677FF</color>
+    <color name="primary_dark">#0E56C4</color>
+    <color name="primary_light">#E6F0FF</color>
+    <color name="primary_soft">#F0F7FF</color>
+    <color name="accent">#3B82F6</color>
+
+    <!-- Navy & Neutral Text Colors -->
+    <color name="navy">#123B70</color>
+    <color name="navy_dark">#0A2244</color>
+    <color name="text_primary">#123B70</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_muted">#94A3B8</color>
+    <color name="text_hint">#CBD5E1</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Backgrounds & Surfaces -->
+    <color name="background">#F6F9FC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F8FAFC</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="divider">#E2E8F0</color>
+    <color name="border">#E2E8F0</color>
+    <color name="border_light">#F1F5F9</color>
+    <color name="input_bg">#F1F5F9</color>
+
+    <!-- Status Colors (Smart Parking) -->
+    <!-- FREE = Green -->
+    <color name="status_free">#10B981</color>
+    <color name="status_free_light">#ECFDF5</color>
+    <color name="status_free_border">#A7F3D0</color>
+
+    <!-- OCCUPIED = Red -->
+    <color name="status_occupied">#EF4444</color>
+    <color name="status_occupied_light">#FEF2F2</color>
+    <color name="status_occupied_border">#FECACA</color>
+
+    <!-- RESERVED = Orange -->
+    <color name="status_reserved">#F59E0B</color>
+    <color name="status_reserved_light">#FFFBEB</color>
+    <color name="status_reserved_border">#FDE68A</color>
+
+    <!-- DISABLED = Gray -->
+    <color name="status_disabled">#94A3B8</color>
+    <color name="status_disabled_light">#F1F5F9</color>
+    <color name="status_disabled_border">#E2E8F0</color>
+
+    <!-- Gradient Accents -->
+    <color name="card_gradient_start">#1677FF</color>
+    <color name="card_gradient_end">#2563EB</color>
+    <color name="card_gradient_accent">#38BDF8</color>
+
+    <!-- Notification Badge -->
+    <color name="badge_red">#EF4444</color>
+    <color name="shimmer_color">#E2E8F0</color>
+</resources>

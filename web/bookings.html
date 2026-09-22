@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booking — Smart Parking</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý Booking — Smart Parking System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/animations.css">
 </head>
@@ -12,31 +15,64 @@
 <script src="js/utils.js"></script>
 <script src="js/admin-layout.js"></script>
 <script>
+var currentPage = 1;
+var currentBookingId = null;
+
 (function init() {
   if (!requireAdmin()) return;
+
   const content = `
-    <div class="page-header flex justify-between items-center">
+    <div class="page-header flex justify-between items-center" style="flex-wrap:wrap;gap:16px">
       <div>
-        <div class="page-title">Quản lý Booking</div>
-        <div class="page-subtitle">Danh sách đặt chỗ trước và trạng thái sử dụng</div>
+        <div class="page-title">Quản lý Đặt chỗ trước (Bookings)</div>
+        <div class="page-subtitle">Danh sách yêu cầu giữ chỗ, thời gian dự kiến và lịch trình sử dụng bãi xe</div>
       </div>
       <button class="btn btn-outline" onclick="loadBookings(1)">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
         Làm mới
       </button>
     </div>
 
-    <!-- Stats -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px" id="booking-stats">
-      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--text-dark)" id="bs-total">—</div><div style="font-size:12px;color:var(--text-light)">Tổng booking</div></div>
-      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--primary)" id="bs-confirmed">—</div><div style="font-size:12px;color:var(--text-light)">Đã xác nhận</div></div>
-      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--success)" id="bs-active">—</div><div style="font-size:12px;color:var(--text-light)">Đang sử dụng</div></div>
-      <div class="card card-body text-center"><div style="font-size:24px;font-weight:700;color:var(--error)" id="bs-cancelled">—</div><div style="font-size:12px;color:var(--text-light)">Đã hủy / Hết hạn</div></div>
+    <!-- 4 KPI Cards -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px" class="stagger-children" id="booking-stats">
+      <div class="stat-card">
+        <div class="stat-icon icon-blue">📋</div>
+        <div>
+          <div class="stat-value" id="bs-total">—</div>
+          <div class="stat-label">Tổng lượt đặt chỗ</div>
+          <div class="stat-sub">Mọi thời điểm</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-orange">⏳</div>
+        <div>
+          <div class="stat-value" style="color:var(--warning)" id="bs-confirmed">—</div>
+          <div class="stat-label">Đã xác nhận</div>
+          <div class="stat-sub">Đang chờ xe đến</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-green">🚗</div>
+        <div>
+          <div class="stat-value" style="color:var(--success)" id="bs-active">—</div>
+          <div class="stat-label">Đang sử dụng</div>
+          <div class="stat-sub">Xe đang đỗ trong bãi</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-red">❌</div>
+        <div>
+          <div class="stat-value" style="color:var(--error)" id="bs-cancelled">—</div>
+          <div class="stat-label">Đã hủy / Quá hạn</div>
+          <div class="stat-sub">Đã hoàn tiền vào ví</div>
+        </div>
+      </div>
     </div>
 
+    <!-- Data Table & Filters -->
     <div class="card">
-      <div class="search-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <div class="search-input-wrap" style="flex:1;min-width:220px">
+      <div class="search-bar" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+        <div class="search-input-wrap" style="flex:1;min-width:240px">
           <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input type="search" class="search-input" placeholder="Tìm theo mã booking, biển số, tên khách, chỗ..." id="b-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearch()">
         </div>
@@ -55,18 +91,28 @@
           <option value="total_price:desc">Phí cao nhất</option>
         </select>
         <input type="date" class="filter-select" id="b-date" onchange="loadBookings(1)" title="Lọc theo ngày">
-        <button class="btn btn-outline btn-sm" onclick="resetBookingFilters()" title="Xóa toàn bộ bộ lọc">
+        <button class="btn btn-outline btn-sm" onclick="resetBookingFilters()">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
           Xóa lọc
         </button>
       </div>
 
-      <div class="table-wrapper">
+      <div class="table-wrapper" style="box-shadow:none;border:none">
         <table class="table">
-          <thead><tr>
-            <th>Mã</th><th>Người dùng</th><th>Biển số</th><th>Chỗ đỗ</th>
-            <th>Thời gian dự kiến</th><th>Thời lượng</th><th>Tổng phí</th><th>Trạng thái</th><th>Thanh toán</th><th>Thao tác</th>
-          </tr></thead>
+          <thead>
+            <tr>
+              <th>Mã Booking</th>
+              <th>Người dùng</th>
+              <th>Biển số xe</th>
+              <th>Chỗ đỗ</th>
+              <th>Thời gian dự kiến</th>
+              <th>Thời lượng</th>
+              <th>Tổng chi phí</th>
+              <th>Trạng thái</th>
+              <th>Thanh toán</th>
+              <th style="text-align:right">Thao tác</th>
+            </tr>
+          </thead>
           <tbody id="booking-table">${skeletonRows(5)}</tbody>
         </table>
       </div>
@@ -77,26 +123,25 @@
     <div id="booking-modal" class="modal-overlay">
       <div class="modal" style="max-width:540px">
         <div class="modal-header">
-          <span class="modal-title">Chi tiết Booking</span>
+          <span class="modal-title">Chi tiết lịch đặt chỗ (Booking)</span>
           <button class="modal-close" onclick="closeModal('booking-modal')">✕</button>
         </div>
         <div class="modal-body" id="booking-modal-body"></div>
         <div class="modal-footer" style="display:flex;justify-content:space-between;align-items:center">
           <div id="booking-modal-actions">
-            <button class="btn btn-error" id="cancel-booking-btn" style="display:none" onclick="cancelBooking()">Hủy booking</button>
+            <button class="btn btn-error" id="cancel-booking-btn" style="display:none" onclick="cancelBooking()">Hủy đặt chỗ & Hoàn tiền</button>
           </div>
-          <button class="btn btn-ghost" onclick="closeModal('booking-modal')">Đóng</button>
+          <button class="btn btn-outline" onclick="closeModal('booking-modal')">Đóng</button>
         </div>
       </div>
     </div>
   `;
+
   createAdminPage('bookings', content, () => {
     loadBookings(1);
     window.debouncedSearch = debounce(() => loadBookings(1), 400);
   });
 })();
-
-let currentPage = 1, currentBookingId = null;
 
 function resetBookingFilters() {
   const s = document.getElementById('b-search');
@@ -127,7 +172,6 @@ async function loadBookings(page = 1) {
     const res = await BookingAPI.getAll(params);
     let data = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
 
-    // Strict client-side check
     if (status) {
       data = data.filter(b => b.status === status);
     }
@@ -143,46 +187,58 @@ async function loadBookings(page = 1) {
 
     const total = res?.pagination?.total ?? data.length;
 
-    // Stats
     const confirmedCount = data.filter(b => b.status === 'CONFIRMED').length;
     const activeCount    = data.filter(b => b.status === 'ACTIVE').length;
     const cancelledCount = data.filter(b => b.status === 'CANCELLED' || b.status === 'EXPIRED').length;
 
-    if (document.getElementById('bs-total')) document.getElementById('bs-total').textContent = total;
-    if (document.getElementById('bs-confirmed')) document.getElementById('bs-confirmed').textContent = confirmedCount;
-    if (document.getElementById('bs-active')) document.getElementById('bs-active').textContent = activeCount;
-    if (document.getElementById('bs-cancelled')) document.getElementById('bs-cancelled').textContent = cancelledCount;
+    const bsTotal     = document.getElementById('bs-total');
+    const bsConfirmed = document.getElementById('bs-confirmed');
+    const bsActive    = document.getElementById('bs-active');
+    const bsCancelled = document.getElementById('bs-cancelled');
+
+    if (bsTotal)     bsTotal.textContent = total;
+    if (bsConfirmed) bsConfirmed.textContent = confirmedCount;
+    if (bsActive)    bsActive.textContent = activeCount;
+    if (bsCancelled) bsCancelled.textContent = cancelledCount;
 
     if (!tbody) return;
     if (!data.length) {
-      tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><div class="empty-state-icon">📅</div><div class="empty-state-title">Không tìm thấy booking nào</div></div></td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><div class="empty-state-icon">📅</div><div class="empty-state-title">Không tìm thấy yêu cầu đặt chỗ nào</div></div></td></tr>`;
       return;
     }
 
     tbody.innerHTML = data.map(b => `
       <tr>
-        <td><code style="font-size:11px;color:var(--primary);font-weight:700">${b.booking_code || '#' + b.id}</code></td>
         <td>
-          <div style="font-weight:500">${b.user_name || '—'}</div>
-          <div style="font-size:11px;color:var(--text-light)">${b.user_email || b.email || ''}</div>
+          <code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--primary);font-weight:700;background:#EFF6FF;padding:2px 6px;border-radius:4px">
+            ${b.booking_code || '#' + b.id}
+          </code>
         </td>
-        <td><code style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:12px;font-weight:600">${b.plate_number || '—'}</code></td>
-        <td><span class="badge badge-primary">${b.slot_code || b.slot_name || '—'}</span></td>
         <td>
-          <div style="font-size:12px;font-weight:500">${Format.datetime(b.start_time)}</div>
+          <div style="font-weight:700;color:var(--text-dark)">${b.user_name || '—'}</div>
+          <div style="font-size:11.5px;color:var(--text-light)">${b.user_email || b.email || ''}</div>
+        </td>
+        <td>
+          <span class="vn-plate" style="font-size:11.5px;padding:2px 7px">${b.plate_number || '—'}</span>
+        </td>
+        <td>
+          <span class="badge badge-primary" style="font-family:'JetBrains Mono',monospace;font-weight:700">${b.slot_code || b.slot_name || '—'}</span>
+        </td>
+        <td>
+          <div style="font-size:12.5px;font-weight:600">${Format.datetime(b.start_time)}</div>
           <div style="font-size:11px;color:var(--text-light)">đến ${Format.datetime(b.end_time)}</div>
         </td>
-        <td style="font-size:12px">${b.duration ? `${b.duration} giờ` : '—'}</td>
-        <td style="font-weight:600;color:var(--success)">${Format.money(b.total_price)}</td>
+        <td style="font-size:12.5px;font-weight:500">${b.duration ? `${b.duration} giờ` : '—'}</td>
+        <td style="font-weight:700;color:var(--success);font-size:13.5px">${Format.money(b.total_price)}</td>
         <td>${bookingBadge(b.status)}</td>
-        <td><span class="badge badge-success">✓ Đã thanh toán</span></td>
-        <td>
-          <button class="btn btn-sm btn-ghost" onclick="viewBooking(${b.id})">Chi tiết</button>
+        <td><span class="badge badge-success">✓ Đã trừ ví</span></td>
+        <td style="text-align:right">
+          <button class="btn btn-sm btn-outline" onclick="viewBooking(${b.id})">Chi tiết</button>
         </td>
       </tr>
     `).join('');
 
-    new Pagination({ container: 'booking-pager', total, page, limit: 10, onChange: loadBookings }).render();
+    new Pagination({ container: 'booking-pager', total, page, limit: 15, onChange: loadBookings }).render();
   } catch (err) {
     if (tbody) tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--error);padding:24px">Lỗi: ${err.message}</td></tr>`;
   }
@@ -205,47 +261,47 @@ async function viewBooking(id) {
     }
 
     body.innerHTML = `
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border-light)">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-light)">
         <div>
-          <div style="font-size:18px;font-weight:700;color:var(--primary)">${b.booking_code || '#' + b.id}</div>
-          <div style="font-size:12px;color:var(--text-light)">Tạo lúc: ${Format.datetime(b.created_at)}</div>
+          <div style="font-size:20px;font-weight:800;color:var(--primary);font-family:'JetBrains Mono',monospace">${b.booking_code || '#' + b.id}</div>
+          <div style="font-size:12px;color:var(--text-light)">Thời gian tạo: ${Format.datetime(b.created_at)}</div>
         </div>
         <div style="margin-left:auto">
           ${bookingBadge(b.status)}
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;background:#F8FAFC;padding:18px;border-radius:14px;border:1px solid #E2E8F0">
         ${[
-          ['Người dùng', b.user_name || '—'],
+          ['Khách hàng', `<strong style="color:var(--text-dark)">${b.user_name || '—'}</strong>`],
           ['Email', b.user_email || b.email || '—'],
-          ['Biển số xe', b.plate_number ? `<code>${b.plate_number}</code>` : '—'],
-          ['Loại xe', Format.vehicleType(b.vehicle_type)],
-          ['Chỗ đỗ', `<strong>${b.slot_code || b.slot_name || '—'}</strong> (${b.zone ? 'Khu ' + b.zone : 'Khu A'})`],
-          ['Thời lượng', b.duration ? `${b.duration} giờ` : '—'],
-          ['Thời gian vào', Format.datetime(b.start_time)],
-          ['Thời gian ra (dự kiến)', Format.datetime(b.end_time)],
-          ['Đơn giá / giờ', Format.money(b.unit_price)],
-          ['Tổng chi phí', `<span style="font-size:15px;font-weight:700;color:var(--success)">${Format.money(b.total_price)}</span>`],
-          ['Thanh toán', '<span class="badge badge-success">✓ Đã trừ ví</span>']
+          ['Biển số xe', `<span class="vn-plate" style="font-size:12px">${b.plate_number || '—'}</span>`],
+          ['Loại phương tiện', Format.vehicleType(b.vehicle_type) || 'Ô tô'],
+          ['Vị trí chỗ đỗ', `<strong style="font-family:'JetBrains Mono',monospace;color:var(--primary)">${b.slot_code || b.slot_name || '—'}</strong> (${b.zone ? 'Khu ' + b.zone : 'Khu A'})`],
+          ['Thời lượng đặt', b.duration ? `${b.duration} giờ` : '—'],
+          ['Giờ vào dự kiến', Format.datetime(b.start_time)],
+          ['Giờ ra dự kiến', Format.datetime(b.end_time)],
+          ['Đơn giá gửi xe', `${Format.money(b.unit_price)} / giờ`],
+          ['Tổng chi phí thanh toán', `<span style="font-size:16px;font-weight:800;color:var(--success)">${Format.money(b.total_price)}</span>`],
+          ['Trạng thái thanh toán', '<span class="badge badge-success">✓ Đã trừ vào ví điện tử</span>']
         ].map(([k, v]) => `
           <div>
-            <div style="font-size:11px;color:var(--text-light);margin-bottom:4px">${k}</div>
+            <div style="font-size:11.5px;color:var(--text-muted);font-weight:600;margin-bottom:3px">${k}</div>
             <div style="font-size:13px">${v}</div>
           </div>
         `).join('')}
       </div>
     `;
   } catch {
-    body.innerHTML = `<div class="text-center" style="color:var(--error);padding:20px">Không thể tải chi tiết booking</div>`;
+    body.innerHTML = `<div class="text-center" style="color:var(--error);padding:24px">Không thể tải thông tin chi tiết booking</div>`;
   }
 }
 
 async function cancelBooking() {
   if (!currentBookingId) return;
   const ok = await showConfirm({
-    title: 'Hủy booking',
-    message: 'Xác nhận hủy booking này? Số tiền đã thanh toán sẽ được hoàn trả đầy đủ vào ví người dùng.',
-    confirmText: 'Hủy booking',
+    title: 'Hủy đặt chỗ trước',
+    message: 'Bạn có chắc chắn muốn hủy đặt chỗ này? Toàn bộ số tiền đã thanh toán trước sẽ được hoàn trả ngay lập tức vào ví người dùng.',
+    confirmText: 'Hủy & Hoàn tiền',
     danger: true
   });
   if (!ok) return;
@@ -253,7 +309,7 @@ async function cancelBooking() {
   try {
     await BookingAPI.cancel(currentBookingId);
     closeModal('booking-modal');
-    Toast.success('Thành công', 'Đã hủy booking và hoàn tiền vào ví người dùng');
+    Toast.success('Thành công', 'Đã hủy booking và hoàn trả tiền vào ví thành công');
     loadBookings(currentPage);
   } catch (e) {
     Toast.error('Lỗi', e.message || 'Không thể hủy booking');

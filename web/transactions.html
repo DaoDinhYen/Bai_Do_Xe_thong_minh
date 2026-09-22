@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Giao dịch — Smart Parking</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giao dịch & Doanh thu — Smart Parking System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/animations.css">
 </head>
@@ -14,91 +17,132 @@
 <script>
 (function init() {
   if (!requireAdmin()) return;
+
   const content = `
-    <div class="page-header" style="display:flex;align-items:center;justify-content:space-between">
+    <div class="page-header flex justify-between items-center" style="flex-wrap:wrap;gap:16px">
       <div>
-        <div class="page-title">Giao dịch</div>
-        <div class="page-subtitle">Toàn bộ giao dịch ví điện tử</div>
+        <div class="page-title">Giao dịch & Tài chính ví</div>
+        <div class="page-subtitle">Nhật ký biến động số dư ví điện tử, thanh toán phí gửi xe và doanh thu hệ thống</div>
       </div>
       <button class="btn btn-primary" onclick="openTopUpModal()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Nạp tiền vào ví
       </button>
     </div>
 
-    <!-- Revenue Stats -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-      <div class="card card-body text-center"><div style="font-size:20px;font-weight:700;color:var(--text-dark)" id="t-total">—</div><div style="font-size:12px;color:var(--text-light)">Tổng giao dịch</div></div>
-      <div class="card card-body text-center"><div style="font-size:20px;font-weight:700;color:var(--success)" id="t-revenue">—</div><div style="font-size:12px;color:var(--text-light)">Doanh thu hôm nay</div></div>
-      <div class="card card-body text-center"><div style="font-size:20px;font-weight:700;color:var(--primary)" id="t-topup">—</div><div style="font-size:12px;color:var(--text-light)">Nạp tiền</div></div>
-      <div class="card card-body text-center"><div style="font-size:20px;font-weight:700;color:var(--warning)" id="t-refund">—</div><div style="font-size:12px;color:var(--text-light)">Hoàn tiền</div></div>
+    <!-- 4 Revenue & Wallet Stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px" class="stagger-children">
+      <div class="stat-card">
+        <div class="stat-icon icon-blue">🧾</div>
+        <div>
+          <div class="stat-value" id="t-total">—</div>
+          <div class="stat-label">Tổng lượt giao dịch</div>
+          <div class="stat-sub">Mọi luồng thanh toán</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-green">💰</div>
+        <div>
+          <div class="stat-value" style="color:var(--success)" id="t-revenue">—</div>
+          <div class="stat-label">Doanh thu hôm nay</div>
+          <div class="stat-sub">Từ tiền gửi xe & đặt chỗ</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-purple">💳</div>
+        <div>
+          <div class="stat-value" style="color:var(--purple)" id="t-topup">—</div>
+          <div class="stat-label">Tổng tiền nạp vào ví</div>
+          <div class="stat-sub">Số dư người dùng nạp</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-orange">🔄</div>
+        <div>
+          <div class="stat-value" style="color:var(--warning)" id="t-refund">—</div>
+          <div class="stat-label">Tổng tiền hoàn trả</div>
+          <div class="stat-sub">Do hủy đặt chỗ trước</div>
+        </div>
+      </div>
     </div>
 
+    <!-- Transactions Data Card -->
     <div class="card">
-      <div class="search-bar">
-        <div class="search-input-wrap">
+      <div class="search-bar" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+        <div class="search-input-wrap" style="flex:1;min-width:240px">
           <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="search" class="search-input" placeholder="Tìm theo tên, email, nội dung..." id="tx-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchTx()">
+          <input type="search" class="search-input" placeholder="Tìm theo tên, email, mã giao dịch, nội dung..." id="tx-search" autocomplete="chrome-off" readonly onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','readonly')" oninput="debouncedSearchTx()">
         </div>
         <select class="filter-select" id="tx-type" onchange="loadTx(1)">
-          <option value="">Tất cả loại</option>
-          <option value="TOP_UP">Nạp tiền</option>
-          <option value="BOOKING_PAYMENT">Đặt chỗ</option>
-          <option value="PARKING_PAYMENT">Phí gửi xe</option>
-          <option value="REFUND">Hoàn tiền</option>
+          <option value="">Tất cả loại giao dịch</option>
+          <option value="TOP_UP">Nạp tiền vào ví</option>
+          <option value="BOOKING_PAYMENT">Thanh toán đặt chỗ</option>
+          <option value="PARKING_PAYMENT">Phí gửi xe tại bãi</option>
+          <option value="REFUND">Hoàn tiền vào ví</option>
         </select>
         <select class="filter-select" id="tx-status" onchange="loadTx(1)">
           <option value="">Tất cả trạng thái</option>
-          <option value="SUCCESS">Thành công</option>
-          <option value="PENDING">Đang xử lý</option>
-          <option value="FAILED">Thất bại</option>
+          <option value="SUCCESS">Thành công (SUCCESS)</option>
+          <option value="PENDING">Đang xử lý (PENDING)</option>
+          <option value="FAILED">Thất bại (FAILED)</option>
         </select>
         <input type="date" class="filter-select" id="tx-date" onchange="loadTx(1)">
-        <button class="btn btn-sm btn-ghost" onclick="resetTxFilter()" title="Xóa bộ lọc" style="white-space:nowrap">
-          ✕ Xóa lọc
+        <button class="btn btn-outline btn-sm" onclick="resetTxFilter()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          Xóa lọc
         </button>
       </div>
-      <div class="table-wrapper">
+
+      <div class="table-wrapper" style="box-shadow:none;border:none">
         <table class="table">
-          <thead><tr>
-            <th>Mã GD</th><th>Người dùng</th><th>Loại</th><th>Số tiền</th><th>Nội dung</th><th>Thời gian</th><th>Trạng thái</th>
-          </tr></thead>
+          <thead>
+            <tr>
+              <th>Mã GD</th>
+              <th>Tài khoản người dùng</th>
+              <th>Loại giao dịch</th>
+              <th>Số tiền</th>
+              <th>Nội dung thanh toán</th>
+              <th>Thời gian</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
           <tbody id="tx-table">${skeletonRows(7)}</tbody>
         </table>
       </div>
       <div id="tx-pager"></div>
     </div>
 
-    <!-- Modal Nạp tiền vào ví -->
+    <!-- Modal Nạp tiền vào ví người dùng -->
     <div id="topup-modal" class="modal-overlay">
-      <div class="modal" style="max-width:440px">
+      <div class="modal" style="max-width:480px">
         <div class="modal-header">
           <span class="modal-title">Nạp tiền vào ví người dùng</span>
           <button class="modal-close" onclick="closeTopUpModal()">✕</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label">Chọn người dùng</label>
-            <select id="tu-user" class="form-control">
+            <label class="form-label">Chọn tài khoản người dùng *</label>
+            <select id="tu-user" class="filter-select" style="width:100%;height:42px">
               <option value="">-- Chọn tài khoản --</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Số tiền (VNĐ)</label>
-            <input type="number" id="tu-amount" class="form-control" placeholder="Ví dụ: 100000" min="10000" step="10000">
+            <label class="form-label">Số tiền cần nạp (VNĐ) *</label>
+            <input type="number" id="tu-amount" class="form-control" placeholder="Ví dụ: 100000" min="10000" step="10000" style="font-weight:700">
           </div>
-          <div class="form-group">
+          <div class="form-group mb-4">
             <label class="form-label">Nội dung / Ghi chú</label>
             <input type="text" id="tu-desc" class="form-control" placeholder="Admin nạp tiền ví...">
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-ghost" onclick="closeTopUpModal()">Hủy</button>
-          <button class="btn btn-primary" onclick="submitTopUp()">Xác nhận nạp</button>
+          <button class="btn btn-outline" onclick="closeTopUpModal()">Hủy</button>
+          <button class="btn btn-primary" onclick="submitTopUp()">Xác nhận nạp tiền</button>
         </div>
       </div>
     </div>
   `;
+
   createAdminPage('transactions', content, () => {
     loadTx(1);
     loadUsersForTopUp();
@@ -141,7 +185,7 @@ async function submitTopUp() {
 
   try {
     await PaymentAPI.adjustWallet({ user_id: +userId, amount: +amount, description: desc });
-    Toast.success('Thành công', `Đã nạp ${Format.money(amount)} vào ví`);
+    Toast.success('Thành công', `Đã nạp ${Format.money(amount)} vào ví người dùng`);
     closeTopUpModal();
     loadTx(1);
     loadUsersForTopUp();
@@ -166,7 +210,6 @@ async function loadTx(page = 1) {
     const res = await PaymentAPI.getAllTransactions(params);
     let data = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
 
-    // Strict client-side check to guarantee exact match
     if (date) {
       data = data.filter(t => {
         if (!t.created_at) return false;
@@ -188,39 +231,58 @@ async function loadTx(page = 1) {
     const totalSpend = data.filter(t => t.type !== 'TOP_UP' && t.type !== 'REFUND').reduce((s, t) => s + Math.abs(parseFloat(t.amount || 0)), 0);
     const totalRefund = data.filter(t => t.type === 'REFUND').reduce((s, t) => s + Math.abs(parseFloat(t.amount || 0)), 0);
 
-    document.getElementById('t-total').textContent = total;
-    document.getElementById('t-revenue').textContent = Format.money(res?.summary?.today_revenue ?? totalSpend);
-    document.getElementById('t-topup').textContent   = Format.money(res?.summary?.total_topup ?? totalTopup);
-    document.getElementById('t-refund').textContent  = Format.money(res?.summary?.total_refund ?? totalRefund);
+    const tTotal   = document.getElementById('t-total');
+    const tRevenue = document.getElementById('t-revenue');
+    const tTopup   = document.getElementById('t-topup');
+    const tRefund  = document.getElementById('t-refund');
+
+    if (tTotal)   tTotal.textContent   = total;
+    if (tRevenue) tRevenue.textContent = Format.money(res?.summary?.today_revenue ?? totalSpend);
+    if (tTopup)   tTopup.textContent   = Format.money(res?.summary?.total_topup ?? totalTopup);
+    if (tRefund)  tRefund.textContent  = Format.money(res?.summary?.total_refund ?? totalRefund);
 
     if (!tbody) return;
     if (!data.length) {
-      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">💳</div><div class="empty-state-title">Không có giao dịch nào</div></div></td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">💳</div><div class="empty-state-title">Không tìm thấy giao dịch nào phù hợp</div></div></td></tr>`;
       return;
     }
 
-    const txColors = { TOP_UP: '#22C55E', BOOKING_PAYMENT: '#2563EB', PARKING_PAYMENT: '#F97316', REFUND: '#8B5CF6' };
+    const txColors = {
+      TOP_UP: '#10B981',
+      BOOKING_PAYMENT: '#2563EB',
+      PARKING_PAYMENT: '#F97316',
+      REFUND: '#8B5CF6'
+    };
 
-    tbody.innerHTML = data.map(t => `
-      <tr>
-        <td><code style="font-size:11px;color:var(--primary)">#${t.id}</code></td>
-        <td>
-          <div style="font-weight:500">${t.user_name || '—'}</div>
-          <div style="font-size:11px;color:var(--text-light)">${t.email || ''}</div>
-        </td>
-        <td>
-          <span class="badge" style="background:${txColors[t.type]}22;color:${txColors[t.type]}">
-            ${Format.txType(t.type)}
-          </span>
-        </td>
-        <td style="font-weight:700;color:${t.type === 'TOP_UP' ? 'var(--success)' : t.type === 'REFUND' ? 'var(--primary)' : 'var(--error)'}">
-          ${t.type === 'TOP_UP' || t.type === 'REFUND' ? '+' : '-'}${Format.money(Math.abs(t.amount))}
-        </td>
-        <td style="font-size:12px;color:var(--text-medium);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.description || ''}">${t.description || '—'}</td>
-        <td style="font-size:12px">${Format.datetime(t.created_at)}</td>
-        <td>${txBadge(t.status)}</td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = data.map(t => {
+      const isPositive = t.type === 'TOP_UP' || t.type === 'REFUND';
+      return `
+        <tr>
+          <td>
+            <code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--primary);font-weight:700;background:#EFF6FF;padding:2px 6px;border-radius:4px">
+              #${t.id}
+            </code>
+          </td>
+          <td>
+            <div style="font-weight:700;color:var(--text-dark)">${t.user_name || '—'}</div>
+            <div style="font-size:11.5px;color:var(--text-light)">${t.email || ''}</div>
+          </td>
+          <td>
+            <span class="badge" style="background:${txColors[t.type]}18;color:${txColors[t.type]};font-weight:700">
+              ${Format.txType(t.type)}
+            </span>
+          </td>
+          <td style="font-weight:800;font-size:14px;color:${isPositive ? 'var(--success)' : 'var(--text-dark)'}">
+            ${isPositive ? '+' : '-'}${Format.money(Math.abs(t.amount))}
+          </td>
+          <td style="font-size:12.5px;color:var(--text-medium);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.description || ''}">
+            ${t.description || '—'}
+          </td>
+          <td style="font-size:12px;color:var(--text-medium)">${Format.datetime(t.created_at)}</td>
+          <td>${txBadge(t.status)}</td>
+        </tr>
+      `;
+    }).join('');
 
     new Pagination({ container: 'tx-pager', total, page, limit: 15, onChange: loadTx }).render();
   } catch (err) {

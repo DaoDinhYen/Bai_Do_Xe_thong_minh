@@ -60,7 +60,7 @@ const deviceController = {
 
       let published = false;
       if (action === 'OPEN') {
-        published = publishOpenGate(direction);
+        published = publishOpenGate(direction, { is_manual: true });
       } else {
         published = publishCloseGate(direction);
       }
@@ -76,7 +76,7 @@ const deviceController = {
         io.emit('barrier_status', { direction, action, source: 'ADMIN', timestamp: new Date().toISOString() });
       }
 
-      return success(res, { published, direction, action }, `Barrier ${direction} đã được ${action === 'OPEN' ? 'mở' : 'đóng'}`);
+      return success(res, { published, direction, action }, `Barrier ${direction} đã được ${action === 'OPEN' ? 'mở thành công' : 'đóng thành công'}`);
     } catch (err) { next(err); }
   },
 
