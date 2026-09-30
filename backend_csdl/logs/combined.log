@@ -11125,3 +11125,1672 @@ Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the cli
 [2026-09-21 23:29:20] INFO: [GET] /api/statistics/revenue?days=7 - ::1
 [2026-09-21 23:29:20] INFO: [GET] /api/parking/rates - ::1
 [2026-09-21 23:29:27] INFO: Socket disconnected: vZN0HCJzAK30zQBpAAAA — transport close
+[2026-09-22 18:59:51] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-22 18:59:52] INFO: ✅ MySQL Database connected
+[2026-09-22 18:59:52] INFO: ✅ Socket.IO initialized
+[2026-09-22 18:59:52] INFO: ✅ MQTT client connecting...
+[2026-09-22 18:59:52] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-22 18:59:52] INFO:    Environment: development
+[2026-09-22 18:59:52] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-22 18:59:52] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-22 18:59:52] INFO: MQTT subscribed to topics:
+[2026-09-22 18:59:58] INFO: [GET] /api/notifications - ::1
+[2026-09-22 18:59:58] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 18:59:58] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 18:59:58] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-22 18:59:58] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 18:59:58] INFO: Socket connected: yxXVRmdw7h2eQ8VyAAAA
+[2026-09-22 18:59:58] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 18:59:58] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:30:07] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-22 19:30:07] INFO: ✅ MySQL Database connected
+[2026-09-22 19:30:07] INFO: ✅ Socket.IO initialized
+[2026-09-22 19:30:07] INFO: ✅ MQTT client connecting...
+[2026-09-22 19:30:07] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-22 19:30:07] INFO:    Environment: development
+[2026-09-22 19:30:07] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-22 19:30:07] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-22 19:30:07] INFO: MQTT subscribed to topics:
+[2026-09-22 19:30:08] INFO: Socket connected: 5GOf7OuC0s_WHEnQAAAA
+[2026-09-22 19:30:51] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Hôm nay doanh thu được bao nhiêu rồi?"
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay bãi xe đã thu được 0 VNĐ từ 0 lượt gửi xe. Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 19:30:51] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 51A-123.45 đang đỗ ở đâu?"
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Phản hồi: "Không tìm thấy phương tiện có biển số 51A12345 đang gửi trong bãi xe."
+[2026-09-22 19:30:51] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Mở barie cổng vào"
+[2026-09-22 19:30:51] INFO: 🚪 Lệnh mở Barrier IN đã gửi tới MQTT: {"command":"OPEN_GATE_IN","direction":"IN","plate":"AI_COMMAND","user":"AI Assistant","slot_code":"","fee":null,"timestamp":"2026-09-22T12:30:51.577Z"}
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Phản hồi: "Đã thực thi lệnh mở barie cổng vào thành công qua MQTT!"
+[2026-09-22 19:30:51] DEBUG: MQTT OUT [parking/cmd/gate_in]: {"command":"OPEN_GATE_IN","direction":"IN","plate":"AI_COMMAND","user":"AI Assistant","slot_code":"","fee":null,"timestamp":"2026-09-22T12:30:51.577Z"}
+[2026-09-22 19:30:51] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Đóng barie cổng vào"
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Phản hồi: "Đã thực thi lệnh đóng barie cổng vào thành công qua MQTT!"
+[2026-09-22 19:30:51] DEBUG: MQTT OUT [parking/cmd/gate_in]: {"command":"CLOSE_GATE_IN","direction":"IN","timestamp":"2026-09-22T12:30:51.581Z"}
+[2026-09-22 19:30:51] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Mở barie cổng ra"
+[2026-09-22 19:30:51] INFO: 🚪 Lệnh mở Barrier OUT đã gửi tới MQTT: {"command":"OPEN_GATE_OUT","direction":"OUT","plate":"AI_COMMAND","user":"AI Assistant","slot_code":"","fee":null,"timestamp":"2026-09-22T12:30:51.584Z"}
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Phản hồi: "Đã thực thi lệnh mở barie cổng ra thành công qua MQTT!"
+[2026-09-22 19:30:51] DEBUG: MQTT OUT [parking/cmd/gate_out]: {"command":"OPEN_GATE_OUT","direction":"OUT","plate":"AI_COMMAND","user":"AI Assistant","slot_code":"","fee":null,"timestamp":"2026-09-22T12:30:51.584Z"}
+[2026-09-22 19:30:51] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Bật đèn bãi xe"
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Phản hồi: "Đã bật hệ thống đèn chiếu sáng bãi xe thành công!"
+[2026-09-22 19:30:51] DEBUG: MQTT OUT [parking/cmd/light]: {"command":"LIGHT_ON","timestamp":"2026-09-22T12:30:51.586Z"}
+[2026-09-22 19:30:51] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Tắt đèn bãi xe"
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Phản hồi: "Đã tắt hệ thống đèn chiếu sáng bãi xe thành công!"
+[2026-09-22 19:30:51] DEBUG: MQTT OUT [parking/cmd/light]: {"command":"LIGHT_OFF","timestamp":"2026-09-22T12:30:51.589Z"}
+[2026-09-22 19:30:51] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Tình trạng bãi xe hiện tại thế nào?"
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện tại bãi xe có 6/6 chỗ trống. Các ô còn trống: A01, A02, A03, A04, A05, A06. "
+[2026-09-22 19:30:51] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Bảng giá gửi xe hiện tại"
+[2026-09-22 19:30:51] INFO: 🤖 [AI Assistant] Phản hồi: "Bảng giá dịch vụ gửi xe hiện tại:
+• Ô tô: 10.000 đ/giờ (Tối thiểu 10.000 đ)
+• Xe máy: 5.000 đ/giờ (Tối thiểu 5.000 đ)
+• Xe tải: 20.000 đ/giờ (Tối thiểu 20.000 đ)"
+[2026-09-22 19:31:06] ERROR: DB Query Error:
+[2026-09-22 19:31:16] WARN: ⚠️ Timeout an toàn 25s tại máy chủ — Gửi lệnh ĐÓNG Barrier OUT dự phòng
+[2026-09-22 19:31:16] DEBUG: MQTT OUT [parking/cmd/gate_out]: {"command":"CLOSE_GATE_OUT","direction":"OUT","timestamp":"2026-09-22T12:31:16.590Z"}
+[2026-09-22 19:31:17] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:31:17] INFO: [GET] /api/parking/slots - ::ffff:127.0.0.1
+[2026-09-22 19:31:17] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:31:17] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:31:42] INFO: [GET] /api/statistics/dashboard - ::ffff:127.0.0.1
+[2026-09-22 19:31:42] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:31:42] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:31:42] INFO: [GET] /api/parking/rates - ::ffff:127.0.0.1
+[2026-09-22 19:31:58] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:31:58] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:31:58] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:31:58] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:32:28] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:32:28] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:32:28] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:32:28] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:33:17] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:33:17] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:33:17] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:33:17] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:34:15] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:34:15] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:34:15] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_OCCUPIED","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-22 19:34:15] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:34:15] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:34:15] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:34:15] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:34:15] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:34:15] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-22 19:34:15] INFO: Light status: OFF
+[2026-09-22 19:34:15] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-22 19:34:15] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-22 19:34:15] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:15] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-22 19:34:15] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:15] INFO: [IR SLOT] Ô A01: FREE → OCCUPIED
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:34:15] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:34:15] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:34:15] INFO: [IR SLOT] Ô A01: OCCUPIED → FREE
+[2026-09-22 19:34:16] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:34:16] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:34:16] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:16] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:34:16] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:34:16] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:34:17] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:17] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:34:17] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:34:17] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:34:28] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-22 19:34:28] INFO: ✅ MySQL Database connected
+[2026-09-22 19:34:28] INFO: ✅ Socket.IO initialized
+[2026-09-22 19:34:39] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:34:39] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:34:39] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:34:39] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:05] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-22 19:38:05] INFO: ✅ MySQL Database connected
+[2026-09-22 19:38:05] INFO: ✅ Socket.IO initialized
+[2026-09-22 19:38:05] INFO: ✅ MQTT client connecting...
+[2026-09-22 19:38:05] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-22 19:38:05] INFO:    Environment: development
+[2026-09-22 19:38:05] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-22 19:38:05] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-22 19:38:05] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_OCCUPIED","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-22 19:38:05] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:38:05] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:38:05] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:38:05] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:38:05] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:38:05] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-22 19:38:05] INFO: Light status: OFF
+[2026-09-22 19:38:05] INFO: MQTT subscribed to topics:
+[2026-09-22 19:38:05] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-22 19:38:05] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-22 19:38:05] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-22 19:38:05] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-22 19:38:05] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-22 19:38:05] INFO: [IR SLOT] Ô A01: FREE → OCCUPIED
+[2026-09-22 19:38:07] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:07] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:38:07] INFO: Socket connected: DnAtM13dEDkiYJItAAAA
+[2026-09-22 19:38:07] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:38:07] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:38:09] INFO: Socket disconnected: DnAtM13dEDkiYJItAAAA — transport close
+[2026-09-22 19:38:09] INFO: [GET] /api/notifications - ::1
+[2026-09-22 19:38:09] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:09] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:38:09] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-22 19:38:09] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 19:38:09] INFO: Socket connected: KEBJJQWgpKN-8rAnAAAB
+[2026-09-22 19:38:09] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:38:09] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:38:09] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:38:10] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:38:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:14] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:38:14] INFO: [IR SLOT] Ô A01: OCCUPIED → FREE
+[2026-09-22 19:38:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:14] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:38:15] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:38:15] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:38:15] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_OCCUPIED","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-22 19:38:15] INFO: [IR SLOT] Ô A01: FREE → OCCUPIED
+[2026-09-22 19:38:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:15] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:38:15] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:38:15] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:38:18] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 19:38:18] INFO: [IR SLOT] Ô A01: OCCUPIED → FREE
+[2026-09-22 19:38:18] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:18] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:38:18] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:38:18] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:38:39] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:39] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:38:39] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:38:39] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:38:39] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:38:39] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:40] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:38:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:38:40] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:38:40] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Hôm nay doanh thu được bao nhiêu rồi?"
+[2026-09-22 19:38:40] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay bãi xe đã thu được 0 VNĐ từ 0 lượt gửi xe. Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 19:39:09] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:39:09] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:39:09] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:39:09] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:39:09] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:39:09] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:39:09] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:39:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:39:18] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:39:18] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Mở barie cổng vào"
+[2026-09-22 19:39:18] INFO: 🚪 Lệnh mở Barrier IN đã gửi tới MQTT: {"command":"OPEN_GATE_IN","direction":"IN","plate":"AI_COMMAND","user":"AI Assistant","slot_code":"","fee":null,"timestamp":"2026-09-22T12:39:18.657Z"}
+[2026-09-22 19:39:18] INFO: 🤖 [AI Assistant] Phản hồi: "Đã thực thi lệnh mở barie cổng vào thành công qua MQTT!"
+[2026-09-22 19:39:18] DEBUG: MQTT OUT [parking/cmd/gate_in]: {"command":"OPEN_GATE_IN","direction":"IN","plate":"AI_COMMAND","user":"AI Assistant","slot_code":"","fee":null,"timestamp":"2026-09-22T12:39:18.657Z"}
+[2026-09-22 19:39:24] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 19:39:24] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Đóng barie cổng vào"
+[2026-09-22 19:39:24] INFO: 🤖 [AI Assistant] Phản hồi: "Đã thực thi lệnh đóng barie cổng vào thành công qua MQTT!"
+[2026-09-22 19:39:24] DEBUG: MQTT OUT [parking/cmd/gate_in]: {"command":"CLOSE_GATE_IN","direction":"IN","timestamp":"2026-09-22T12:39:24.212Z"}
+[2026-09-22 19:39:39] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:39:39] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:39:39] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:39:39] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:39:39] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:39:39] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:39:40] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:39:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:40:09] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:40:09] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:40:10] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:40:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:40:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:40:10] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:40:10] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:40:10] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:40:39] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:40:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:40:40] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:40:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:40:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:40:40] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:40:40] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:40:40] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:41:10] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:41:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:41:10] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:41:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:41:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:41:10] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:41:10] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:41:10] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:41:39] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:41:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:41:40] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:41:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:41:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:41:40] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 19:41:40] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 19:41:40] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 19:42:10] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:42:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 19:42:10] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 19:42:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:05] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-22 20:22:05] INFO: ✅ MySQL Database connected
+[2026-09-22 20:22:05] INFO: ✅ Socket.IO initialized
+[2026-09-22 20:22:05] INFO: ✅ MQTT client connecting...
+[2026-09-22 20:22:05] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-22 20:22:05] INFO:    Environment: development
+[2026-09-22 20:22:05] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-22 20:22:05] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-22 20:22:05] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:05] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:05] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:05] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:05] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:05] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:05] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-22 20:22:05] INFO: Light status: OFF
+[2026-09-22 20:22:05] INFO: MQTT subscribed to topics:
+[2026-09-22 20:22:05] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-22 20:22:05] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-22 20:22:05] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-22 20:22:05] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-22 20:22:05] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-22 20:22:05] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-22 20:22:08] INFO: Socket connected: v2DN1VmisxEluIrsAAAA
+[2026-09-22 20:22:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:10] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:22:10] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:22:10] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:22:12] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:22:12] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:22:12] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:12] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:12] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:12] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:12] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:12] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:22:12] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-22 20:22:12] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-22 20:22:12] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-22 20:22:12] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:22:12] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-22 20:22:12] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:12] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-22 20:22:12] INFO: Light status: OFF
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:22:12] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:22:16] INFO: Socket disconnected: v2DN1VmisxEluIrsAAAA — transport close
+[2026-09-22 20:22:16] INFO: [GET] /api/notifications - ::1
+[2026-09-22 20:22:16] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:16] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:22:16] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-22 20:22:16] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 20:22:16] INFO: Socket connected: 5M8brM9VECNlZB1lAAAB
+[2026-09-22 20:22:16] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:22:16] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:22:32] INFO: Socket disconnected: 5M8brM9VECNlZB1lAAAB — transport close
+[2026-09-22 20:22:32] INFO: [GET] /api/notifications - ::1
+[2026-09-22 20:22:32] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:32] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:22:32] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-22 20:22:32] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 20:22:32] INFO: Socket connected: rjjBLcq12tLyomlLAAAC
+[2026-09-22 20:22:32] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:22:32] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:22:37] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:22:37] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:22:37] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:37] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:22:58] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:22:58] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Doanh thu ngày 22 tháng 9 thế nào ?"
+[2026-09-22 20:22:58] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay bãi xe đã thu được 0 VNĐ từ 0 lượt gửi xe. Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 20:23:02] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:23:02] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:23:02] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:23:02] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:23:07] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:23:07] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:23:07] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:23:07] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:23:13] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:23:13] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Tình trạng bãi xe hiện tại thế nào?"
+[2026-09-22 20:23:13] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện tại bãi xe có 6/6 chỗ trống. Các ô còn trống: A01, A02, A03, A04, A05, A06. "
+[2026-09-22 20:43:34] INFO: [Handshake Buffer] Thẻ RFID 56:62:69:03 (36A99999) quẹt trước — đang chờ nhận diện Camera IN...
+[2026-09-22 20:43:34] INFO: 🎯 [Handshake Auto-Match] Tự động kích hoạt mở cổng IN cho xe 36A99999 (Thẻ 56:62:69:03)!
+[2026-09-22 20:43:34] WARN: MQTT not connected — cannot publish to parking/cmd/gate_in
+[2026-09-22 20:43:34] INFO: 🚪 Lệnh mở Barrier IN đã gửi tới MQTT: {"command":"OPEN_GATE_IN","direction":"IN","plate":"36A99999","user":"Người dùng Demo","slot_code":"A01","fee":null,"timestamp":"2026-09-22T13:43:34.847Z"}
+[2026-09-22 20:43:34] INFO: [IR SLOT] Ô A02: FREE → OCCUPIED
+[2026-09-22 20:43:34] INFO: 📍 [Gán vị trí đỗ] Xe 36A99999 đã vào đỗ hợp lệ tại ô: A02
+[2026-09-22 20:43:34] INFO: [IR SLOT] Ô A02: OCCUPIED → FREE
+[2026-09-22 20:43:34] INFO: [Single RFID Resolver] Xe 1 (Thẻ 56:62:69:03) có activeSession: true -> Chiều: OUT
+[2026-09-22 20:43:34] INFO: [Single RFID Resolver] Xác định thẻ 56:62:69:03 thuộc cổng: OUT
+[2026-09-22 20:43:34] INFO: RFID OUT: 56:62:69:03
+[2026-09-22 20:43:34] WARN: MQTT not connected — cannot publish to parking/cmd/gate_out
+[2026-09-22 20:43:34] INFO: 🚪 Lệnh mở Barrier OUT đã gửi tới MQTT: {"command":"OPEN_GATE_OUT","direction":"OUT","plate":"36A99999","user":"Người dùng Demo","slot_code":"A02","fee":10000,"timestamp":"2026-09-22T13:43:34.906Z"}
+[2026-09-22 20:43:34] INFO: Gate OUT event: {"type":"GATE_PASSED"}
+[2026-09-22 20:43:34] WARN: MQTT not connected — cannot publish to parking/cmd/gate_out
+[2026-09-22 20:43:34] INFO: Auto-close gate OUT after car passed
+[2026-09-22 20:43:59] WARN: ⚠️ Timeout an toàn 25s tại máy chủ — Gửi lệnh ĐÓNG Barrier IN dự phòng
+[2026-09-22 20:43:59] WARN: MQTT not connected — cannot publish to parking/cmd/gate_in
+[2026-09-22 20:47:05] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-22 20:47:05] INFO: ✅ MySQL Database connected
+[2026-09-22 20:47:05] INFO: ✅ Socket.IO initialized
+[2026-09-22 20:47:05] INFO: ✅ MQTT client connecting...
+[2026-09-22 20:47:05] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-22 20:47:05] INFO:    Environment: development
+[2026-09-22 20:47:05] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-22 20:47:05] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-22 20:47:05] INFO: MQTT subscribed to topics:
+[2026-09-22 20:47:05] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:05] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:05] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:05] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:05] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:05] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:05] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-22 20:47:05] INFO: Light status: OFF
+[2026-09-22 20:47:05] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-22 20:47:05] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-22 20:47:05] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-22 20:47:05] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-22 20:47:05] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-22 20:47:05] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-22 20:47:08] INFO: Socket connected: nPMqXyJS0mr-AVN1AAAA
+[2026-09-22 20:47:17] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:47:17] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:47:17] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:17] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:17] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:17] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:17] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:17] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:47:17] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-22 20:47:17] INFO: Light status: OFF
+[2026-09-22 20:47:17] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-22 20:47:17] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-22 20:47:17] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-22 20:47:17] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-22 20:47:17] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:47:17] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-22 20:47:17] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-22 20:47:17] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:47:17] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:47:18] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:47:24] INFO: Socket disconnected: nPMqXyJS0mr-AVN1AAAA — transport close
+[2026-09-22 20:47:24] INFO: [GET] /api/notifications - ::1
+[2026-09-22 20:47:24] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:24] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:47:24] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-22 20:47:24] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 20:47:24] INFO: Socket connected: k_z1ligW0V6hjzmdAAAB
+[2026-09-22 20:47:25] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:47:25] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:47:26] INFO: Socket disconnected: k_z1ligW0V6hjzmdAAAB — transport close
+[2026-09-22 20:47:26] INFO: [GET] /api/notifications - ::1
+[2026-09-22 20:47:26] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:26] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:47:26] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-22 20:47:26] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 20:47:26] INFO: Socket connected: H20k6ppQEWKjI5PGAAAC
+[2026-09-22 20:47:26] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:47:26] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:47:37] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:47:37] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Mở barie cổng vào"
+[2026-09-22 20:47:37] INFO: 🚪 Lệnh mở Barrier IN đã gửi tới MQTT: {"command":"OPEN_GATE_IN","direction":"IN","plate":"AI_COMMAND","user":"AI Assistant","slot_code":"","fee":null,"timestamp":"2026-09-22T13:47:37.475Z"}
+[2026-09-22 20:47:37] INFO: 🤖 [AI Assistant] Phản hồi: "Đã thực thi lệnh mở barie cổng vào thành công qua MQTT!"
+[2026-09-22 20:47:37] DEBUG: MQTT OUT [parking/cmd/gate_in]: {"command":"OPEN_GATE_IN","direction":"IN","plate":"AI_COMMAND","user":"AI Assistant","slot_code":"","fee":null,"timestamp":"2026-09-22T13:47:37.475Z"}
+[2026-09-22 20:47:38] INFO: [GET] /api/ai/tts?text=%C4%90%C3%A3%20th%E1%BB%B1c%20thi%20l%E1%BB%87nh%20m%E1%BB%9F%20barie%20c%E1%BB%95ng%20v%C3%A0o%20th%C3%A0nh%20c%C3%B4ng%20qua%20MQTT! - ::1
+[2026-09-22 20:47:40] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:47:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:40] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:47:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:41] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:47:41] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Tình trạng bãi xe hiện tại thế nào?"
+[2026-09-22 20:47:41] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện tại bãi xe có 6/6 chỗ trống. Các ô còn trống: A01, A02, A03, A04, A05, A06. "
+[2026-09-22 20:47:42] INFO: [GET] /api/ai/tts?text=Hi%E1%BB%87n%20t%E1%BA%A1i%20b%C3%A3i%20xe%20c%C3%B3%206%2F6%20ch%E1%BB%97%20tr%E1%BB%91ng. - ::1
+[2026-09-22 20:47:46] INFO: [GET] /api/ai/tts?text=C%C3%A1c%20%C3%B4%20c%C3%B2n%20tr%E1%BB%91ng%3A%20A01%2C%20A02%2C%20A03%2C%20A04%2C%20A05%2C%20A06. - ::1
+[2026-09-22 20:47:52] DEBUG: MQTT IN [parking/esp32_2/gate/in]: {"type":"GATE_TIMEOUT"}
+[2026-09-22 20:47:52] INFO: Gate IN event: {"type":"GATE_TIMEOUT"}
+[2026-09-22 20:47:56] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:47:56] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:47:56] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:47:56] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:48:02] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:48:02] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Bảng giá gửi xe hiện tại"
+[2026-09-22 20:48:02] INFO: 🤖 [AI Assistant] Phản hồi: "Bảng giá dịch vụ gửi xe hiện tại:
+• Ô tô: 10.000 đ/giờ (Tối thiểu 10.000 đ)
+• Xe máy: 5.000 đ/giờ (Tối thiểu 5.000 đ)
+• Xe tải: 20.000 đ/giờ (Tối thiểu 20.000 đ)"
+[2026-09-22 20:48:02] WARN: ⚠️ Timeout an toàn 25s tại máy chủ — Gửi lệnh ĐÓNG Barrier IN dự phòng
+[2026-09-22 20:48:02] DEBUG: MQTT OUT [parking/cmd/gate_in]: {"command":"CLOSE_GATE_IN","direction":"IN","timestamp":"2026-09-22T13:48:02.517Z"}
+[2026-09-22 20:48:04] INFO: [GET] /api/ai/tts?text=B%E1%BA%A3ng%20gi%C3%A1%20d%E1%BB%8Bch%20v%E1%BB%A5%20g%E1%BB%ADi%20xe%20hi%E1%BB%87n%20t%E1%BA%A1i%3A%20%C3%94%20t%C3%B4%3A%2010. - ::1
+[2026-09-22 20:48:10] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:48:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:48:10] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:48:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:48:11] INFO: [GET] /api/ai/tts?text=000%20%C4%91%2Fgi%E1%BB%9D%20T%E1%BB%91i%20thi%E1%BB%83u%2010. - ::1
+[2026-09-22 20:48:15] INFO: [GET] /api/ai/tts?text=000%20%C4%91%20Xe%20m%C3%A1y%3A%205. - ::1
+[2026-09-22 20:48:23] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:48:23] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Tình trạng bãi xe hiện tại thế nào?"
+[2026-09-22 20:48:23] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện tại bãi xe có 6/6 chỗ trống. Các ô còn trống: A01, A02, A03, A04, A05, A06. "
+[2026-09-22 20:48:26] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:48:26] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:48:26] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:48:26] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:48:40] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:48:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:48:40] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:48:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:48:56] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:48:56] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:48:56] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:48:56] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:49:10] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:49:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:49:10] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:49:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:54:05] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-22 20:54:05] INFO: ✅ MySQL Database connected
+[2026-09-22 20:54:05] INFO: ✅ Socket.IO initialized
+[2026-09-22 20:54:05] INFO: ✅ MQTT client connecting...
+[2026-09-22 20:54:05] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-22 20:54:05] INFO:    Environment: development
+[2026-09-22 20:54:05] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-22 20:54:05] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-22 20:54:05] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:05] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:05] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:05] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:05] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:05] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:05] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-22 20:54:05] INFO: Light status: OFF
+[2026-09-22 20:54:05] INFO: MQTT subscribed to topics:
+[2026-09-22 20:54:05] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-22 20:54:05] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-22 20:54:05] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-22 20:54:05] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-22 20:54:05] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-22 20:54:05] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-22 20:54:07] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:54:07] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:54:07] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:07] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:07] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:07] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:07] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:07] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:07] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-22 20:54:07] INFO: Light status: OFF
+[2026-09-22 20:54:07] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-22 20:54:07] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-22 20:54:07] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-22 20:54:07] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-22 20:54:07] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-22 20:54:07] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-22 20:54:07] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:54:07] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:54:07] INFO: Socket connected: ndkoyl-31ClI4L5yAAAA
+[2026-09-22 20:54:07] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:54:07] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:54:08] INFO: Socket disconnected: ndkoyl-31ClI4L5yAAAA — transport close
+[2026-09-22 20:54:08] INFO: [GET] /api/notifications - ::1
+[2026-09-22 20:54:09] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:54:09] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:54:09] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-22 20:54:09] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 20:54:09] INFO: Socket connected: DCzRp9ZuMQkOjATpAAAB
+[2026-09-22 20:54:09] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:54:09] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:54:13] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:54:13] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Hôm nay doanh thu được bao nhiêu rồi?"
+[2026-09-22 20:54:13] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe. Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 20:54:31] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:54:31] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:54:31] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:54:31] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:54:33] INFO: Socket disconnected: DCzRp9ZuMQkOjATpAAAB — transport close
+[2026-09-22 20:54:33] INFO: [GET] /api/notifications - ::1
+[2026-09-22 20:54:33] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:54:33] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:54:33] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-22 20:54:33] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 20:54:33] INFO: Socket connected: gNTW9NpVRFku6s6ZAAAC
+[2026-09-22 20:54:33] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:54:33] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:54:36] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:54:36] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Hôm nay doanh thu được bao nhiêu rồi?"
+[2026-09-22 20:54:36] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe. Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 20:54:53] INFO: Socket disconnected: gNTW9NpVRFku6s6ZAAAC — transport close
+[2026-09-22 20:54:58] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-22 20:54:58] INFO: ✅ MySQL Database connected
+[2026-09-22 20:54:58] INFO: ✅ Socket.IO initialized
+[2026-09-22 20:54:58] INFO: ✅ MQTT client connecting...
+[2026-09-22 20:54:58] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-22 20:54:58] INFO:    Environment: development
+[2026-09-22 20:54:58] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-22 20:54:58] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-22 20:54:58] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:58] INFO: MQTT subscribed to topics:
+[2026-09-22 20:54:58] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:58] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:58] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:58] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:58] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:54:58] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-22 20:54:58] INFO: Light status: OFF
+[2026-09-22 20:54:58] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-22 20:54:58] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-22 20:54:58] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-22 20:54:58] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-22 20:54:58] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-22 20:54:58] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-22 20:55:01] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:55:01] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:55:05] INFO: [GET] /api/notifications - ::1
+[2026-09-22 20:55:05] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:55:05] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:55:05] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-22 20:55:05] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 20:55:05] INFO: Socket connected: kNDfo6DJmLlrA8TsAAAA
+[2026-09-22 20:55:05] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:55:05] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:55:08] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:55:08] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Hôm nay doanh thu được bao nhiêu rồi?"
+[2026-09-22 20:55:08] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe. Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 20:55:31] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:55:31] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:55:31] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:55:31] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:55:35] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:55:35] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:55:35] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:55:35] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:56:01] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:56:01] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:56:01] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:56:01] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:56:05] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:56:05] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:56:05] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:56:05] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:56:31] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:56:31] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:56:31] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:56:31] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:56:35] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:56:35] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:56:35] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:56:35] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:56:59] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-22 20:56:59] INFO: ✅ MySQL Database connected
+[2026-09-22 20:56:59] INFO: ✅ Socket.IO initialized
+[2026-09-22 20:56:59] INFO: ✅ MQTT client connecting...
+[2026-09-22 20:56:59] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-22 20:56:59] INFO:    Environment: development
+[2026-09-22 20:56:59] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-22 20:56:59] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-22 20:56:59] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:56:59] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:56:59] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:56:59] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:56:59] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:56:59] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-22 20:56:59] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-22 20:56:59] INFO: Light status: OFF
+[2026-09-22 20:56:59] INFO: MQTT subscribed to topics:
+[2026-09-22 20:56:59] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-22 20:56:59] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-22 20:56:59] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-22 20:56:59] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-22 20:56:59] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-22 20:56:59] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-22 20:57:00] INFO: Socket connected: ohx39BB8cKOgiVv8AAAA
+[2026-09-22 20:57:01] INFO: Socket disconnected: ohx39BB8cKOgiVv8AAAA — transport close
+[2026-09-22 20:57:01] INFO: [GET] /api/notifications - ::1
+[2026-09-22 20:57:01] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:57:01] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:57:01] INFO: [GET] /api/camera/stream/in - ::ffff:127.0.0.1
+[2026-09-22 20:57:01] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 20:57:01] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:57:01] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:57:01] INFO: Socket connected: iSOjdol2N7-ePs3xAAAB
+[2026-09-22 20:57:01] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:57:02] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:57:02] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:57:03] INFO: Socket disconnected: iSOjdol2N7-ePs3xAAAB — transport close
+[2026-09-22 20:57:03] INFO: [GET] /api/notifications - ::1
+[2026-09-22 20:57:03] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:57:03] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:57:03] INFO: [GET] /api/camera/stream/in - ::ffff:127.0.0.1
+[2026-09-22 20:57:03] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-22 20:57:03] INFO: Socket connected: XeHIWxtwWkRS0DycAAAC
+[2026-09-22 20:57:03] INFO: [GET] /api/statistics/revenue?days=7 - ::ffff:127.0.0.1
+[2026-09-22 20:57:03] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:57:06] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:57:06] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Hôm nay doanh thu được bao nhiêu rồi?"
+[2026-09-22 20:57:06] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe. Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 20:57:06] INFO: [GET] /api/ai/tts?text=H%C3%B4m%20nay%20b%C3%A3i%20xe%20%C4%91%C3%A3%20thu%20%C4%91%C6%B0%E1%BB%A3c%2010. - ::1
+[2026-09-22 20:57:11] INFO: [GET] /api/ai/tts?text=000%20VN%C4%90%20t%E1%BB%AB%201%20l%C6%B0%E1%BB%A3t%20g%E1%BB%ADi%20xe. - ::1
+[2026-09-22 20:57:14] INFO: [GET] /api/ai/tts?text=Hi%E1%BB%87n%20c%C3%B3%200%2F6%20xe%20%C4%91ang%20%C4%91%E1%BB%97%20trong%20b%C3%A3i%20%C4%91%E1%BA%A1t%200%25%20c%C3%B4ng%20su%E1%BA%A5t%20. - ::ffff:127.0.0.1
+[2026-09-22 20:57:31] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:57:31] INFO: [GET] /api/statistics/dashboard - ::ffff:127.0.0.1
+[2026-09-22 20:57:31] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:57:31] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:57:33] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:57:33] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 22/9 là bao nhiêu ?"
+[2026-09-22 20:57:33] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe. Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 20:57:33] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:57:33] INFO: [GET] /api/parking/slots - ::ffff:127.0.0.1
+[2026-09-22 20:57:33] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:57:33] INFO: [GET] /api/parking/rates - ::ffff:127.0.0.1
+[2026-09-22 20:57:48] INFO: [POST] /api/ai/chat - ::1
+[2026-09-22 20:57:48] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 10/9 là bao nhiêu ?"
+[2026-09-22 20:57:48] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe. Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 20:58:01] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:58:01] INFO: [GET] /api/statistics/dashboard - ::ffff:127.0.0.1
+[2026-09-22 20:58:01] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:58:01] INFO: [GET] /api/statistics/dashboard - ::ffff:127.0.0.1
+[2026-09-22 20:58:03] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:58:03] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:58:03] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:58:03] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 20:58:31] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:58:31] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:58:31] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.51","firmware_version":"2.0.0"}
+[2026-09-22 20:58:31] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:58:34] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-22 20:58:34] INFO: [GET] /api/parking/slots - ::1
+[2026-09-22 20:58:34] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-22 20:58:34] INFO: [GET] /api/parking/rates - ::1
+[2026-09-22 21:03:00] ERROR: DB Query Error:
+[2026-09-22 21:03:15] ERROR: DB Query Error:
+[2026-09-22 21:04:28] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Hôm nay doanh thu được bao nhiêu rồi?"
+[2026-09-22 21:04:29] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay (22/09/2026), bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe (1 lượt đã hoàn tất). Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 21:04:29] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 22/9 là bao nhiêu ?"
+[2026-09-22 21:04:29] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay (22/09/2026), bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe (1 lượt đã hoàn tất). Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 21:04:29] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 10/9 là bao nhiêu ?"
+[2026-09-22 21:04:29] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay (22/09/2026), bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe (1 lượt đã hoàn tất). Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Hôm nay doanh thu được bao nhiêu rồi?"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay (22/09/2026), bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe (1 lượt đã hoàn tất). Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 22/9 là bao nhiêu ?"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Phản hồi: "Ngày 22/09/2026, bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe (1 lượt đã hoàn tất)."
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 10/9 là bao nhiêu ?"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Phản hồi: "Ngày 10/09/2026, bãi xe không ghi nhận lượt gửi xe nào (Doanh thu: 0 VNĐ)."
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 21/9 là bao nhiêu ?"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Phản hồi: "Ngày 21/09/2026, bãi xe đã thu được 20.000 VNĐ từ 2 lượt gửi xe (2 lượt đã hoàn tất)."
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu tháng 9"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Phản hồi: "Tháng 09/2026, bãi xe đã thu được 90.000 VNĐ từ 8 lượt gửi xe (7 lượt đã hoàn tất, 1 xe đang đỗ)."
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu hôm qua"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm qua (21/09/2026), bãi xe đã thu được 20.000 VNĐ từ 2 lượt gửi xe (2 lượt đã hoàn tất)."
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 51A-123.45 đang đỗ ở đâu?"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện bãi xe có các ô trống: A01, A02, A03, A04, A05, A06. Bạn nên hướng dẫn khách đỗ vào ô A01 vì đây là vị trí thông thoáng và gần lối vào nhất."
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "ô A01 có xe không?"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Phản hồi: "Vị trí ô A01 hiện đang TRỐNG (khả dụng). Bạn có thể đỗ xe hoặc đặt chỗ trước tại vị trí này."
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "hiện có những xe nào đang đỗ trong bãi?"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện có 1 xe đang đỗ trong bãi:
+1. Xe 15B-999.99 (Khách vãng lai) đỗ tại ô A01 (đã gửi 93h31p)"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "bảng giá gửi xe hiện tại"
+[2026-09-22 21:07:03] INFO: 🤖 [AI Assistant] Phản hồi: "Bảng giá dịch vụ gửi xe hiện tại:
+• Ô tô: 10.000 đ/giờ (Tối thiểu 10.000 đ)
+• Xe máy: 5.000 đ/giờ (Tối thiểu 5.000 đ)
+• Xe tải: 20.000 đ/giờ (Tối thiểu 20.000 đ)"
+[2026-09-22 21:07:49] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 51A-123.45 đang đỗ ở đâu?"
+[2026-09-22 21:07:49] INFO: 🤖 [AI Assistant] Phản hồi: "Không tìm thấy phương tiện có biển số 51A12345 trong cơ sở dữ liệu bãi xe."
+[2026-09-22 21:08:24] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 15B-999.99 đang đỗ ở đâu?"
+[2026-09-22 21:08:24] INFO: 🤖 [AI Assistant] Phản hồi: "Xe 15B-999.99 của Khách vãng lai đang đỗ tại ô A01, đã đỗ được 93 giờ 32 phút. Phí tạm tính: 940.000 VNĐ."
+[2026-09-22 21:08:24] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe 36A99999 đang đỗ ở đâu?"
+[2026-09-22 21:08:24] INFO: 🤖 [AI Assistant] Phản hồi: "Xe 36A99999 của Người dùng Demo hiện KHÔNG có trong bãi. Lượt gửi gần nhất tại ô A02 đã xuất bãi lúc 20:43 ngày 22/9/2026 (phí gửi: 10.000 VNĐ)."
+[2026-09-22 21:08:24] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe 30E-123.45 đang đỗ ở đâu?"
+[2026-09-22 21:08:24] INFO: 🤖 [AI Assistant] Phản hồi: "Xe 30E-123.45 của Nguyễn Văn An hiện KHÔNG có trong bãi. Lượt gửi gần nhất tại ô A02 đã xuất bãi lúc 11:32 ngày 16/9/2026 (phí gửi: 20.000 VNĐ)."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Hôm nay doanh thu được bao nhiêu rồi?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay (22/09/2026), bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe (1 lượt đã hoàn tất). Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 22/9 là bao nhiêu ?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Ngày 22/09/2026, bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe (1 lượt đã hoàn tất)."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 10/9 là bao nhiêu ?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Ngày 10/09/2026, bãi xe không ghi nhận lượt gửi xe nào (Doanh thu: 0 VNĐ)."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 21/9 là bao nhiêu ?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Ngày 21/09/2026, bãi xe đã thu được 20.000 VNĐ từ 2 lượt gửi xe (2 lượt đã hoàn tất)."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu tháng 9"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Tháng 09/2026, bãi xe đã thu được 90.000 VNĐ từ 8 lượt gửi xe (7 lượt đã hoàn tất, 1 xe đang đỗ)."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu hôm qua"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm qua (21/09/2026), bãi xe đã thu được 20.000 VNĐ từ 2 lượt gửi xe (2 lượt đã hoàn tất)."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 15B-999.99 đang đỗ ở đâu?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Xe 15B-999.99 của Khách vãng lai đang đỗ tại ô A01, đã đỗ được 93 giờ 37 phút. Phí tạm tính: 940.000 VNĐ."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 36A-999.99 đang đỗ ở đâu?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Xe 36A99999 của Người dùng Demo hiện KHÔNG có trong bãi. Lượt gửi gần nhất tại ô A02 đã xuất bãi lúc 20:43 ngày 22/9/2026 (phí gửi: 10.000 VNĐ)."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 30E-123.45 đang đỗ ở đâu?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Xe 30E-123.45 của Nguyễn Văn An hiện KHÔNG có trong bãi. Lượt gửi gần nhất tại ô A02 đã xuất bãi lúc 11:32 ngày 16/9/2026 (phí gửi: 20.000 VNĐ)."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 51A-123.45 đang đỗ ở đâu?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Không tìm thấy phương tiện có biển số 51A12345 trong cơ sở dữ liệu bãi xe."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "ô A01 có xe không?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Vị trí ô A01 hiện đang TRỐNG (khả dụng). Bạn có thể đỗ xe hoặc đặt chỗ trước tại vị trí này."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "ô A02 có xe không?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Vị trí ô A02 hiện đang TRỐNG (khả dụng). Bạn có thể đỗ xe hoặc đặt chỗ trước tại vị trí này."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Gợi ý ô đỗ gần cổng vào nhất"
+[2026-09-22 21:13:00] WARN: MQTT not connected — cannot publish to parking/cmd/gate_in
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Đã thực thi lệnh đóng barie cổng vào thành công qua MQTT!"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "hiện có những xe nào đang đỗ trong bãi?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện có 1 xe đang đỗ trong bãi:
+1. Xe 15B-999.99 (Khách vãng lai) đỗ tại ô A01 (đã gửi 93h37p)"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Lịch sử xe ra vào gần nhất"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "5 lượt xe ra vào gần nhất của bãi xe:
+1. [🚪 ĐÃ RA] Xe 36A99999 (Người dùng Demo) - Ô A02 lúc 20:43:35
+2. [🚪 ĐÃ RA] Xe 38AC08999 (yen) - Ô A01 lúc 21:48:57
+3. [🚪 ĐÃ RA] Xe 38AC08999 (yen) - Ô A01 lúc 21:44:56
+4. [🚗 VÀO BÃI] Xe 15B-999.99 (Khách vãng lai) - Ô A01 lúc 23:35:38
+5. [🚪 ĐÃ RA] Xe 38AC08999 (yen) - Ô A05 lúc 22:47:25"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Bảng giá gửi xe hiện tại"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Bảng giá dịch vụ gửi xe hiện tại:
+• Ô tô: 10.000 đ/giờ (Tối thiểu 10.000 đ)
+• Xe máy: 5.000 đ/giờ (Tối thiểu 5.000 đ)
+• Xe tải: 20.000 đ/giờ (Tối thiểu 20.000 đ)"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Mở barie cổng vào"
+[2026-09-22 21:13:00] WARN: MQTT not connected — cannot publish to parking/cmd/gate_in
+[2026-09-22 21:13:00] INFO: 🚪 Lệnh mở Barrier IN đã gửi tới MQTT: {"command":"OPEN_GATE_IN","direction":"IN","plate":"AI_COMMAND","user":"AI Assistant","slot_code":"","fee":null,"timestamp":"2026-09-22T14:13:00.675Z"}
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Đã thực thi lệnh mở barie cổng vào thành công qua MQTT!"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Đóng barie cổng ra"
+[2026-09-22 21:13:00] WARN: MQTT not connected — cannot publish to parking/cmd/gate_out
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Đã thực thi lệnh đóng barie cổng ra thành công qua MQTT!"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Bật đèn bãi xe"
+[2026-09-22 21:13:00] WARN: MQTT not connected — cannot publish to parking/cmd/light
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Đã bật hệ thống đèn chiếu sáng bãi xe thành công!"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Mở tất cả barie khẩn cấp"
+[2026-09-22 21:13:00] WARN: MQTT not connected — cannot publish to parking/cmd/gate_in
+[2026-09-22 21:13:00] INFO: 🚪 Lệnh mở Barrier IN đã gửi tới MQTT: {"command":"OPEN_GATE_IN","direction":"IN","plate":"EMERGENCY_AI","user":"AI Emergency","slot_code":"","fee":null,"timestamp":"2026-09-22T14:13:00.676Z"}
+[2026-09-22 21:13:00] WARN: MQTT not connected — cannot publish to parking/cmd/gate_out
+[2026-09-22 21:13:00] INFO: 🚪 Lệnh mở Barrier OUT đã gửi tới MQTT: {"command":"OPEN_GATE_OUT","direction":"OUT","plate":"EMERGENCY_AI","user":"AI Emergency","slot_code":"","fee":null,"timestamp":"2026-09-22T14:13:00.676Z"}
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "🚨 ĐÃ KÍCH HOẠT CHẾ ĐỘ KHẨN CẤP: Đã mở đồng thời toàn bộ Barie Cổng Vào và Cổng Ra để các phương tiện lưu thông tự do!"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Nếu mất điện bãi xe xử lý thế nào?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện tại bãi xe có 6/6 chỗ trống. Các ô còn trống: A01, A02, A03, A04, A05, A06. "
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Khách mất thẻ hoặc quên thẻ RFID"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Quy trình xử lý an ninh thẻ & biển số:
+• Khách vãng lai: Hệ thống tạo phiên gửi tự động bằng ảnh chụp biển số ANPR.
+• Quên/Mất thẻ RFID: Bảo vệ tra cứu biển số trên Web Admin để xác minh thời gian vào và tạo lượt ra thủ công.
+• Biển số và RFID không khớp: Hệ thống báo động và từ chối mở barie chống trộm xe."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Quy trình đặt chỗ gửi xe qua App"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Quy trình đặt chỗ thông minh:
+1. Khách chọn ô đỗ (A01-A06) và giờ gửi trên Mobile App.
+2. Hệ thống tạm giữ chỗ trong vòng 15 phút so với giờ hẹn.
+3. Khi xe đến cổng, Camera ANPR và thẻ RFID xác thực mở barie vào đúng ô đã đặt.
+4. Nếu hủy đặt chỗ trước giờ hẹn, tiền đặt cọc được hoàn lại 100% vào ví điện tử."
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Bãi xe mở cửa những khung giờ nào?"
+[2026-09-22 21:13:00] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện tại bãi xe có 6/6 chỗ trống. Các ô còn trống: A01, A02, A03, A04, A05, A06. "
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Hôm nay doanh thu được bao nhiêu rồi?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm nay (22/09/2026), bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe (1 lượt đã hoàn tất). Hiện có 0/6 xe đang đỗ trong bãi (đạt 0% công suất)."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 22/9 là bao nhiêu ?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Ngày 22/09/2026, bãi xe đã thu được 10.000 VNĐ từ 1 lượt gửi xe (1 lượt đã hoàn tất)."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 10/9 là bao nhiêu ?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Ngày 10/09/2026, bãi xe không ghi nhận lượt gửi xe nào (Doanh thu: 0 VNĐ)."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu ngày 21/9 là bao nhiêu ?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Ngày 21/09/2026, bãi xe đã thu được 20.000 VNĐ từ 2 lượt gửi xe (2 lượt đã hoàn tất)."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu tháng 9"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Tháng 09/2026, bãi xe đã thu được 90.000 VNĐ từ 8 lượt gửi xe (7 lượt đã hoàn tất, 1 xe đang đỗ)."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "doanh thu hôm qua"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Hôm qua (21/09/2026), bãi xe đã thu được 20.000 VNĐ từ 2 lượt gửi xe (2 lượt đã hoàn tất)."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 15B-999.99 đang đỗ ở đâu?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Xe 15B-999.99 của Khách vãng lai đang đỗ tại ô A01, đã đỗ được 93 giờ 38 phút. Phí tạm tính: 940.000 VNĐ."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 36A-999.99 đang đỗ ở đâu?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Xe 36A99999 của Người dùng Demo hiện KHÔNG có trong bãi. Lượt gửi gần nhất tại ô A02 đã xuất bãi lúc 20:43 ngày 22/9/2026 (phí gửi: 10.000 VNĐ)."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 30E-123.45 đang đỗ ở đâu?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Xe 30E-123.45 của Nguyễn Văn An hiện KHÔNG có trong bãi. Lượt gửi gần nhất tại ô A02 đã xuất bãi lúc 11:32 ngày 16/9/2026 (phí gửi: 20.000 VNĐ)."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Xe biển số 51A-123.45 đang đỗ ở đâu?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Không tìm thấy phương tiện có biển số 51A12345 trong cơ sở dữ liệu bãi xe."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "ô A01 có xe không?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Vị trí ô A01 hiện đang TRỐNG (khả dụng). Bạn có thể đỗ xe hoặc đặt chỗ trước tại vị trí này."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "ô A02 có xe không?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Vị trí ô A02 hiện đang TRỐNG (khả dụng). Bạn có thể đỗ xe hoặc đặt chỗ trước tại vị trí này."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Gợi ý ô đỗ gần cổng vào nhất"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện bãi xe có các ô trống: A01, A02, A03, A04, A05, A06. Bạn nên hướng dẫn khách đỗ vào ô A01 vì đây là vị trí thông thoáng và gần lối vào nhất."
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "hiện có những xe nào đang đỗ trong bãi?"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Hiện có 1 xe đang đỗ trong bãi:
+1. Xe 15B-999.99 (Khách vãng lai) đỗ tại ô A01 (đã gửi 93h38p)"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Lịch sử xe ra vào gần nhất"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "5 lượt xe ra vào gần nhất của bãi xe:
+1. [🚪 ĐÃ RA] Xe 36A99999 (Người dùng Demo) - Ô A02 lúc 20:43:35
+2. [🚪 ĐÃ RA] Xe 38AC08999 (yen) - Ô A01 lúc 21:48:57
+3. [🚪 ĐÃ RA] Xe 38AC08999 (yen) - Ô A01 lúc 21:44:56
+4. [🚗 VÀO BÃI] Xe 15B-999.99 (Khách vãng lai) - Ô A01 lúc 23:35:38
+5. [🚪 ĐÃ RA] Xe 38AC08999 (yen) - Ô A05 lúc 22:47:25"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Nhận câu lệnh: "Bảng giá gửi xe hiện tại"
+[2026-09-22 21:14:03] INFO: 🤖 [AI Assistant] Phản hồi: "Bảng giá dịch vụ gửi xe hiện tại:
+• Ô tô: 10.000 đ/giờ (Tối thiểu 10.000 đ)
+• Xe máy: 5.000 đ/giờ (Tối thiểu 5.000 đ)
+• Xe tải: 20.000 đ/giờ (Tối thiểu 20.000 đ)"
+[2026-09-30 20:35:17] ERROR: DB Query Error:
+[2026-09-30 20:36:36] INFO: 📁 Serving static web from: c:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 20:36:36] INFO: ✅ MySQL Database connected
+[2026-09-30 20:36:36] INFO: ✅ Socket.IO initialized
+[2026-09-30 20:36:37] INFO: ✅ MQTT client connecting...
+[2026-09-30 20:36:37] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 20:36:37] INFO:    Environment: development
+[2026-09-30 20:36:37] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 20:36:37] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 20:36:37] INFO: MQTT subscribed to topics:
+[2026-09-30 21:55:00] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 21:55:00] INFO: ✅ MySQL Database connected
+[2026-09-30 21:55:00] INFO: ✅ Socket.IO initialized
+[2026-09-30 21:55:00] INFO: ✅ MQTT client connecting...
+[2026-09-30 21:55:00] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 21:55:00] INFO:    Environment: development
+[2026-09-30 21:55:00] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 21:55:00] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 21:55:00] INFO: MQTT subscribed to topics:
+[2026-09-30 21:55:00] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 21:55:00] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 21:55:00] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 21:55:00] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 21:55:00] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 21:55:00] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 21:55:00] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-30 21:55:00] INFO: Light status: OFF
+[2026-09-30 21:55:00] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-30 21:55:00] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-30 21:55:00] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-30 21:55:00] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-30 21:55:00] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-30 21:55:00] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-30 21:55:07] INFO: [GET] /api/notifications - ::1
+[2026-09-30 21:55:07] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:55:07] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 21:55:07] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 21:55:07] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 21:55:07] INFO: [POST] /api/auth/refresh-token - ::1
+[2026-09-30 21:55:07] ERROR: [ERROR] POST /api/auth/refresh-token: jwt expired
+TokenExpiredError: jwt expired
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:190:21
+    at getSecret (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:101:10)
+    at Object.refreshAccessToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\services\authService.js:87:23)
+    at refreshToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\controllers\authController.js:44:39)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\index.js:284:15
+[2026-09-30 21:55:07] INFO: [POST] /api/auth/refresh-token - ::1
+[2026-09-30 21:55:07] ERROR: [ERROR] POST /api/auth/refresh-token: jwt expired
+TokenExpiredError: jwt expired
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:190:21
+    at getSecret (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:101:10)
+    at Object.refreshAccessToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\services\authService.js:87:23)
+    at refreshToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\controllers\authController.js:44:39)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\index.js:284:15
+[2026-09-30 21:55:07] INFO: Socket connected: -PI3wrbCwS4FvfiWAAAA
+[2026-09-30 21:55:07] INFO: [POST] /api/auth/refresh-token - ::1
+[2026-09-30 21:55:07] ERROR: [ERROR] POST /api/auth/refresh-token: jwt expired
+TokenExpiredError: jwt expired
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:190:21
+    at getSecret (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:101:10)
+    at Object.refreshAccessToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\services\authService.js:87:23)
+    at refreshToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\controllers\authController.js:44:39)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\index.js:284:15
+[2026-09-30 21:55:08] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 21:55:08] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 21:55:09] INFO: [POST] /api/auth/login - ::1
+[2026-09-30 21:55:11] INFO: [GET] /api/notifications - ::1
+[2026-09-30 21:55:11] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:55:11] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 21:55:11] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 21:55:11] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 21:55:11] INFO: Socket connected: i8HI2-MpakOdAVsDAAAB
+[2026-09-30 21:55:11] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 21:55:11] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 21:55:20] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 21:55:24] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 21:55:24] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:55:24] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 21:55:24] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:55:41] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:55:41] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 21:55:41] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 21:55:41] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 21:55:52] INFO: Socket disconnected: -PI3wrbCwS4FvfiWAAAA — ping timeout
+[2026-09-30 21:55:54] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 21:55:54] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:55:54] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 21:55:54] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:56:11] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:56:11] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 21:56:11] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 21:56:11] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 21:56:24] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 21:56:24] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:56:24] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 21:56:24] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:56:41] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:56:41] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 21:56:41] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 21:56:41] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 21:56:54] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 21:56:54] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 21:56:54] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 21:56:54] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:05:08] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 22:05:08] INFO: ✅ MySQL Database connected
+[2026-09-30 22:05:08] INFO: ✅ Socket.IO initialized
+[2026-09-30 22:05:08] INFO: ✅ MQTT client connecting...
+[2026-09-30 22:05:08] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 22:05:08] INFO:    Environment: development
+[2026-09-30 22:05:08] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 22:05:08] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 22:05:08] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:05:08] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:05:08] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:05:08] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:05:08] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:05:08] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:05:08] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-30 22:05:08] INFO: Light status: OFF
+[2026-09-30 22:05:08] INFO: MQTT subscribed to topics:
+[2026-09-30 22:05:08] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-30 22:05:08] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-30 22:05:08] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-30 22:05:08] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-30 22:05:08] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-30 22:05:08] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-30 22:05:13] INFO: Socket connected: J-nR4HenYSeiz0_6AAAA
+[2026-09-30 22:05:22] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:05:22] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:05:22] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 22:05:22] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:05:24] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:05:25] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:05:25] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:05:25] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:05:28] INFO: Socket disconnected: J-nR4HenYSeiz0_6AAAA — transport close
+[2026-09-30 22:05:29] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:05:29] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:05:29] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:05:29] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 22:05:29] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 22:05:29] INFO: Socket connected: 1RoXga_TQc6Vssc4AAAB
+[2026-09-30 22:05:29] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:05:29] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:05:55] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:05:55] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:05:55] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:05:55] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:05:59] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:05:59] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:05:59] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:05:59] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:06:25] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:06:25] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:06:25] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:06:25] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:06:29] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:06:29] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:06:29] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:06:29] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:06:55] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:06:55] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:06:55] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:06:55] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:06:59] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:06:59] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:06:59] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:06:59] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:45:21] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 22:45:21] INFO: ✅ MySQL Database connected
+[2026-09-30 22:45:21] INFO: ✅ Socket.IO initialized
+[2026-09-30 22:45:21] INFO: ✅ MQTT client connecting...
+[2026-09-30 22:45:21] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 22:45:21] INFO:    Environment: development
+[2026-09-30 22:45:21] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 22:45:21] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 22:45:21] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:45:21] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:45:21] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:45:21] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:45:21] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:45:21] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:45:21] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-30 22:45:21] INFO: Light status: OFF
+[2026-09-30 22:45:21] INFO: MQTT subscribed to topics:
+[2026-09-30 22:45:21] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-30 22:45:21] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-30 22:45:21] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-30 22:45:21] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-30 22:45:21] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-30 22:45:21] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-30 22:45:22] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:45:22] INFO: [GET] /api/parking/slots - ::ffff:127.0.0.1
+[2026-09-30 22:45:22] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:45:22] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:45:26] INFO: Socket connected: 243uYAGc9cwSfQXdAAAA
+[2026-09-30 22:45:28] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:45:28] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:45:29] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:45:29] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:45:29] INFO: Socket disconnected: 243uYAGc9cwSfQXdAAAA — transport close
+[2026-09-30 22:45:29] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:45:29] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:45:29] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:45:29] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 22:45:29] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 22:45:29] INFO: Socket connected: x3GOvTwkdgB8NOhrAAAB
+[2026-09-30 22:45:31] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:45:31] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:45:36] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:45:36] INFO: [GET] /api/devices - ::1
+[2026-09-30 22:45:36] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:45:36] INFO: Socket connected: KxdocxbnsEyWlk8bAAAC
+[2026-09-30 22:45:36] INFO: [GET] /api/parking/slots/summary - ::1
+[2026-09-30 22:45:39] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:45:39] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:45:39] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:45:39] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 22:45:39] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 22:45:39] INFO: Socket connected: 3JuaSYsftCcYdqTgAAAD
+[2026-09-30 22:45:39] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:45:40] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:45:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:45:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:45:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:45:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:46:09] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:46:09] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:46:09] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:46:09] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:46:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:46:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:46:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:46:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:46:14] INFO: Socket disconnected: x3GOvTwkdgB8NOhrAAAB — ping timeout
+[2026-09-30 22:46:21] INFO: Socket disconnected: KxdocxbnsEyWlk8bAAAC — ping timeout
+[2026-09-30 22:46:39] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:46:39] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:46:39] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:46:39] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:46:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:46:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:46:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:46:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:46:58] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_OCCUPIED","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-30 22:46:58] INFO: [IR SLOT] Ô A03: FREE → OCCUPIED
+[2026-09-30 22:46:58] INFO: 📍 [Gán vị trí đỗ] Xe 15B-999.99 đã vào đỗ hợp lệ tại ô: A03
+[2026-09-30 22:46:58] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:46:58] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:46:58] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:46:58] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:47:04] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:47:04] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:47:04] INFO: [GET] /api/devices - ::1
+[2026-09-30 22:47:04] INFO: Socket connected: e_WkuOfto4dA1GroAAAE
+[2026-09-30 22:47:04] INFO: [GET] /api/parking/slots/summary - ::1
+[2026-09-30 22:47:08] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:47:08] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:47:08] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:47:08] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 22:47:08] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 22:47:08] INFO: Socket connected: 9UxhoPHqQiDtQNgAAAAF
+[2026-09-30 22:47:09] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:47:09] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:47:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:47:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:47:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:47:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:47:24] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:47:24] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:47:24] INFO: [GET] /api/devices - ::1
+[2026-09-30 22:47:24] INFO: Socket connected: 5uH9gE4kyDC8IopbAAAG
+[2026-09-30 22:47:24] INFO: [GET] /api/parking/slots/summary - ::1
+[2026-09-30 22:47:26] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:47:26] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:47:26] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:47:26] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 22:47:26] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 22:47:26] INFO: Socket connected: qBoV2T1B9mapx8XOAAAH
+[2026-09-30 22:47:27] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:47:27] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:47:32] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:47:32] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:47:32] INFO: [GET] /api/devices - ::1
+[2026-09-30 22:47:32] INFO: Socket connected: zqLrhRHQZsbE_ow7AAAI
+[2026-09-30 22:47:32] INFO: [GET] /api/parking/slots/summary - ::1
+[2026-09-30 22:47:35] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:47:35] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:47:35] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:47:35] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 22:47:35] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 22:47:35] INFO: Socket connected: 8EQVZTPyqwcQ9YWSAAAJ
+[2026-09-30 22:47:35] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:47:35] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:47:39] INFO: Socket disconnected: 3JuaSYsftCcYdqTgAAAD — ping timeout
+[2026-09-30 22:47:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:47:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:47:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:47:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:47:49] INFO: Socket disconnected: e_WkuOfto4dA1GroAAAE — ping timeout
+[2026-09-30 22:47:53] INFO: Socket disconnected: 9UxhoPHqQiDtQNgAAAAF — ping timeout
+[2026-09-30 22:47:59] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 22:48:04] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:48:04] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:48:05] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 22:48:05] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:48:08] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:48:08] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:48:08] INFO: [GET] /api/devices - ::1
+[2026-09-30 22:48:08] INFO: Socket connected: XA8i_jva12hQJzYNAAAK
+[2026-09-30 22:48:08] INFO: [GET] /api/parking/slots/summary - ::1
+[2026-09-30 22:48:09] INFO: Socket disconnected: 5uH9gE4kyDC8IopbAAAG — ping timeout
+[2026-09-30 22:48:10] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:48:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:48:10] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:48:10] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 22:48:10] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 22:48:10] INFO: Socket connected: 28Az3M7v7gWPn32QAAAL
+[2026-09-30 22:48:11] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:48:11] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:48:11] INFO: Socket disconnected: qBoV2T1B9mapx8XOAAAH — ping timeout
+[2026-09-30 22:48:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:48:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:48:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:48:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:48:17] INFO: Socket disconnected: zqLrhRHQZsbE_ow7AAAI — ping timeout
+[2026-09-30 22:48:41] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:48:41] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:48:41] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:48:41] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:48:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:48:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:48:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:48:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:48:45] INFO: Socket disconnected: 8EQVZTPyqwcQ9YWSAAAJ — ping timeout
+[2026-09-30 22:48:53] INFO: Socket disconnected: XA8i_jva12hQJzYNAAAK — ping timeout
+[2026-09-30 22:49:11] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:49:11] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:49:11] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:49:11] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:49:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:49:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:49:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:49:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:52:58] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 22:52:58] INFO: ✅ MySQL Database connected
+[2026-09-30 22:52:58] INFO: ✅ Socket.IO initialized
+[2026-09-30 22:52:58] INFO: ✅ MQTT client connecting...
+[2026-09-30 22:52:58] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 22:52:58] INFO:    Environment: development
+[2026-09-30 22:52:58] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 22:52:58] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 22:52:58] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_FREE","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:52:58] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:52:58] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:52:58] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:52:58] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:52:58] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 22:52:58] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-30 22:52:58] INFO: Light status: OFF
+[2026-09-30 22:52:58] INFO: MQTT subscribed to topics:
+[2026-09-30 22:52:58] INFO: [IR SLOT] Ô A01: FREE → FREE
+[2026-09-30 22:52:58] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-30 22:52:58] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-30 22:52:58] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-30 22:52:58] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-30 22:52:58] INFO: [IR SLOT] Ô A03: OCCUPIED → FREE
+[2026-09-30 22:53:00] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:53:00] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:53:00] INFO: Socket connected: X_3bNYLmQvTrly87AAAA
+[2026-09-30 22:53:00] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:53:00] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:53:02] INFO: Socket disconnected: X_3bNYLmQvTrly87AAAA — transport close
+[2026-09-30 22:53:02] INFO: [GET] /api/notifications - ::1
+[2026-09-30 22:53:02] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:53:02] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:53:02] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 22:53:02] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 22:53:02] INFO: Socket connected: AjP849WGopaBdO9mAAAB
+[2026-09-30 22:53:04] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:53:04] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:53:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:53:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:53:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:53:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:53:17] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_OCCUPIED","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-30 22:53:17] INFO: [IR SLOT] Ô A01: FREE → OCCUPIED
+[2026-09-30 22:53:17] INFO: 📍 [Gán vị trí đỗ] Xe 15B-999.99 đã vào đỗ hợp lệ tại ô: A01
+[2026-09-30 22:53:17] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:53:17] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:53:17] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:53:17] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:53:32] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:53:32] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:53:32] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 22:53:32] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:53:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:53:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:53:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:53:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:53:45] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 22:54:02] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:54:02] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:54:02] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 22:54:02] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:54:12] INFO: [POST] /api/devices/barrier/control - ::1
+[2026-09-30 22:54:12] INFO: 🚪 Lệnh mở Barrier IN đã gửi tới MQTT: {"command":"OPEN_GATE_IN","direction":"IN","plate":"","user":"","slot_code":"","fee":null,"timestamp":"2026-09-30T15:54:12.210Z"}
+[2026-09-30 22:54:12] DEBUG: MQTT OUT [parking/cmd/gate_in]: {"command":"OPEN_GATE_IN","direction":"IN","plate":"","user":"","slot_code":"","fee":null,"timestamp":"2026-09-30T15:54:12.210Z"}
+[2026-09-30 22:54:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:54:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:54:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:54:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:54:16] INFO: [POST] /api/devices/barrier/control - ::1
+[2026-09-30 22:54:16] DEBUG: MQTT OUT [parking/cmd/gate_in]: {"command":"CLOSE_GATE_IN","direction":"IN","timestamp":"2026-09-30T15:54:16.353Z"}
+[2026-09-30 22:54:32] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:54:32] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 22:54:32] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 22:54:32] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 22:54:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:54:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 22:54:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 22:54:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:01:55] ERROR: DB Query Error:
+[2026-09-30 23:03:59] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 23:03:59] INFO: ✅ MySQL Database connected
+[2026-09-30 23:03:59] INFO: ✅ Socket.IO initialized
+[2026-09-30 23:03:59] INFO: ✅ MQTT client connecting...
+[2026-09-30 23:03:59] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 23:03:59] INFO:    Environment: development
+[2026-09-30 23:03:59] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 23:03:59] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 23:03:59] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_OCCUPIED","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-30 23:03:59] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:03:59] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:03:59] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:03:59] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:03:59] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:03:59] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-30 23:03:59] INFO: Light status: OFF
+[2026-09-30 23:03:59] INFO: MQTT subscribed to topics:
+[2026-09-30 23:03:59] INFO: [IR SLOT] Ô A01: OCCUPIED → OCCUPIED
+[2026-09-30 23:03:59] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-30 23:03:59] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-30 23:03:59] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-30 23:03:59] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-30 23:03:59] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-30 23:04:01] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:04:01] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:04:01] INFO: Socket connected: LDSyicdBy0mRGuG5AAAA
+[2026-09-30 23:04:01] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:04:01] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:04:02] INFO: Socket disconnected: LDSyicdBy0mRGuG5AAAA — transport close
+[2026-09-30 23:04:02] INFO: [GET] /api/notifications - ::1
+[2026-09-30 23:04:02] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:04:02] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:04:02] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 23:04:02] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 23:04:02] INFO: Socket connected: SZ8zE7KL3U8dciN_AAAB
+[2026-09-30 23:04:03] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:04:03] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:04:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:04:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:04:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:04:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:04:32] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:04:32] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:04:32] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:04:32] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:04:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:04:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:04:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:04:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:05:03] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:05:03] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:05:03] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:05:03] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:05:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:05:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:05:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:05:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:05:33] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:05:33] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:05:33] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:05:33] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:05:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:05:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:05:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:05:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:05:56] INFO: [GET] /api/notifications - ::1
+[2026-09-30 23:05:56] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:05:56] INFO: [GET] /api/devices - ::1
+[2026-09-30 23:05:56] INFO: Socket connected: ZZ5SchgYxW87N9RqAAAC
+[2026-09-30 23:05:57] INFO: [GET] /api/parking/slots/summary - ::1
+[2026-09-30 23:06:02] INFO: [GET] /api/notifications - ::1
+[2026-09-30 23:06:02] INFO: [GET] /api/history/admin/all?page=1&limit=100 - ::1
+[2026-09-30 23:06:02] INFO: [GET] /api/history/admin/guest-sessions?page=1&limit=100 - ::1
+[2026-09-30 23:06:11] INFO: [GET] /api/notifications - ::1
+[2026-09-30 23:06:11] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:06:11] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:06:11] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 23:06:11] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 23:06:11] INFO: Socket connected: kFlM97NITKqaUTzAAAAD
+[2026-09-30 23:06:12] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:06:12] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:06:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:06:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:06:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:06:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:06:17] INFO: [GET] /api/notifications - ::1
+[2026-09-30 23:06:17] INFO: [GET] /api/history/admin/all?page=1&limit=100 - ::1
+[2026-09-30 23:06:17] INFO: [GET] /api/history/admin/guest-sessions?page=1&limit=100 - ::1
+[2026-09-30 23:06:27] INFO: Socket disconnected: SZ8zE7KL3U8dciN_AAAB — ping timeout
+[2026-09-30 23:06:31] INFO: [GET] /api/notifications - ::1
+[2026-09-30 23:06:31] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:06:31] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:06:31] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 23:06:31] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 23:06:31] INFO: Socket connected: YdbxP0Xo4kxvUFu9AAAE
+[2026-09-30 23:06:31] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:06:31] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:06:41] INFO: Socket disconnected: ZZ5SchgYxW87N9RqAAAC — ping timeout
+[2026-09-30 23:06:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:06:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:06:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:06:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:06:50] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 23:06:56] INFO: Socket disconnected: kFlM97NITKqaUTzAAAAD — ping timeout
+[2026-09-30 23:06:58] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 23:06:58] INFO: ✅ MySQL Database connected
+[2026-09-30 23:06:58] INFO: ✅ Socket.IO initialized
+[2026-09-30 23:06:58] INFO: ✅ MQTT client connecting...
+[2026-09-30 23:06:58] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 23:06:58] INFO:    Environment: development
+[2026-09-30 23:06:58] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 23:06:58] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 23:06:58] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_OCCUPIED","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-30 23:06:58] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:06:58] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:06:58] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:06:58] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:06:58] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:06:58] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-30 23:06:58] INFO: Light status: OFF
+[2026-09-30 23:06:58] INFO: MQTT subscribed to topics:
+[2026-09-30 23:06:58] INFO: [IR SLOT] Ô A01: OCCUPIED → OCCUPIED
+[2026-09-30 23:06:58] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-30 23:06:58] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-30 23:06:58] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-30 23:06:58] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-30 23:06:58] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-30 23:07:00] INFO: Socket connected: R26nusGi4DDmc23qAAAA
+[2026-09-30 23:07:01] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:07:01] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:07:01] INFO: [GET] /api/statistics/revenue?days=7 - ::1
+[2026-09-30 23:07:01] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:08:37] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 23:08:38] INFO: ✅ MySQL Database connected
+[2026-09-30 23:08:38] INFO: ✅ Socket.IO initialized
+[2026-09-30 23:08:38] INFO: ✅ MQTT client connecting...
+[2026-09-30 23:08:38] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 23:08:38] INFO:    Environment: development
+[2026-09-30 23:08:38] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 23:08:38] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 23:08:38] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_OCCUPIED","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-30 23:08:38] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:08:38] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:08:38] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:08:38] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:08:38] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:08:38] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-30 23:08:38] INFO: Light status: OFF
+[2026-09-30 23:08:38] INFO: MQTT subscribed to topics:
+[2026-09-30 23:08:38] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-30 23:08:38] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-30 23:08:38] INFO: [IR SLOT] Ô A01: OCCUPIED → OCCUPIED
+[2026-09-30 23:08:38] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-30 23:08:38] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-30 23:08:38] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-30 23:08:40] INFO: [GET] /api/notifications - ::1
+[2026-09-30 23:08:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:08:40] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:08:40] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 23:08:40] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 23:08:40] INFO: Socket connected: BvBluQna4Bhw-QMjAAAA
+[2026-09-30 23:08:41] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:08:41] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:08:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:08:44] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:08:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:08:44] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:09:10] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:09:10] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:09:10] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:09:10] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:09:14] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:09:14] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:09:15] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:09:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:16:39] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 23:16:39] INFO: ✅ MySQL Database connected
+[2026-09-30 23:16:39] INFO: ✅ Socket.IO initialized
+[2026-09-30 23:16:39] INFO: ✅ MQTT client connecting...
+[2026-09-30 23:16:39] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 23:16:39] INFO:    Environment: development
+[2026-09-30 23:16:39] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 23:16:39] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 23:16:39] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_OCCUPIED","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-30 23:16:39] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:16:39] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:16:39] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:16:39] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:16:39] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:16:39] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-30 23:16:39] INFO: Light status: OFF
+[2026-09-30 23:16:39] INFO: MQTT subscribed to topics:
+[2026-09-30 23:16:39] INFO: [IR SLOT] Ô A01: OCCUPIED → OCCUPIED
+[2026-09-30 23:16:39] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-30 23:16:39] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-30 23:16:39] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-30 23:16:39] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-30 23:16:39] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-30 23:16:40] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:16:40] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:16:40] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:16:40] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:16:42] INFO: [GET] /api/notifications - ::1
+[2026-09-30 23:16:42] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:16:42] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:16:42] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 23:16:42] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 23:16:44] INFO: Socket connected: nPPgBey_1KYqAjU0AAAA
+[2026-09-30 23:16:44] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:16:44] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:16:45] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:16:45] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:16:45] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:16:45] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:17:12] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:17:12] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:17:12] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:17:12] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:17:15] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:17:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:17:15] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:17:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:17:43] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:17:43] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:17:43] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:17:43] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:17:45] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:17:45] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:17:45] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:17:45] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:22:51] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 23:22:51] INFO: ✅ MySQL Database connected
+[2026-09-30 23:22:52] INFO: ✅ Socket.IO initialized
+[2026-09-30 23:22:52] INFO: ✅ MQTT client connecting...
+[2026-09-30 23:22:52] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 23:22:52] INFO:    Environment: development
+[2026-09-30 23:22:52] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 23:22:52] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 23:22:52] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_OCCUPIED","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-30 23:22:52] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:22:52] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:22:52] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:22:52] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:22:52] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:22:52] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-30 23:22:52] INFO: Light status: OFF
+[2026-09-30 23:22:52] INFO: MQTT subscribed to topics:
+[2026-09-30 23:22:52] INFO: [IR SLOT] Ô A01: OCCUPIED → OCCUPIED
+[2026-09-30 23:22:52] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-30 23:22:52] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-30 23:22:52] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-30 23:22:52] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-30 23:22:52] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-30 23:22:52] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:22:52] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:22:52] INFO: Socket connected: TQi6EHmbTJOM_hfCAAAA
+[2026-09-30 23:22:53] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:22:53] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:22:54] INFO: Socket disconnected: TQi6EHmbTJOM_hfCAAAA — transport close
+[2026-09-30 23:22:54] INFO: [GET] /api/notifications - ::1
+[2026-09-30 23:22:54] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:22:54] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:22:54] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 23:22:54] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 23:22:54] INFO: Socket connected: ld8aq7767BD2dWTsAAAB
+[2026-09-30 23:22:56] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:22:56] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:23:15] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:23:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:23:15] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:23:15] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:23:24] INFO: [POST] /api/devices/barrier/control - ::1
+[2026-09-30 23:23:24] INFO: 🚪 Lệnh mở Barrier IN đã gửi tới MQTT: {"command":"OPEN_GATE_IN","direction":"IN","plate":"","user":"","slot_code":"","fee":null,"timestamp":"2026-09-30T16:23:24.344Z"}
+[2026-09-30 23:23:24] DEBUG: MQTT OUT [parking/cmd/gate_in]: {"command":"OPEN_GATE_IN","direction":"IN","plate":"","user":"","slot_code":"","fee":null,"timestamp":"2026-09-30T16:23:24.344Z"}
+[2026-09-30 23:23:24] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:23:24] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:23:24] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:23:24] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:23:27] INFO: [POST] /api/devices/barrier/control - ::1
+[2026-09-30 23:23:27] DEBUG: MQTT OUT [parking/cmd/gate_in]: {"command":"CLOSE_GATE_IN","direction":"IN","timestamp":"2026-09-30T16:23:27.476Z"}
+[2026-09-30 23:23:45] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_SLOT_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:23:45] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:23:45] DEBUG: MQTT IN [parking/device/status]: {"device_code":"ESP32_GATE_01","status":"ONLINE","ip_address":"192.168.1.65","firmware_version":"2.0.0"}
+[2026-09-30 23:23:45] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:29:43] ERROR: DB Query Error:
+[2026-09-30 23:32:19] INFO: 📁 Serving static web from: C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\web
+[2026-09-30 23:32:19] INFO: ✅ MySQL Database connected
+[2026-09-30 23:32:19] INFO: ✅ Socket.IO initialized
+[2026-09-30 23:32:19] INFO: ✅ MQTT client connecting...
+[2026-09-30 23:32:19] INFO: ✅ Smart Parking Backend running on port 3000
+[2026-09-30 23:32:19] INFO:    Environment: development
+[2026-09-30 23:32:19] INFO:    API Base URL: http://localhost:3000/api
+[2026-09-30 23:32:19] INFO: ✅ MQTT connected to mqtt://localhost:1883
+[2026-09-30 23:32:19] DEBUG: MQTT IN [parking/esp32_1/slot/A01]: {"type":"SLOT_OCCUPIED","slot_code":"A01","device_id":"ESP32_SLOT_01","occupied":true}
+[2026-09-30 23:32:19] DEBUG: MQTT IN [parking/esp32_1/slot/A02]: {"type":"SLOT_FREE","slot_code":"A02","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:32:19] DEBUG: MQTT IN [parking/esp32_1/slot/A03]: {"type":"SLOT_FREE","slot_code":"A03","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:32:19] DEBUG: MQTT IN [parking/esp32_1/slot/A04]: {"type":"SLOT_FREE","slot_code":"A04","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:32:19] DEBUG: MQTT IN [parking/esp32_1/slot/A05]: {"type":"SLOT_FREE","slot_code":"A05","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:32:19] DEBUG: MQTT IN [parking/esp32_1/slot/A06]: {"type":"SLOT_FREE","slot_code":"A06","device_id":"ESP32_SLOT_01","occupied":false}
+[2026-09-30 23:32:19] DEBUG: MQTT IN [parking/esp32_2/light]: {"status":"OFF"}
+[2026-09-30 23:32:19] INFO: Light status: OFF
+[2026-09-30 23:32:19] INFO: MQTT subscribed to topics:
+[2026-09-30 23:32:19] INFO: [IR SLOT] Ô A01: OCCUPIED → OCCUPIED
+[2026-09-30 23:32:19] INFO: [IR SLOT] Ô A03: FREE → FREE
+[2026-09-30 23:32:19] INFO: [IR SLOT] Ô A05: FREE → FREE
+[2026-09-30 23:32:19] INFO: [IR SLOT] Ô A06: FREE → FREE
+[2026-09-30 23:32:19] INFO: [IR SLOT] Ô A02: FREE → FREE
+[2026-09-30 23:32:19] INFO: [IR SLOT] Ô A04: FREE → FREE
+[2026-09-30 23:32:21] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:32:21] INFO: [GET] /api/parking/slots - ::ffff:127.0.0.1
+[2026-09-30 23:32:21] INFO: Socket connected: 23eYxvrD2HL0qxgwAAAA
+[2026-09-30 23:32:21] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:32:21] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:32:22] INFO: Socket disconnected: 23eYxvrD2HL0qxgwAAAA — transport close
+[2026-09-30 23:32:22] INFO: [GET] /api/notifications - ::1
+[2026-09-30 23:32:22] INFO: [GET] /api/statistics/dashboard - ::1
+[2026-09-30 23:32:22] INFO: [GET] /api/parking/slots - ::1
+[2026-09-30 23:32:22] INFO: [GET] /api/camera/stream/in - ::1
+[2026-09-30 23:32:22] INFO: [GET] /api/camera/stream/out - ::1
+[2026-09-30 23:32:23] INFO: Socket connected: KPhTtJWSCYLptGcjAAAB
+[2026-09-30 23:32:24] INFO: [GET] /api/statistics/revenue?days=30 - ::1
+[2026-09-30 23:32:24] INFO: [GET] /api/parking/rates - ::1
+[2026-09-30 23:32:31] INFO: Socket disconnected: KPhTtJWSCYLptGcjAAAB — transport close

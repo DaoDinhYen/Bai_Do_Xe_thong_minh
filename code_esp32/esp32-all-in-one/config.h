@@ -17,7 +17,7 @@
 // ------------------------------------------------------------
 // 2. CẤU HÌNH MQTT BROKER (Máy tính chạy Backend Node.js)
 // ------------------------------------------------------------
-#define MQTT_SERVER         "192.168.1.40"        // Địa chỉ IP của máy chủ MQTT / Backend
+#define MQTT_SERVER         "192.168.1.64"        // Địa chỉ IP của máy chủ MQTT / Backend
 #define MQTT_PORT           1883                   // Port MQTT chuẩn (1883)
 #define MQTT_USER           ""                     // Để trống nếu không dùng tài khoản
 #define MQTT_PASSWORD       ""                     // Để trống nếu không dùng mật khẩu

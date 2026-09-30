@@ -2497,3 +2497,52 @@ Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the cli
     at Socket.socketErrorListener (node:_http_client:574:5)
     at Socket.emit (node:events:508:28)
     at emitErrorNT (node:internal/streams/destroy:170:8)
+[2026-09-22 19:31:06] ERROR: DB Query Error:
+[2026-09-22 19:34:28] ERROR: Uncaught Exception: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at Server.listen (node:net:2102:7)
+    at startServer (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\server.js:192:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[2026-09-22 21:03:00] ERROR: DB Query Error:
+[2026-09-22 21:03:15] ERROR: DB Query Error:
+[2026-09-30 20:35:17] ERROR: DB Query Error:
+[2026-09-30 21:55:07] ERROR: [ERROR] POST /api/auth/refresh-token: jwt expired
+TokenExpiredError: jwt expired
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:190:21
+    at getSecret (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:101:10)
+    at Object.refreshAccessToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\services\authService.js:87:23)
+    at refreshToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\controllers\authController.js:44:39)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\index.js:284:15
+[2026-09-30 21:55:07] ERROR: [ERROR] POST /api/auth/refresh-token: jwt expired
+TokenExpiredError: jwt expired
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:190:21
+    at getSecret (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:101:10)
+    at Object.refreshAccessToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\services\authService.js:87:23)
+    at refreshToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\controllers\authController.js:44:39)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\index.js:284:15
+[2026-09-30 21:55:07] ERROR: [ERROR] POST /api/auth/refresh-token: jwt expired
+TokenExpiredError: jwt expired
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:190:21
+    at getSecret (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\jsonwebtoken\verify.js:101:10)
+    at Object.refreshAccessToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\services\authService.js:87:23)
+    at refreshToken (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\src\controllers\authController.js:44:39)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\ADMIN\Downloads\Thiet ke ht IOT\BÀi tập lớn\backend_csdl\node_modules\express\lib\router\index.js:284:15
+[2026-09-30 23:01:55] ERROR: DB Query Error:
+[2026-09-30 23:29:43] ERROR: DB Query Error:

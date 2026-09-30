@@ -127,6 +127,42 @@ Backend CSDL + Web Admin + Mobile App + Firmware ESP32 + ANPR Service, đảm b�
     - Cặp nút Mở / Đóng đã được tách độc lập (Mở nền màu, Đóng viền trắng).
   - [x] Cập nhật `AdminDashboardFragment.java` nạp và hiển thị bảng giá realtime, gắn sự kiện mở hộp thoại cấu hình.
   - [x] Biên dịch thành công APK qua Adoptium JDK 17: `BUILD SUCCESSFUL in 46s`.
+---
 
+### Giai đoạn 12: Trợ Lý Ảo AI Điều Hành Bãi Xe (AI Voice / Chatbot Assistant) — Dành Riêng Web Admin
+- [x] **Backend Node.js**:
+  - [x] Xây dựng `src/services/aiService.js` với cơ chế Hybrid:
+    - Tool / Function execution: tra cứu doanh thu, vị trí xe, trạng thái chỗ đỗ, điều khiển barie vào/ra qua MQTT, điều khiển đèn bãi xe, tra cứu bảng giá.
+    - Smart Vietnamese NLP Intent Engine xử lý câu lệnh tiếng Việt tự nhiên (hỗ trợ cả offline 100% không lo rớt mạng khi demo).
+    - Hỗ trợ kết nối Gemini API LLM nếu có API Key.
+  - [x] Xây dựng `src/controllers/aiController.js` và `src/routes/aiRoutes.js`.
+  - [x] Đăng ký router `/api/ai` trong `src/routes/index.js` và nạp vào `server.js`.
+- [x] **Web Admin**:
+  - [x] Thiết kế menu `Trợ lý AI (Voice/Chat)` trên thanh Sidebar (nằm ngay dưới Dashboard và trên Bãi xe khớp chính xác với ảnh, kèm badge `HOT AI`).
+  - [x] Thiết kế Card Widget Mini AI Voice ở góc dưới sidebar kèm nút Micro nhanh ("Hỏi AI hoặc Bấm nói").
+  - [x] Thiết kế nút Trợ lý AI trên Header (kèm phím tắt toàn cục `Alt + A`).
+  - [x] Xây dựng `web/css/ai-assistant.css` và `web/js/ai-assistant.js`:
+    - Khung chat Glassmorphism hiện đại, tin nhắn 2 chiều, typing indicator.
+    - Tích hợp Web Speech API (nhận diện giọng nói tiếng Việt mượt mà trực tiếp trên trình duyệt).
+    - Tích hợp Web Speech Synthesis (đọc to phản hồi bằng giọng nói tiếng Việt tự nhiên).
+    - Hiệu ứng sóng âm thanh (Voice Waves Pulse) khi đang nghe.
+    - Thẻ thực thi hành động (Action Cards) khi mở/đóng barie, bật đèn, tìm vị trí xe, doanh thu.
+- [x] **Phạm vi triển khai**: Theo chỉ thị của người dùng, tính năng này được tối ưu hóa tập trung 100% dành riêng cho Web Admin để biểu diễn thuyết trình trước giáo viên.
+- [x] **Kiểm thử Toàn diện**:
+  - [x] Đã kiểm thử tự động 9 kịch bản thoại tiếng Việt: Doanh thu hôm nay, Vị trí xe, Mở/Đóng barie cổng vào/ra, Bật/Tắt đèn bãi xe, Tình trạng chỗ trống, Bảng giá gửi xe. Tỷ lệ thành công 100%.
 
+---
+
+### Giai đoạn 13: Nâng Cấp Đỉnh Cao AI Assistant (TTS Chuẩn Tiếng Việt, Typewriter Effect, Gợi Ý Gõ Chữ & Ngân Hàng Câu Hỏi Toàn Diện)
+- [ ] **1. Phát âm Tiếng Việt Chuẩn 100% (Loại bỏ triệt để đọc tiếng Anh)**:
+  - Tích hợp giải pháp Hybrid TTS:
+    - Nếu trình duyệt có sẵn Voice tiếng Việt (`vi-VN`, `Google tiếng Việt`, `Microsoft HoaiMy/Nam`) -> dùng Web Speech Synthesis tốc độ 0.85.
+    - Nếu máy Windows thiếu gói tiếng Việt (bị đọc sang tiếng Anh) -> Tự động kích hoạt Online Vietnamese TTS Audio Engine (Google TTS) phát âm tiếng Việt 100% chuẩn giọng nữ ngọt ngào, rõ ràng từng từ!
+- [ ] **2. Hiệu ứng Suy Nghĩ & Gõ Chữ Từng Từ (Typewriter Effect)**:
+  - Khi gửi câu hỏi: Thêm khoảng trễ suy nghĩ tự nhiên (Thinking indicator 600ms - 900ms).
+  - Khi hiển thị: Hiển thị câu trả lời xuất hiện dần dần từng chữ (Typewriter Effect) mượt mà kèm con trỏ nhấp nháy, sau đó mới bung Action Card.
+- [ ] **3. Gợi ý Câu hỏi Thông minh khi Gõ chữ (Real-time Input Suggestions)**:
+  - Thêm dropdown autocomplete ngay phía trên ô nhập liệu: Khi gõ các từ khóa ("xe", "barie", "tiền", "chỗ", "đèn", "quy trình"...), lập tức gợi ý các câu hỏi thông minh để chọn trong 1 click.
+- [ ] **4. Ngân hàng Tri thức Toàn Diện Toàn Bộ Hệ Thống**:
+  - Mở rộng xử lý 12 nhóm nghiệp vụ: Chỗ đỗ, phương tiện (mọi biển số/tên chủ xe/danh sách xe đang đỗ), doanh thu & thống kê, điều khiển barie & đèn, bảng giá, quy trình đặt chỗ, an ninh RFID & ANPR, ví điện tử, phần cứng ESP32 & cảm biến IR, báo cáo & thông tin đồ án.
 

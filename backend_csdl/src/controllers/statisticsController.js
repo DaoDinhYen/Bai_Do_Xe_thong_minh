@@ -151,7 +151,66 @@ const statisticsController = {
   async getRevenue(req, res, next) {
     try {
       const days = parseInt(req.query.days) || 30;
-      const daily = await ParkingHistoryModel.getDailyRevenue(days);
+      const [entriesList, exitsList, bookingsList] = await Promise.all([
+        query(`
+          SELECT DATE(entry_time) as date, COUNT(*) as entries
+          FROM parking_history
+          WHERE entry_time >= DATE_SUB(NOW(), INTERVAL ? DAY)
+          GROUP BY DATE(entry_time)
+        `, [days]),
+        query(`
+          SELECT DATE(exit_time) as date, COUNT(*) as exits, COALESCE(SUM(fee), 0) as revenue
+          FROM parking_history
+          WHERE exit_time >= DATE_SUB(NOW(), INTERVAL ? DAY)
+          GROUP BY DATE(exit_time)
+        `, [days]),
+        query(`
+          SELECT DATE(created_at) as date, COUNT(*) as bookings
+          FROM bookings
+          WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
+          GROUP BY DATE(created_at)
+        `, [days])
+      ]);
+
+      const dateMap = {};
+      const toDateKey = (val) => {
+        if (!val) return null;
+        const dt = new Date(val);
+        if (isNaN(dt.getTime())) return String(val).slice(0, 10);
+        const yyyy = dt.getFullYear();
+        const mm = String(dt.getMonth() + 1).padStart(2, '0');
+        const dd = String(dt.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      };
+
+      const getOrInit = (key) => {
+        if (!dateMap[key]) {
+          dateMap[key] = { date: key, entries: 0, exits: 0, bookings: 0, revenue: 0, sessions: 0 };
+        }
+        return dateMap[key];
+      };
+
+      entriesList.forEach(r => {
+        const k = toDateKey(r.date);
+        if (k) getOrInit(k).entries += Number(r.entries || 0);
+      });
+
+      exitsList.forEach(r => {
+        const k = toDateKey(r.date);
+        if (k) {
+          const exitsCount = Number(r.exits || 0);
+          getOrInit(k).exits += exitsCount;
+          getOrInit(k).sessions += exitsCount;
+          getOrInit(k).revenue += Number(r.revenue || 0);
+        }
+      });
+
+      bookingsList.forEach(r => {
+        const k = toDateKey(r.date);
+        if (k) getOrInit(k).bookings += Number(r.bookings || 0);
+      });
+
+      const daily = Object.values(dateMap).sort((a, b) => a.date.localeCompare(b.date));
       return success(res, daily);
     } catch (err) { next(err); }
   },

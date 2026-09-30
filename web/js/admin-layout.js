@@ -7,6 +7,21 @@
 function createAdminPage(pageId, contentHTML, onReady) {
   if (!requireAdmin()) return;
 
+  // Tự động nhúng stylesheet & script cho AI Assistant
+  if (!document.getElementById('ai-assistant-css')) {
+    const link = document.createElement('link');
+    link.id = 'ai-assistant-css';
+    link.rel = 'stylesheet';
+    link.href = 'css/ai-assistant.css';
+    document.head.appendChild(link);
+  }
+  if (!document.getElementById('ai-assistant-js')) {
+    const script = document.createElement('script');
+    script.id = 'ai-assistant-js';
+    script.src = 'js/ai-assistant.js';
+    document.body.appendChild(script);
+  }
+
   const user = Auth.getUser();
   const initials = user?.name
     ? user.name.split(' ').filter(Boolean).slice(-2).map(w => w[0]).join('').toUpperCase()
@@ -84,11 +99,30 @@ function createAdminPage(pageId, contentHTML, onReady) {
           </div>
         </div>
         <nav class="sidebar-nav">${renderMenu()}</nav>
-        <div style="padding:16px 20px;border-top:1px solid #F1F5F9;font-size:11px;color:#94A3B8;display:flex;align-items:center;justify-content:space-between">
+
+        <!-- Mini AI Voice Assistant Card -->
+        <div class="sidebar-ai-widget" onclick="window.openAiAssistant()" title="Nhấn để mở Trợ lý AI hoặc bấm Micro nói tiếng Việt">
+          <div class="sidebar-ai-avatar">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><rect x="4" y="8" width="16" height="12" rx="4"/><circle cx="9" cy="13" r="1.5" fill="currentColor"/><circle cx="15" cy="13" r="1.5" fill="currentColor"/><path d="M9 17h6"/></svg>
+          </div>
+          <div class="sidebar-ai-info">
+            <div class="sidebar-ai-title">
+              <span>Trợ Lý AI</span>
+              <span style="font-size:9px;background:linear-gradient(135deg, #6366F1, #9333EA);color:#fff;padding:1px 6px;border-radius:10px;font-weight:700">AI</span>
+            </div>
+            <div class="sidebar-ai-sub">Hỏi đáp & Bấm nói...</div>
+          </div>
+          <button class="sidebar-ai-mic-btn" onclick="event.stopPropagation(); window.toggleAiSpeech()" title="Bấm để nói tiếng Việt ngay">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+          </button>
+        </div>
+
+        <div style="padding:14px 20px;border-top:1px solid #F1F5F9;font-size:11px;color:#94A3B8;display:flex;align-items:center;justify-content:space-between">
           <span>Hệ thống IoT v1.0</span>
           <span class="badge badge-success" style="font-size:10px;padding:2px 8px">ONLINE</span>
         </div>
       </aside>
+
 
       <!-- Main Wrapper -->
       <div style="flex:1;margin-left:240px;display:flex;flex-direction:column;min-width:0" id="main-wrapper">
@@ -125,6 +159,12 @@ function createAdminPage(pageId, contentHTML, onReady) {
                 <span id="header-time">10:24:32</span>
               </div>
             </div>
+
+            <!-- Quick AI Assistant Trigger Button -->
+            <button class="header-ai-btn" onclick="window.openAiAssistant()" title="Mở Trợ Lý Ảo AI (Phím tắt: Alt + A)">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><rect x="4" y="8" width="16" height="12" rx="4"/><circle cx="9" cy="13" r="1.5" fill="currentColor"/><circle cx="15" cy="13" r="1.5" fill="currentColor"/><path d="M9 17h6"/></svg>
+              <span>Trợ lý AI</span>
+            </button>
 
             <!-- Notifications Button -->
             <div class="relative">

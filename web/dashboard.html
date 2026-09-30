@@ -47,7 +47,7 @@
     /* ── Main Dashboard Layout (Khu vực trái + Cột điều khiển phải) ── */
     .dashboard-main {
       display: grid;
-      grid-template-columns: 1fr 280px;
+      grid-template-columns: minmax(0, 1fr) 250px;
       gap: 20px;
       align-items: start;
       margin-bottom: 24px;
@@ -56,22 +56,24 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
+      min-width: 0;
     }
     .dashboard-top-row {
       display: grid;
-      grid-template-columns: 1.35fr 1fr;
+      grid-template-columns: minmax(0, 1fr) 280px;
       gap: 20px;
     }
     .dashboard-quad-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
+      min-width: 0;
     }
-    @media (max-width: 1480px) {
+    @media (max-width: 1366px) {
       .dashboard-main { grid-template-columns: 1fr; }
-      .right-col { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+      .right-col { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
     }
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
       .dashboard-top-row { grid-template-columns: 1fr; }
       .dashboard-quad-grid { grid-template-columns: 1fr; }
     }
@@ -324,65 +326,187 @@
       flex-shrink: 0;
     }
 
-    /* Map Legend */
+    /* Parking Map Card Header & Legend (Đảm bảo 100% hiển thị trên 1 dòng duy nhất) */
+    .parking-map-card {
+      min-width: 0;
+    }
+    .parking-map-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: nowrap !important;
+      overflow-x: auto;
+      scrollbar-width: none; /* Firefox */
+      padding: 16px 20px;
+    }
+    .parking-map-header::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Edge */
+    }
+    .parking-map-header .card-title {
+      white-space: nowrap !important;
+      flex-shrink: 0 !important;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
     .map-legend {
       display: flex;
       align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
+      gap: 10px;
+      flex-wrap: nowrap !important;
+      white-space: nowrap !important;
+      flex-shrink: 0 !important;
     }
     .legend-item {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
       font-size: 12px;
       font-weight: 600;
       color: var(--text-medium);
+      white-space: nowrap !important;
+      flex-shrink: 0 !important;
+      padding: 4px 9px;
+      background: #F1F5F9;
+      border-radius: 6px;
+      border: 1px solid #E2E8F0;
+      line-height: 1.2;
     }
     .legend-dot {
-      width: 9px;
-      height: 9px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
+      flex-shrink: 0;
     }
 
-    /* ── Recent Activity (Hoạt động gần đây) ── */
+    /* ── Nút chuyển đổi 3D / 2D & Điều khiển góc nhìn Camera ── */
+    .btn-toggle-view {
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-medium);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-toggle-view.active {
+      background: #FFFFFF;
+      color: var(--primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+    .btn-cam-view {
+      padding: 6px 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      background: #FFFFFF;
+      color: var(--text-medium);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-cam-view:hover {
+      background: #F8FAFC;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-cam-view.active {
+      background: rgba(37, 99, 235, 0.1);
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* ── KPI Pills cho biểu đồ lượt xe ── */
+    .chart-kpi-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-medium);
+      padding: 3px 9px;
+      background: #F8FAFC;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+    }
+    .chart-kpi-pill strong {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-dark);
+      font-size: 12px;
+    }
+    .kpi-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── Recent Activity (Hoạt động gần đây - Co gọn thanh thoát) ── */
+    .activity-card {
+      min-width: 0;
+    }
+    .activity-card .card-header {
+      padding: 16px 16px;
+    }
+    .activity-card .card-title {
+      font-size: 14px;
+      white-space: nowrap;
+    }
     .activity-list { padding: 4px 0; }
     .activity-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 20px;
+      gap: 10px;
+      padding: 11px 16px;
       border-bottom: 1px solid var(--border-light);
       transition: background-color var(--transition-fast);
+      min-width: 0;
     }
     .activity-item:last-child { border-bottom: none; }
     .activity-item:hover { background-color: #F8FAFC; }
     .activity-time {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       color: var(--text-muted);
-      width: 44px;
+      width: 38px;
       flex-shrink: 0;
       font-family: 'JetBrains Mono', monospace;
     }
     .activity-dot {
-      width: 9px;
-      height: 9px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       flex-shrink: 0;
       box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
     }
     .activity-content { flex: 1; min-width: 0; }
     .activity-main {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--text-dark);
       margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .activity-sub {
-      font-size: 11.5px;
+      font-size: 11px;
       color: var(--text-light);
       font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .activity-badge { flex-shrink: 0; }
 
@@ -780,6 +904,9 @@
 <script src="js/api.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/admin-layout.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="js/parking-3d.js"></script>
 <script>
 (function init() {
   if (!requireAdmin()) return;
@@ -963,9 +1090,9 @@
       <div class="dashboard-left-content">
         <!-- Hàng 1: Sơ đồ bãi đỗ xe & Hoạt động gần đây -->
         <div class="dashboard-top-row">
-          <!-- 1. Parking Map Visual -->
-          <div class="card">
-            <div class="card-header">
+          <!-- 1. Parking Map Visual (Kéo dài, rộng phần này ra) -->
+          <div class="card parking-map-card">
+            <div class="card-header parking-map-header">
               <span class="card-title">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>
                 Sơ đồ bãi đỗ xe
@@ -977,8 +1104,41 @@
                 <div class="legend-item"><div class="legend-dot" style="background:#94A3B8"></div>Không hoạt động</div>
               </div>
             </div>
-            <div class="parking-map-container">
-              <div class="parking-lot-canvas" id="parking-map">
+            <div class="parking-map-container" style="position:relative">
+              <!-- Thanh điều khiển Sa bàn 3D & 2D -->
+              <div class="map-3d-toolbar" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <!-- Chuyển đổi 3D / 2D -->
+                <div style="display:inline-flex;background:#E2E8F0;padding:3px;border-radius:8px;gap:2px">
+                  <button id="btn-view-3d" class="btn-toggle-view active" onclick="switchParkingView('3d')">
+                    🎮 Sa bàn 3D
+                  </button>
+                  <button id="btn-view-2d" class="btn-toggle-view" onclick="switchParkingView('2d')">
+                    📋 Sơ đồ 2D
+                  </button>
+                </div>
+
+                <!-- 4 Góc nhìn 3D -->
+                <div id="controls-3d-group" style="display:inline-flex;align-items:center;gap:6px">
+                  <button class="btn-cam-view active" id="btn-cam-iso" onclick="set3DCamera('isometric', this)" title="Góc nhìn 3D Toàn cảnh">
+                    🎥 Toàn cảnh
+                  </button>
+                  <button class="btn-cam-view" id="btn-cam-top" onclick="set3DCamera('top', this)" title="Góc nhìn thẳng từ trên xuống">
+                    📐 Mặt bằng
+                  </button>
+                  <button class="btn-cam-view" id="btn-cam-gate" onclick="set3DCamera('gate', this)" title="Góc nhìn Cận cảnh Cổng & Nhà điều hành">
+                    🚗 Cổng vào
+                  </button>
+                  <button class="btn-cam-view" id="btn-cam-rotate" onclick="toggle3DRotate(this)" title="Bật/Tắt xoay tự động 360 độ">
+                    🔄 Tự xoay
+                  </button>
+                </div>
+              </div>
+
+              <!-- Khung hiển thị Sa bàn 3D (Three.js WebGL) -->
+              <div id="parking-3d-canvas" style="width:100%;height:500px;position:relative;border-radius:14px;overflow:hidden;box-shadow:inset 0 4px 20px rgba(0,0,0,0.5)"></div>
+
+              <!-- Khung sơ đồ 2D (Dự phòng khi bấm xem dạng 2D phẳng) -->
+              <div class="parking-lot-canvas" id="parking-map" style="display:none">
                 <div class="parking-lawn-edge"></div>
                 <div id="parking-map-slots" style="position:relative;z-index:2">
                   <div style="text-align:center;color:#94A3B8;padding:40px 0;font-size:13px">
@@ -1005,8 +1165,8 @@
             </div>
           </div>
 
-          <!-- 2. Recent Activities -->
-          <div class="card">
+          <!-- 2. Recent Activities (Co gọn lại) -->
+          <div class="card activity-card">
             <div class="card-header">
               <span class="card-title">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
@@ -1031,15 +1191,51 @@
         <!-- 4 Cái vào khoảng trắng ở trên chia làm 2 hàng mỗi hàng 2 cái -->
         <div class="dashboard-quad-grid">
           <!-- HÀNG 1 - CÁI 1: Traffic Chart (Thống kê lượt xe) -->
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">Thống kê lượt xe</span>
-              <select class="filter-select" id="chart-period" onchange="loadChart(this.value)" style="font-size:12px;padding:6px 12px">
-                <option value="7">7 ngày gần đây</option>
-                <option value="30">30 ngày</option>
-              </select>
+          <div class="card traffic-chart-card">
+            <div class="card-header" style="flex-wrap:wrap;gap:10px">
+              <span class="card-title">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                Thống kê lượt xe
+              </span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <!-- Nút chuyển kiểu biểu đồ: Đường cong / Cột -->
+                <div style="display:inline-flex;background:#F1F5F9;padding:2px;border-radius:6px;gap:2px">
+                  <button id="btn-chart-area" class="btn-toggle-view active" style="padding:4px 9px;font-size:11px" onclick="setChartType('line', this)" title="Biểu đồ đường cong diện tích">
+                    📈 Đường cong
+                  </button>
+                  <button id="btn-chart-bar" class="btn-toggle-view" style="padding:4px 9px;font-size:11px" onclick="setChartType('bar', this)" title="Biểu đồ cột">
+                    📊 Cột
+                  </button>
+                </div>
+                <!-- Chọn khoảng thời gian -->
+                <select class="filter-select" id="chart-period" onchange="loadChart(this.value)" style="font-size:11.5px;padding:5px 10px">
+                  <option value="7">7 ngày</option>
+                  <option value="14">14 ngày</option>
+                  <option value="30" selected>30 ngày</option>
+                </select>
+              </div>
             </div>
-            <div style="padding:16px 20px;height:240px;position:relative">
+
+            <!-- Hàng chỉ số nhanh KPI Badges -->
+            <div class="chart-kpi-bar" style="padding:12px 20px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <div class="chart-kpi-pill kpi-in">
+                <span class="kpi-dot" style="background:#3B82F6"></span>
+                <span>Vào: <strong id="kpi-chart-in">0</strong></span>
+              </div>
+              <div class="chart-kpi-pill kpi-out">
+                <span class="kpi-dot" style="background:#10B981"></span>
+                <span>Ra: <strong id="kpi-chart-out">0</strong></span>
+              </div>
+              <div class="chart-kpi-pill kpi-book">
+                <span class="kpi-dot" style="background:#F59E0B"></span>
+                <span>Đặt trước: <strong id="kpi-chart-book">0</strong></span>
+              </div>
+              <div class="chart-kpi-pill kpi-total" style="margin-left:auto">
+                <span>Tổng: <strong id="kpi-chart-total" style="color:var(--text-dark)">0 lượt</strong></span>
+              </div>
+            </div>
+
+            <div style="padding:10px 20px 16px;height:245px;position:relative">
               <canvas id="traffic-chart"></canvas>
             </div>
           </div>
@@ -1207,6 +1403,8 @@
 
 // ── Dashboard Core Logic ──
 let trafficChart, donutChart;
+let currentChartType = 'line';
+let cachedChartSeries = null;
 let isCameraMonitorOpen = false;
 let cameraPollTimer = null;
 window._latestInSnapshot = '/captures/nguoi_demo_1_12h_17-9-2026/anh_vao.jpg';
@@ -1218,6 +1416,13 @@ function initDashboard() {
   loadDashboard();
   setInterval(loadDashboard, 30000); // refresh every 30s
   connectDashboardSocket();
+
+  // Khởi tạo Sa bàn 3D
+  setTimeout(() => {
+    if (window.Parking3D) {
+      window.Parking3D.init('parking-3d-canvas');
+    }
+  }, 120);
 }
 
 function connectDashboardSocket() {
@@ -1290,10 +1495,20 @@ function connectDashboardSocket() {
 
     // Barrier movement event
     socket.on('barrier_status', (data) => {
+      const target = (data.target || data.direction || 'in').toLowerCase();
+      const action = (data.action || data.status || (data.event === 'PASSED' ? 'CLOSE' : 'OPEN')).toUpperCase();
+      if (window.Parking3D) {
+        if (target === 'all') {
+          window.Parking3D.setBarrier('in', action);
+          window.Parking3D.setBarrier('out', action);
+        } else {
+          window.Parking3D.setBarrier(target, action);
+        }
+      }
       if (isCameraMonitorOpen) {
         const barrierEl = document.getElementById('latest-info-barrier');
         if (barrierEl) {
-          const isOpen = data.action === 'OPEN';
+          const isOpen = action === 'OPEN';
           barrierEl.innerHTML = `<span class="badge ${isOpen ? 'badge-success' : 'badge-outline'}">${isOpen ? 'MỞ (Thủ công)' : 'ĐÃ ĐÓNG'}</span>`;
         }
       }
@@ -1744,9 +1959,6 @@ function renderStats(s, slots = []) {
 }
 
 function renderSlots(slots) {
-  const container = document.getElementById('parking-map-slots');
-  if (!container) return;
-
   // Fallback 6 chuẩn A01-A06
   let slotsList = slots && slots.length ? slots : [
     { id: 1, slot_code: 'A01', status: 'FREE' },
@@ -1756,6 +1968,17 @@ function renderSlots(slots) {
     { id: 5, slot_code: 'A05', status: 'FREE' },
     { id: 6, slot_code: 'A06', status: 'FREE' },
   ];
+
+  // 1. Đồng bộ dữ liệu sang Sa bàn 3D (Three.js)
+  if (window.Parking3D && window.Parking3D.isInitialized) {
+    window.Parking3D.updateSlots(slotsList);
+  } else if (window.Parking3D) {
+    window.Parking3D.slotsData = slotsList;
+  }
+
+  // 2. Render cho sơ đồ 2D fallback
+  const container = document.getElementById('parking-map-slots');
+  if (!container) return;
 
   // Tìm chuẩn 6 vị trí: Cột trái (A01, A02, A03), Cột phải (A04, A05, A06)
   const slotA1 = slotsList.find(s => (s.slot_code === 'A01' || s.slot_code === 'A1')) || { slot_code: 'A01', status: 'FREE' };
@@ -1948,137 +2171,289 @@ function renderSystemStatus(s) {
   }).join('');
 }
 
+// ── Traffic Chart Controls & Rendering ──
+function setChartType(type, btn) {
+  currentChartType = type || 'line';
+  document.querySelectorAll('.traffic-chart-card .btn-toggle-view').forEach(b => b.classList.remove('active'));
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    const targetId = currentChartType === 'line' ? 'btn-chart-area' : 'btn-chart-bar';
+    document.getElementById(targetId)?.classList.add('active');
+  }
+  if (cachedChartSeries) {
+    renderTrafficChart(cachedChartSeries);
+  } else {
+    loadChart(document.getElementById('chart-period')?.value || 7);
+  }
+}
+
+function renderTrafficChart(series) {
+  if (!series || !series.labels) return;
+  const { labels, entries, exits, bookings } = series;
+  const ctx = document.getElementById('traffic-chart')?.getContext('2d');
+  if (!ctx) return;
+
+  if (trafficChart) {
+    trafficChart.destroy();
+    trafficChart = null;
+  }
+
+  // Gradients cho diện tích dưới đường cong
+  const gradBlue = ctx.createLinearGradient(0, 0, 0, 220);
+  gradBlue.addColorStop(0, 'rgba(59, 130, 246, 0.32)');
+  gradBlue.addColorStop(1, 'rgba(59, 130, 246, 0.00)');
+
+  const gradGreen = ctx.createLinearGradient(0, 0, 0, 220);
+  gradGreen.addColorStop(0, 'rgba(16, 185, 129, 0.26)');
+  gradGreen.addColorStop(1, 'rgba(16, 185, 129, 0.00)');
+
+  const isLine = currentChartType === 'line';
+
+  const datasets = isLine ? [
+    {
+      label: 'Vào bãi',
+      data: entries,
+      borderColor: '#2563EB',
+      backgroundColor: gradBlue,
+      fill: true,
+      tension: 0.38,
+      borderWidth: 2.5,
+      pointRadius: labels.length > 18 ? 0 : 3.5,
+      pointHoverRadius: 6,
+      pointBackgroundColor: '#FFFFFF',
+      pointBorderColor: '#2563EB',
+      pointBorderWidth: 2.5
+    },
+    {
+      label: 'Ra bãi',
+      data: exits,
+      borderColor: '#059669',
+      backgroundColor: gradGreen,
+      fill: true,
+      tension: 0.38,
+      borderWidth: 2.5,
+      pointRadius: labels.length > 18 ? 0 : 3.5,
+      pointHoverRadius: 6,
+      pointBackgroundColor: '#FFFFFF',
+      pointBorderColor: '#059669',
+      pointBorderWidth: 2.5
+    },
+    {
+      label: 'Đặt trước',
+      data: bookings,
+      borderColor: '#F59E0B',
+      backgroundColor: 'transparent',
+      fill: false,
+      tension: 0.38,
+      borderWidth: 2,
+      borderDash: [5, 4],
+      pointRadius: labels.length > 18 ? 0 : 3,
+      pointHoverRadius: 5,
+      pointBackgroundColor: '#FFFFFF',
+      pointBorderColor: '#F59E0B',
+      pointBorderWidth: 2
+    }
+  ] : [
+    {
+      label: 'Vào bãi',
+      data: entries,
+      backgroundColor: '#3B82F6',
+      hoverBackgroundColor: '#2563EB',
+      borderRadius: 6,
+      borderSkipped: false,
+      barPercentage: labels.length > 18 ? 0.8 : 0.65,
+      categoryPercentage: 0.8
+    },
+    {
+      label: 'Ra bãi',
+      data: exits,
+      backgroundColor: '#10B981',
+      hoverBackgroundColor: '#059669',
+      borderRadius: 6,
+      borderSkipped: false,
+      barPercentage: labels.length > 18 ? 0.8 : 0.65,
+      categoryPercentage: 0.8
+    },
+    {
+      label: 'Đặt trước',
+      data: bookings,
+      backgroundColor: '#F59E0B',
+      hoverBackgroundColor: '#D97706',
+      borderRadius: 6,
+      borderSkipped: false,
+      barPercentage: labels.length > 18 ? 0.8 : 0.65,
+      categoryPercentage: 0.8
+    }
+  ];
+
+  trafficChart = new Chart(ctx, {
+    type: isLine ? 'line' : 'bar',
+    data: {
+      labels,
+      datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 500,
+        easing: 'easeOutQuart'
+      },
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      layout: {
+        padding: { top: 12, bottom: 4, left: 4, right: 8 }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+          align: 'end',
+          labels: {
+            font: { family: 'Plus Jakarta Sans', size: 11.5, weight: '700' },
+            usePointStyle: true,
+            pointStyle: 'circle',
+            boxWidth: 7,
+            padding: 14,
+            color: '#475569'
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.94)',
+          borderColor: 'rgba(255, 255, 255, 0.12)',
+          borderWidth: 1,
+          titleFont: { family: 'Plus Jakarta Sans', size: 12.5, weight: '700' },
+          bodyFont: { family: 'Plus Jakarta Sans', size: 12, weight: '500' },
+          padding: 12,
+          cornerRadius: 8,
+          boxPadding: 6,
+          usePointStyle: true,
+          callbacks: {
+            title: (items) => `📅 Ngày ${items[0].label}`,
+            label: (item) => `  ${item.dataset.label}: ${item.raw} lượt`,
+            footer: (items) => {
+              const sum = items.reduce((acc, it) => acc + (Number(it.raw) || 0), 0);
+              return `  Tổng: ${sum} lượt`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' },
+            color: '#64748B',
+            maxRotation: 0,
+            autoSkip: true,
+            maxTicksLimit: labels.length > 14 ? 10 : labels.length
+          }
+        },
+        y: {
+          grid: { color: '#F1F5F9', drawBorder: false },
+          grace: '15%',
+          beginAtZero: true,
+          ticks: {
+            font: { family: 'Plus Jakarta Sans', size: 11, weight: '500' },
+            color: '#64748B',
+            precision: 0,
+            stepSize: 2
+          }
+        }
+      }
+    }
+  });
+}
+
 async function loadChart(days = 7) {
   try {
-    const res = await StatsAPI.revenue(days);
-    const data = res?.data || [
-      { date: '04/09', entries: 12, exits: 10, bookings: 4 },
-      { date: '05/09', entries: 9,  exits: 8,  bookings: 3 },
-      { date: '06/09', entries: 9,  exits: 9,  bookings: 5 },
-      { date: '07/09', entries: 15, exits: 14, bookings: 7 },
-      { date: '08/09', entries: 16, exits: 12, bookings: 6 },
-      { date: '09/09', entries: 14, exits: 13, bookings: 8 },
-      { date: '10/09', entries: 17, exits: 15, bookings: 9 },
-    ];
+    const numDays = parseInt(days) || 7;
+    let res = null;
+    try {
+      res = await StatsAPI.revenue(numDays);
+    } catch (e) {
+      console.warn('StatsAPI.revenue failed:', e);
+    }
 
-    // Chuẩn hóa định dạng nhãn ngày: hiển thị gọn gàng dd/mm (ví dụ: 14/09, 15/09)
-    const labels = data.map(d => {
-      const raw = d.date || d.day || d.exit_date;
-      if (!raw) return '—';
-      const dt = new Date(raw);
-      if (isNaN(dt.getTime())) {
-        const str = String(raw);
-        if (str.includes('-')) {
-          const parts = str.split('-');
-          return `${parts[2].slice(0,2)}/${parts[1]}`;
-        }
-        return str;
-      }
-      const dd = String(dt.getDate()).padStart(2, '0');
-      const mm = String(dt.getMonth() + 1).padStart(2, '0');
-      return `${dd}/${mm}`;
-    });
+    const rawList = res?.data || [];
 
-    const entries = data.map(d => Number(d.entries || d.vehicle_count || d.sessions || 10));
-    const exits = data.map(d => Number(d.exits || Math.max(1, (d.entries || d.sessions || 10) - 2)));
-    const bookings = data.map(d => Number(d.bookings || Math.round((d.entries || d.sessions || 10) * 0.4)));
+    // Tạo chuỗi ngày liên tục numDays ngày kết thúc tại hôm nay
+    const today = new Date();
+    const timelineMap = new Map();
+    const labels = [];
 
-    const ctx = document.getElementById('traffic-chart')?.getContext('2d');
-    if (!ctx) return;
+    for (let i = numDays - 1; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      const keyDate = `${yyyy}-${mm}-${dd}`;
+      const label = `${dd}/${mm}`;
+      labels.push(label);
 
-    if (trafficChart) trafficChart.destroy();
-    trafficChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: 'Vào bãi',
-            data: entries,
-            backgroundColor: '#3B82F6',
-            hoverBackgroundColor: '#2563EB',
-            borderRadius: 6,
-            borderSkipped: false,
-            barPercentage: 0.65,
-            categoryPercentage: 0.8
-          },
-          {
-            label: 'Ra bãi',
-            data: exits,
-            backgroundColor: '#10B981',
-            hoverBackgroundColor: '#059669',
-            borderRadius: 6,
-            borderSkipped: false,
-            barPercentage: 0.65,
-            categoryPercentage: 0.8
-          },
-          {
-            label: 'Đặt chỗ',
-            data: bookings,
-            backgroundColor: '#F59E0B',
-            hoverBackgroundColor: '#D97706',
-            borderRadius: 6,
-            borderSkipped: false,
-            barPercentage: 0.65,
-            categoryPercentage: 0.8
-          },
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: {
-          padding: { top: 16, bottom: 4, left: 4, right: 4 }
-        },
-        plugins: {
-          legend: {
-            position: 'top',
-            align: 'end',
-            labels: {
-              font: { family: 'Plus Jakarta Sans', size: 11.5, weight: '700' },
-              usePointStyle: true,
-              pointStyle: 'circle',
-              boxWidth: 8,
-              padding: 16,
-              color: '#475569'
-            }
-          },
-          tooltip: {
-            backgroundColor: '#0F172A',
-            titleFont: { family: 'Plus Jakarta Sans', size: 12.5, weight: '700' },
-            bodyFont: { family: 'Plus Jakarta Sans', size: 12 },
-            padding: 12,
-            cornerRadius: 8,
-            boxPadding: 6,
-            callbacks: {
-              title: (items) => `Ngày ${items[0].label}`,
-              label: (item) => ` ${item.dataset.label}: ${item.raw} lượt`
-            }
-          }
-        },
-        scales: {
-          x: {
-            grid: { display: false },
-            ticks: {
-              font: { family: 'Plus Jakarta Sans', size: 11.5, weight: '600' },
-              color: '#64748B',
-              maxRotation: 0,
-              autoSkip: true
-            }
-          },
-          y: {
-            grid: { color: '#F1F5F9', drawBorder: false },
-            grace: '20%',
-            ticks: {
-              font: { family: 'Plus Jakarta Sans', size: 11, weight: '500' },
-              color: '#64748B',
-              precision: 0,
-              stepSize: 2
-            }
+      // Khởi tạo chính xác bằng 0 từ đầu (chuẩn 100% theo CSDL thật)
+      timelineMap.set(keyDate, {
+        label,
+        entries: 0,
+        exits: 0,
+        bookings: 0
+      });
+    }
+
+    // Tích hợp dữ liệu 100% chuẩn từ cơ sở dữ liệu (parking_history + bookings)
+    if (Array.isArray(rawList) && rawList.length > 0) {
+      rawList.forEach(r => {
+        const rawDate = r.date || r.day || r.exit_date;
+        if (!rawDate) return;
+        const dt = new Date(rawDate);
+        if (!isNaN(dt.getTime())) {
+          const dd = String(dt.getDate()).padStart(2, '0');
+          const mm = String(dt.getMonth() + 1).padStart(2, '0');
+          const yyyy = dt.getFullYear();
+          const keyDate = `${yyyy}-${mm}-${dd}`;
+          if (timelineMap.has(keyDate)) {
+            const item = timelineMap.get(keyDate);
+            item.entries = Number(r.entries || 0);
+            item.exits = Number(r.exits || 0);
+            item.bookings = Number(r.bookings || 0);
           }
         }
-      }
+      });
+    }
+
+    const entries = [];
+    const exits = [];
+    const bookings = [];
+    let sumIn = 0, sumOut = 0, sumBook = 0;
+
+    timelineMap.forEach(item => {
+      entries.push(item.entries);
+      exits.push(item.exits);
+      bookings.push(item.bookings);
+      sumIn += item.entries;
+      sumOut += item.exits;
+      sumBook += item.bookings;
     });
+
+    // Cập nhật số liệu các thẻ KPI nhanh phía trên biểu đồ (chuẩn CSDL)
+    const inEl = document.getElementById('kpi-chart-in');
+    const outEl = document.getElementById('kpi-chart-out');
+    const bookEl = document.getElementById('kpi-chart-book');
+    const totalEl = document.getElementById('kpi-chart-total');
+
+    if (inEl) inEl.textContent = sumIn.toLocaleString('vi-VN');
+    if (outEl) outEl.textContent = sumOut.toLocaleString('vi-VN');
+    if (bookEl) bookEl.textContent = sumBook.toLocaleString('vi-VN');
+    if (totalEl) totalEl.textContent = `${(sumIn + sumOut).toLocaleString('vi-VN')} lượt`;
+
+    // Lưu cache để chuyển đổi spline <-> bar tức thời
+    cachedChartSeries = { labels, entries, exits, bookings };
+
+    // Vẽ biểu đồ
+    renderTrafficChart(cachedChartSeries);
   } catch (err) {
     console.error('loadChart error:', err);
   }
@@ -2179,9 +2554,61 @@ async function quickControl(target, action) {
     if (window.DeviceAPI) {
       await DeviceAPI.controlBarrier({ target, action });
     }
+    if (window.Parking3D) {
+      window.Parking3D.setBarrier(target, action);
+    }
     Toast.success('Thành công', `Đã gửi lệnh ${actionLabel.toLowerCase()} barrier ${targetLabel}`);
   } catch (e) {
     Toast.error('Lỗi', e.message || 'Không thể điều khiển barrier');
+  }
+}
+
+// ── Hàm điều khiển Sa bàn 3D (Toolbar Controls) ──
+function switchParkingView(mode) {
+  const btn3D = document.getElementById('btn-view-3d');
+  const btn2D = document.getElementById('btn-view-2d');
+  const canvas3D = document.getElementById('parking-3d-canvas');
+  const canvas2D = document.getElementById('parking-map');
+  const ctrlGroup = document.getElementById('controls-3d-group');
+
+  if (mode === '3d') {
+    btn3D?.classList.add('active');
+    btn2D?.classList.remove('active');
+    if (canvas3D) canvas3D.style.display = 'block';
+    if (canvas2D) canvas2D.style.display = 'none';
+    if (ctrlGroup) ctrlGroup.style.display = 'inline-flex';
+    if (window.Parking3D && !window.Parking3D.isInitialized) {
+      window.Parking3D.init('parking-3d-canvas');
+    }
+  } else {
+    btn2D?.classList.add('active');
+    btn3D?.classList.remove('active');
+    if (canvas3D) canvas3D.style.display = 'none';
+    if (canvas2D) canvas2D.style.display = 'block';
+    if (ctrlGroup) ctrlGroup.style.display = 'none';
+  }
+}
+
+function set3DCamera(view, btn) {
+  if (window.Parking3D) {
+    window.Parking3D.setCameraView(view);
+  }
+  document.querySelectorAll('.btn-cam-view').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function toggle3DRotate(btn) {
+  if (window.Parking3D) {
+    const isRotating = window.Parking3D.toggleAutoRotate();
+    if (btn) {
+      if (isRotating) {
+        btn.classList.add('active');
+        btn.innerHTML = '⏸ Dừng xoay';
+      } else {
+        btn.classList.remove('active');
+        btn.innerHTML = '🔄 Tự xoay';
+      }
+    }
   }
 }
 

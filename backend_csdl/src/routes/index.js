@@ -15,6 +15,7 @@ const historyRoutes      = require('./historyRoutes');
 const statisticsRoutes   = require('./statisticsRoutes');
 const adminRoutes        = require('./adminRoutes');
 const notificationRoutes = require('./notificationRoutes');
+const aiRoutes           = require('./aiRoutes');
 
 router.use('/auth',          authRoutes);
 router.use('/users',         userRoutes);
@@ -30,5 +31,6 @@ router.use('/history',       historyRoutes);
 router.use('/statistics',    statisticsRoutes);
 router.use('/admin',         adminRoutes);
 router.use('/notifications', notificationRoutes);
+router.use('/ai',            aiRoutes);
 
 module.exports = router;
